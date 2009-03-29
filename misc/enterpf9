@@ -3,16 +3,16 @@
 # check whether we are inside of a pf9 tree,
 # and try to guess a value for PF9
 
-if pwd | grep sys/src > /dev/null; then
-	base=`pwd | sed 's,/sys/src.*,,'`
-else
-	base=`pwd`
+if test "x$PF9" = x; then 
+	if pwd | grep /src > /dev/null; then
+		PF9=`pwd | sed 's,/src.*,,'`
+	else
+		PF9=`pwd`
+	fi
 fi
 
-if test -f "$base/pf9.defaults"; then
+if test -f "$PF9/pf9.defaults"; then
 	
-	PF9=$base
-
 	# derive default value for objtype from cputype
 	test "$objtype" || objtype=$cputype
 
@@ -21,7 +21,7 @@ if test -f "$base/pf9.defaults"; then
 	user_cputype=$cputype
 
 	# load distribution defaults
-	. $base/pf9.defaults
+	. $PF9/pf9.defaults
 
 	# user settings have precedence
 	test -z "$user_objtype" || objtype=$user_objtype
