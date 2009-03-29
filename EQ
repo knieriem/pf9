@@ -472,6 +472,7 @@ src/lib9/fmt/fmtdef.h
 src/lib9/_exits.c
 src/lib9/ctime.c
 src/lib9/execl.c
+src/lib9/tm2sec.c
 src/lib9/atoi.c
 src/lib9/encodefmt.c
 src/lib9/atol.c
