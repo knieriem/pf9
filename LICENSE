@@ -1,23 +1,16 @@
 A large part of pf9 is based on plan9port with only minor
 modifications. This includes the source files within the directories
 
-	sys/include, sys/src/cmd, and sys/src/lib*
+	include, src/lib*, src/cmd
 
 the scripts 9a, 9c, 9l in linux/bin 9.rc, doctype, man, lookman, lc and
-psfonts in rc/bin, and some yacc/lex support files in /sys/lib.
+psfonts in rc/bin, and some yacc/lex support files in lib.
 
 
 Homepage of Plan9port: http://www.swtch.com/plan9port/
 
 For plan9port the Lucent Public License, v1.02, applies, please see
 LICENSE.plan9port for details.
-
-If you run `mk' in sys/man and sys/lib, both directories will be
-populated with a copy of files from a plan9port directory, if one is
-available. The files beeing copied are necessary for the normal operation
-of some programs in sys/src/cmd, like troff or man. They are used without
-modification (except some paths) by the same programs as in plan9port.
-
 
 ---------------------------------------------------
 
@@ -26,24 +19,6 @@ The mkfile-hierarchy is based on files from Plan 9, i.e. the files
 	sys/src/mkfile sys/src/mkfile.proto sys/src/cmd/mk*
 
 are copies of the original Plan 9 files, some with slight modifications.
-
-
----------------------------------------------------
-
-The `cygwin' directory contains a binary distribution of the cygwin DLL
-v1.5.21-2, and its corresponding header files and libraries:
-
-	cygwin/bin		- cygwin1.dll, cygcheck.exe, mount.exe, strace.exe
-	cygwin/include		- header files (except u.h)
-	cygwin/lib		- lib*.a
-
-The GPL-based license can be found in cygwin/CYGWIN_LICENSE. According
-to the license you have the right to get the full source code of the DLL
-and its support libraries (cygwin-1.5.21-2-src.tar.bz2). Please contact
-me at mt@wmipf.in-berlin.de, if you don't find the file at
-	ftp://ftp-stud.fht-esslingen.de/pub/Mirrors/sources.redhat.com/cygwin/release/cygwin
-or one of the mirrors:
-	http://cygwin.com/mirrors.html
 
 
 ---------------------------------------------------
