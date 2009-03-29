@@ -1,0 +1,28 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libip.a
+OFILES=\
+	bo.$O\
+	classmask.$O\
+	eipfmt.$O\
+	freeipifc.$O\
+	ipaux.$O\
+	myetheraddr.$O\
+	myipaddr.$O\
+	parseether.$O\
+	parseip.$O\
+	ptclbsum.$O\
+	udp.$O\
+	$objsys.$O\
+
+HFILES=\
+	ip.h
+
+<$PF9/src/mksyslib
+
+Darwin.$O FreeBSD.$O: BSD.c
+
+testreadipifc: testreadipifc.o $LIBDIR/$LIB
+	$LD -o testreadipifc testreadipifc.o
+
+

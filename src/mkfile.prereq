@@ -1,0 +1,30 @@
+MKSHELL=rc
+<$PF9/$objtype/mkfile
+
+# make sure $buildprogs are available
+buildprogs=lex yacc mk
+
+buildprogpaths=${buildprogs:%=$PF9/$cputype/bin/%$PROGSFX}
+
+default:V:  ,$objtype-prereqs-built
+
+,$objtype-prereqs-built: $buildprogpaths
+	date > $target
+
+$buildprogpaths:
+	rm -f $target
+	for (i in 9 bio regexp stdio)
+		@{cd lib$i && mk}
+	
+	cd cmd
+	@{cd mk; mk safeinstall; mk clean}
+	
+	# mk must be built before the stuff below, because
+	# it is slightly patched against the original version, which
+	# would fail at some rc constructs within the mkfile
+	mk yacc.install
+	@{cd lex; mk install; mk clean}
+
+
+clean:V:
+	rm -f $buildprogpaths

@@ -1,0 +1,201 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/lib9.a
+
+IGNORED=\
+
+NUM=\
+	charstod.$O\
+	pow10.$O\
+
+# Could add errfmt, but we want to pick it up from lib9 instead.
+FMTOFILES=\
+	dofmt.$O\
+	fltfmt.$O\
+	fmt.$O\
+	fmtfd.$O\
+	fmtfdflush.$O\
+	fmtlocale.$O\
+	fmtlock2.$O\
+	fmtnull.$O\
+	fmtprint.$O\
+	fmtquote.$O\
+	fmtrune.$O\
+	fmtstr.$O\
+	fmtvprint.$O\
+	fprint.$O\
+	nan64.$O\
+	print.$O\
+	runefmtstr.$O\
+	runeseprint.$O\
+	runesmprint.$O\
+	runesnprint.$O\
+	runesprint.$O\
+	runevseprint.$O\
+	runevsmprint.$O\
+	runevsnprint.$O\
+	seprint.$O\
+	smprint.$O\
+	snprint.$O\
+	sprint.$O\
+	strtod.$O\
+	vfprint.$O\
+	vseprint.$O\
+	vsmprint.$O\
+	vsnprint.$O\
+	$NUM\
+
+UTFOFILES=\
+	rune.$O\
+	runestrcat.$O\
+	runestrchr.$O\
+	runestrcmp.$O\
+	runestrcpy.$O\
+	runestrdup.$O\
+	runestrlen.$O\
+	runestrecpy.$O\
+	runestrncat.$O\
+	runestrncmp.$O\
+	runestrncpy.$O\
+	runestrrchr.$O\
+	runestrstr.$O\
+	runetype.$O\
+	utfecpy.$O\
+	utflen.$O\
+	utfnlen.$O\
+	utfrrune.$O\
+	utfrune.$O\
+	utfutf.$O\
+
+<$objsys/ofiles.mk
+LIB9OFILES=\
+	$SYSOFILES\
+	_exits.$O\
+	_p9dialparse.$O\
+	_p9dir.$O\
+	access.$O\
+	announce.$O\
+	argv0.$O\
+	atexit.$O\
+	atoi.$O\
+	atol.$O\
+	atoll.$O\
+	atnotify.$O\
+	await.$O\
+	cistrcmp.$O\
+	cistrncmp.$O\
+	cistrstr.$O\
+	cleanname.$O\
+	convD2M.$O\
+	convM2D.$O\
+	convM2S.$O\
+	convS2M.$O\
+	create.$O\
+	crypt.$O\
+	ctime.$O\
+#	date.$O\
+	dial.$O\
+	dirfstat.$O\
+	dirfwstat.$O\
+	dirmodefmt.$O\
+	dirread-$objsys.$O\
+	dirstat.$O\
+	dirwstat.$O\
+	dup.$O\
+	encodefmt.$O\
+	errstr.$O\
+	exec.$O\
+	execl.$O\
+	exitcode.$O\
+	fcallfmt.$O\
+	get9root.$O\
+	getcallerpc.$O\
+	getenv.$O\
+	getfields.$O\
+#	getnetconn.$O\
+	getns.$O\
+	getuser.$O\
+	getwd.$O\
+	jmp.$O\
+	lrand.$O\
+	lnrand.$O\
+	main-$objsys.$O\
+	malloc.$O\
+	malloctag.$O\
+	mallocz.$O\
+	misc-$objsys.$O\
+	nan.$O\
+	needsrcquote.$O\
+	needstack.$O\
+	netcrypt.$O\
+	netmkaddr.$O\
+	notify.$O\
+	nrand.$O\
+	nulldir.$O\
+	open.$O\
+	opentemp.$O\
+	pin.$O\
+	pipe.$O\
+	post9p.$O\
+	postnote.$O\
+	qlock.$O\
+	quote.$O\
+	rand.$O\
+	read9pmsg.$O\
+	readcons.$O\
+	pread.$O\
+	readn.$O\
+	rfork.$O\
+#	searchpath.$O\
+	seek.$O\
+	sendfd.$O\
+	sleep.$O\
+	strdup.$O\
+	strecpy.$O\
+	sysfatal.$O\
+#	syslog.$O\
+	sysname.$O\
+	time.$O\
+	tokenize.$O\
+	truerand.$O\
+	u16.$O\
+	u32.$O\
+	u64.$O\
+	unsharp.$O\
+	wait.$O\
+	waitpid.$O\
+	zoneinfo.$O\
+
+OFILES=\
+	$LIB9OFILES\
+	$FMTOFILES\
+	$UTFOFILES\
+
+HFILES=\
+	$PF9/include/lib9.h\
+
+<$PF9/src/mksyslib
+
+%.$O: $objsys/%.c
+	$CC $CFLAGS $objsys/$stem.c
+
+%-$objsys.$O: $objsys/%.c
+	rm -f $target
+	$CC $CFLAGS $objsys/$stem.c
+	mv $stem.$O $target
+
+%.$O: fmt/%.c
+	$CC $CFLAGS -Ifmt fmt/$stem.c
+
+%.$O: utf/%.c
+	$CC $CFLAGS utf/$stem.c
+
+$O.testfmt: testfmt.$O $LIB
+	$LD -o $target testfmt.$O
+
+$O.testfltfmt: testfltfmt.$O $LIB
+	$LD -o $target testfltfmt.$O
+
+$O.testprint: testprint.$O $LIB
+	$LD -o $target testprint.$O
+

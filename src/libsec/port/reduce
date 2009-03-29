@@ -1,0 +1,19 @@
+O=$1
+shift
+objtype=$1
+shift
+
+case "$objtype" in
+mingw|lin386)
+	objtype=386
+	;;
+esac
+
+for i in $*
+do
+	j=`echo $i | sed "s/\.$O//"`
+	if test ! -f ../$objtype/$j.c -a ! -f ../$objtype/$j.s -a ! -f ../$objtype/$j.spp
+	then
+		echo $i
+	fi
+done

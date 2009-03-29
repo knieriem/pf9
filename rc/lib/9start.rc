@@ -1,0 +1,5 @@
+# to be included by 9
+
+. 9rc
+
+$*

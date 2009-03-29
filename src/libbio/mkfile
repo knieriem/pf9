@@ -1,0 +1,31 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libbio.a
+
+OFILES=\
+	bbuffered.$O\
+	bfildes.$O\
+	bflush.$O\
+	bgetc.$O\
+	bgetrune.$O\
+	bgetd.$O\
+	binit.$O\
+	boffset.$O\
+	bprint.$O\
+	bputc.$O\
+	bputrune.$O\
+	brdline.$O\
+	brdstr.$O\
+	bread.$O\
+	bseek.$O\
+	bvprint.$O\
+	bwrite.$O\
+
+HFILES=\
+	$PF9/include/bio.h\
+
+<$PF9/src/mksyslib
+
+bcat: bcat.$O $LIB
+	$LD $LDFLAGS -o $O.bcat bcat.$O -lbio -l9 
+

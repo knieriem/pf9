@@ -1,0 +1,16 @@
+<$PF9/$objtype/mkfile
+
+TARG=Mail
+OFILES=\
+		html.$O\
+		mail.$O\
+		mesg.$O\
+		reply.$O\
+		util.$O\
+		win.$O
+
+HFILES=dat.h
+
+BIN=/$objtype/bin
+<$PF9/src/mkone
+

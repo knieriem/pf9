@@ -1,0 +1,16 @@
+<$PF9/$objtype/mkfile
+
+TARG=lex
+OFILES=lmain.$O\
+	y.tab.$O\
+	sub1.$O\
+	sub2.$O\
+	header.$O\
+
+HFILES=ldefs.h\
+
+YFILES=parser.y\
+
+BIN=/$objtype/bin
+<$PF9/src/mkone
+

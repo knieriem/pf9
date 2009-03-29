@@ -1,0 +1,25 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libregexp9.a
+
+OFILES=\
+	regcomp.$O\
+	regerror.$O\
+	regexec.$O\
+	regsub.$O\
+	regaux.$O\
+	rregexec.$O\
+	rregsub.$O\
+
+HFILES=\
+	$PF9/include/regexp9.h\
+	regcomp.h\
+
+<$PF9/src/mksyslib
+
+test: test.$O $LIB
+	$CC -o test test.$O $LIB -L/usr/local/lib -lfmt -lutf
+
+test2: test2.$O $LIB
+	$CC -o test2 test2.$O $LIB -L/usr/local/lib -lfmt -lutf
+

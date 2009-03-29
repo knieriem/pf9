@@ -1,0 +1,173 @@
+`Pf9' is a distribution of parts of plan9port
+(http://www.swtch.com/plan9port/), slightly adapted to get
+it compiled for use with the MinGW libraries.  The License
+is the same as in plan9port, see LICENSE.
+
+
+Ported programs from $PLAN9/src/cmd:
+
+	9p 9pserve ascii cal calendar cat cmp comm cp date
+	dd deroff dial du echo env factor fmt fsize hget
+	join listen1 look ls mc md5sum mkdir mtime mv p pr
+	primes pwd read resample rm sed seq sha1sum sleep
+	sort srv strings sum tail tar tee test time touch
+	tr unicode uniq wc xd yacc
+
+
+Directories from $PLAN9/src/cmd (only parts):
+	acme awk lex diff devdraw draw bzip2 grep gzip
+	hoc plumb postscript rc tcs troff eqn tbl pic grap
+
+
+Libraries:
+	libthread: works mostly, daemonizing works not
+
+	libdraw:	works basically, tested with tcolors and
+		acme. Events are not implemented, so only
+		programs using the thread-based mouse
+		interface will run.
+
+
+Pipes:
+	Implemented using Named Pipes.
+
+Unix Sockets
+	Implemented using Named Pipes. You can use the same
+	addresses as in plan9port, e.g. unix!/tmp/acme.
+
+Internet Sockets
+	Implemented using Winsock.
+
+
+
+	All programs get UTF-8 encoded streams. A "cat > file" from
+	the Windows console will produce UTF-8 characters, regardless
+	of which codepage is installed.
+
+
+Because the mkfile system's structure has been derived from Plan9's, you
+can compile the libs and sources for Linux and MinGW in a similar way:
+On Linux, to compile for the MinGW, run
+
+	cd src
+	objtype=mingw
+	mk
+
+
+How to build for cygwin
+-------------------
+
+1.	Set `PF9' to the main directory of this distribution. Set cputype
+	and objtype:
+		cputype=lin386
+		objtype=cygwin
+
+	You might just run `sh misc/enterpf9' alternatively, which should
+	start a `sh' with these values already set (it won't affect the
+	environment of the calling shell).
+	
+2.	Set PATH to include the necessary bin directories $cputype/bin and
+	$cpusys/bin, i.e. lin386/bin and linux/bin. They should come
+	before the PLAN9/bin directory, to avoid conflicts. If you have
+	run `misc/enterpf9' in step 1, this has already been done.
+
+3.		cd sys/src
+		mk
+		mk install
+	
+	This should build the all programs, on success you will
+	find them in cygwin/bin.
+
+4.	Some programs, like troff and man, need additional files (fonts,
+	macros) to run properly. To copy these files from your plan9port
+	installation, move to sys/lib and type mk, and do the same
+	in sys/man.
+
+5.	Now you can copy the whole hierarchy, or parts, to your Windows
+	system, perhaps using `samba', or create a Zip file using a
+	provided shell script:
+
+		sh cygwin/binzip.sh sys/man sys/lib
+	
+	This creates an archive without the sources, but with manpages
+	and data files. [This way the binary package of pf9 has been built.]
+
+
+
+Run it
+-----
+
+There are at least two ways to use the system on cygwin. You might want't
+to use it in an already installed cygwin system (1), or - if you don't
+have a cygwin system installed -, to use the plan9port programs plus
+cygwin DLL standalone (2).
+
+1.	You already have a cygwin installation.
+	
+	* 	Copy the pf9-hierarchy to e.g. /usr/local/pf9
+	
+	*	In a startup file, e.g. ~/.bash_profile,
+		
+		-	set PF9 to /usr/local/pf9 (or any other place
+			you have chosen)
+		-	set cputype=cygwin
+		-	append
+				$PF9/$cputype/bin and
+				$PF9/rc/bin
+			to your PATH
+	
+	This should be enough to get it work. Now you might generate the
+	lookman index from a shell prompt, which is a good test of some
+	of the functionality:
+
+		$ rc
+		% cd $PF9/sys/man
+		% ./mkindex
+
+
+2.	You don't have a cygwin system running, and wan't to use
+	the plan9port programs standalone, with only the cygwin1.dll.
+	
+	*	Copy the pf9-hierarchy to a desired place in the file system.
+
+	*	If you never had a cygwin system installed, there still is
+		no system root `/' defined (in the Windows registry).
+
+		Create it using the mount.exe program to be found in
+		cygwin/bin:
+
+			cygwin/bin/mount.exe "C:\pf9" "/"
+
+		[Replace C:\pf9 with the base directory you have chosen
+		above.]
+	
+		Mount.exe apparently creates also mount points for DOS
+		drives, like /cygdrive/c.
+	
+	*	Like in (1), you will have to somehow provide values
+		for the variables PF9, cputype and PATH.
+		You might use the batch file misc/enterpf9.bat, which
+		will set these variables and start a command
+		interpreter. You may need to adapt the settings to
+		your situation. After this you could start the batch file
+		from the Desktop.
+	
+	If this works well, the batch file will give you a cmd.exe with
+	the ported plan9port programs accessible. You might want to
+	create an index for lookman as described in (1). Since PF9 now
+	most likely points to `/', i.e. the pf9-base dir is also the
+	`cygwin' root, the following commands should be sufficient:
+	
+		> rc
+		% cd /sys/man
+		% ./mkindex
+
+
+Have fun!
+
+
+-- 
+Michael Teichgräber
+mt@wmipf.in-berlin.de
+
+	

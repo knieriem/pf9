@@ -1,0 +1,27 @@
+#
+# common mkfile parameters shared by all architectures
+#
+
+OS=8wW
+CPUS=lin386 cygwin mingw
+#CFLAGS=-FVw
+CFLAGS=-w
+LEX=$PF9/$cputype/bin/lex
+YACC=$PF9/$cputype/bin/yacc
+#MK=$PF9/$cputype/bin/mk
+#MKSHELL=$PF9/$cputype/bin/rc
+
+AR=ar
+
+MKSHELL=rc
+objsys=`{cat $PF9/$objtype/sysname}
+cpusys=`{cat $PF9/$cputype/sysname}
+
+
+# recursive mk will have these set from the parent
+# this is never what we want.  clear them
+
+TARG=
+OFILES=
+HFILES=
+YFILES=

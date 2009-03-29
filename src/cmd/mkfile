@@ -1,0 +1,94 @@
+<$PF9/$objtype/mkfile
+DIRS=\
+	acme\
+	awk\
+	lex\
+	diff\
+	devdraw draw\
+	bzip2\
+	grep gzip\
+	hoc\
+#	mk\
+	plumb\
+	postscript\
+	rc\
+	sam samterm\
+	tcs\
+	troff eqn tbl pic grap\
+
+TARG=\
+	9p\
+	9pserve\
+	ascii\
+	cal\
+	calendar\
+	cat\
+	cmp\
+	comm\
+	cp\
+	date\
+#	dc\
+	dd\
+	deroff\
+	dial\
+	du\
+	echo\
+#	ed\
+	env\
+	factor\
+	fmt\
+	fsize\
+	hget\
+	join\
+	listen1\
+	look\
+	ls\
+	mc\
+	md5sum\
+	mkdir\
+	mtime\
+	mv\
+	p\
+	pr\
+	primes\
+	pwd\
+#	ramfs\
+	read\
+	resample\
+	rm\
+	sed\
+	seq\
+	sha1sum\
+	sleep\
+	sort\
+	srv\
+	strings\
+	sum\
+	tail\
+	tar\
+	tee\
+	test\
+	time\
+	touch\
+	tr\
+	unicode\
+	uniq\
+	wc\
+	xd\
+	yacc\
+	yacc\
+
+<$objsys.mk
+
+OFILES=\
+
+HFILES=
+
+BIN=/$objtype/bin
+<$PF9/src/mkmany
+<$PF9/src/mkdirs
+
+# This should not be necessary.
+yacc-bootstrap:V:
+	objtype=$cputype
+	mk yacc.install

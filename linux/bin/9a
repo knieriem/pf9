@@ -1,0 +1,12 @@
+#!/bin/sh
+if [ $# != 1 ]; then
+	echo 'usage: 9a file.[sS]' 1>&2
+	exit 1
+fi
+
+objtype=$cputype
+test -f $PF9/$objtype/config && . $PF9/$objtype/config
+
+out=`echo $1 | sed 's/\.[sS]$//;s/$/.'"$O/"`
+
+exec gcc -o $out -c $1

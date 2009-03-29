@@ -1,0 +1,15 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libmux.a
+
+OFILES=\
+	io.$O\
+	mux.$O\
+	queue.$O\
+	thread.$O\
+
+HFILES=\
+	$PF9/include/mux.h\
+
+<$PF9/src/mksyslib
+

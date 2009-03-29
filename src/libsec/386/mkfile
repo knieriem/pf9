@@ -1,0 +1,21 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libsec.a
+SFILES=\
+	md5block.s\
+	sha1block.s\
+
+HFILES=$PF9/include/libsec.h
+
+OFILES=${SFILES:%.s=%.$O}
+
+UPDATE=mkfile\
+	$HFILES\
+	$SFILES\
+
+<$PF9/src/mksyslib
+
+%.s: %.spp
+	cpp $stem.spp >$stem.s
+
+CLEANFILES=md5block.s sha1block.s

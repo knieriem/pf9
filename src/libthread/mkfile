@@ -1,0 +1,58 @@
+<$PF9/$objtype/mkfile
+
+#SYSOFILES=`{sh ./sysofiles.sh}
+LIB=$PF9/$objtype/lib/libthread.a
+SYSOFILES=`{sh ./sysofiles.sh}
+OFILES=\
+	$SYSOFILES\
+	channel.$O\
+	daemonize.$O\
+	exec.$O\
+	iorw.$O\
+	ioproc.$O\
+	ref.$O\
+	thread.$O\
+	wait.$O\
+
+<$PF9/src/mksyslib
+
+HFILES=thread.h threadimpl.h
+OpenBSD.$O FreeBSD.$O: BSD.c
+NetBSD.$O: Linux.c
+
+tprimes: test/tprimes.$O
+	9l -o $target test/$target.$O
+tspawn: test/tspawn.$O
+	9l -o $target test/$target.$O
+tspawnloop: test/tspawnloop.$O
+	9l -o $target test/$target.$O
+
+%.$O: %.c
+	$CC $CFLAGS -I. $stem.c
+
+# cannot use generic .S rule because it conflicts
+# with generic .s rule in mkcommon on case-insensitive
+# systems like Mac OS X.
+
+OpenBSD-%-asm.$O:	OpenBSD-%-asm.S
+	$CC $CFLAGS OpenBSD-$stem-asm.S
+
+Linux-sparc64-context.$O: Linux-sparc64-context.S
+	$CC -m64 -mcpu=v9 $CFLAGS Linux-sparc64-context.S
+
+Linux-sparc64-swapcontext.$O: Linux-sparc64-swapcontext.c
+	$CC -m64 -mcpu=v9 $CFLAGS Linux-sparc64-swapcontext.c
+
+test:V: tprimes tspawn
+	primes 1 10007 >p1.txt
+	$PLAN9/bin/time ./tprimes 10000 >tp1.txt
+	cmp p1.txt tp1.txt
+	primes 1 1009 >p2.txt
+	$PLAN9/bin/time ./tprimes 1000 >tp2.txt
+	cmp p2.txt tp2.txt
+	echo tspawn should take 3 seconds, not 6
+	$PLAN9/bin/time ./tspawn sleep 3 >/dev/null
+
+CLEANFILES=p1.txt p2.txt tp1.txt tp2.txt
+
+

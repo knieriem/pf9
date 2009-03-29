@@ -1,0 +1,6 @@
+<$PF9/$objtype/mkfile
+
+TARG=`ls *.[cy] | sed 's/\.[cy]//'`
+
+BIN=/$objtype/bin
+<$PF9/src/mkmany

@@ -1,0 +1,37 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libdiskfs.a
+
+FSOFILES=\
+	ext2.$O\
+	fat.$O\
+	ffs.$O\
+	hfs.$O\
+	kfs.$O\
+
+DISKOFILES=\
+	cache.$O\
+	file.$O\
+	part.$O\
+	venti.$O\
+
+OFILES=\
+	block.$O\
+	disk.$O\
+	fsys.$O\
+	$DISKOFILES\
+	$FSOFILES\
+
+HFILES=\
+	fs.h
+
+<$PF9/src/mksyslib
+
+CFLAGS=$CFLAGS
+
+%.acid: %.$O %.c
+	$CC $CFLAGS -a $stem.c >$stem.acid
+
+ext2.$O: ext2.h
+ffs.$O: ffs.h
+hfs.$O: hfs.h

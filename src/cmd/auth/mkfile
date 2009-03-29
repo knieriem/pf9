@@ -1,0 +1,41 @@
+<$PF9/$objtype/mkfile
+#
+#		programs
+#
+TARG=\
+	asn12dsa\
+	asn12rsa\
+	dsagen\
+	dsa2pub\
+	dsa2ssh\
+#	passwd\
+	pemdecode\
+	pemencode\
+	rsagen\
+	rsafill\
+	rsa2csr\
+	rsa2pub\
+	rsa2ssh\
+	rsa2x509\
+#	ssh-agent\
+
+DIRS=\
+#	factotum\
+#	secstore\
+
+HFILES=$PF9/include/auth.h $PF9/sys/include/authsrv.h
+
+<$PF9/src/mkmany
+<$PF9/src/mkdirs
+
+RSA2=\
+	rsa2ssh\
+	rsafill\
+	rsa2x509\
+	rsa2pub\
+	rsa2csr\
+	dsa2ssh\
+	dsa2pub\
+	
+${RSA2:%=$O.%}: rsa2any.$O
+${RSA2:%=%.$O}: rsa2any.h

@@ -1,0 +1,82 @@
+#!/bin/sh
+
+test "$frontend" || frontend=pfxc	#default
+
+if test "x$objtype" = x; then
+	echo "$frontend: Please set the \`objtype'." >&2
+	exit 2
+fi
+test -f $PF9/$objtype/config && . $PF9/$objtype/config
+
+. $PF9/linux/bin/9c_opts.sh
+
+usegcc()
+{
+	cc=${TOOLPFX}gcc
+	ngflags=-c
+	
+	# switch off optimization due to problems with *jmp functions
+	opti=false
+
+	if $opti; then
+		ngflags="-O2 $ngflags"
+	fi
+	if $warn; then
+		ngflags="$ngflags \
+			-Wall \
+			-Wno-parentheses \
+			-Wno-missing-braces \
+			-Wno-switch \
+			-Wno-comment \
+			-Wno-sign-compare \
+			-Wno-unknown-pragmas \
+		"
+	fi
+	ngflags="$ngflags \
+		-fno-omit-frame-pointer \
+	"
+	# want to put -fno-optimize-sibling-calls here but
+	# that option only works with gcc3+ it seems
+	cflags="$ngflags -ggdb"
+}
+
+# always using gcc
+usegcc
+
+if test "x$srcs" = x; then
+	echo "$frontend: No input files." >&2
+	exit 1
+fi
+
+for src in $srcs; do
+	if test -z "$outfile"; then
+		outfile=`echo $src | sed 's,[^/]*/,,g;s,[.]c$,,'`.$O
+	fi
+
+	if $avoid_outfile; then
+		outopt=
+	else
+		outopt="-o $outfile"
+	fi
+
+	# N.B. Must use temp file to avoid pipe; pipe loses status.
+	# The uniq at the end is for gcc's strcmp/etc. built-in nonsense,
+	# which multiplies single errors as a result of its expansion.
+	xtmp=/tmp/9c.$$.$USER.out
+	case $objtype in
+	mingw)
+		$cc $outopt -DPLAN9PORT -DPF9 -I$PF9/$objtype/include -I$PF9/include $cflags $opts $src 2>$xtmp
+		status=$?
+		;;
+	cygwin)
+		$cc $outopt -DPLAN9PORT -mcygwin -D__CYGWIN__ -DPF9 -nostdinc -I$MSYSgcclib/include -I$PF9/$objtype/include -I$PF9/sys/include -I$MSYSdir/include $cflags $opts $src 2>$xtmp
+		status=$?
+		;;
+	esac
+	grep -v '__p9l_autolib_' $xtmp |
+	egrep -v ': error: .Each undeclared identifier|: error: for each function it appears|is dangerous, better use|is almost always misused|: In function |: At top level:|support .long long.|In file included from|        from|use of C99 long long|ISO C forbids conversion' |
+	sed 's/ .first use in this function.$//; s/\"\([^\"][^\"]*\)\", line \([0-9][0-9]*\)/\1:\2/g' |
+	uniq 1>&2
+	rm -f $xtmp $xtmp.status
+	exit $status
+done

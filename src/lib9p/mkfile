@@ -1,0 +1,18 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/lib9p.a
+OFILES=\
+	_post.$O\
+	dirread.$O\
+	fid.$O\
+	file.$O\
+	intmap.$O\
+	mem.$O\
+	req.$O\
+	parse.$O\
+	srv.$O\
+	tpost.$O\
+	uid.$O\
+	util.$O\
+
+<$PF9/src/mksyslib

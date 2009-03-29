@@ -1,0 +1,4 @@
+cputype=lin386
+cpusys=linux
+objtype=$cputype
+objsys=$cpusys

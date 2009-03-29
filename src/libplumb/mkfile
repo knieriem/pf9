@@ -1,0 +1,11 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libplumb.a
+OFILES=\
+	event.$O\
+	fid.$O\
+	mesg.$O\
+
+HFILES=$PF9/include/plumb.h
+
+<$PF9/src/mksyslib

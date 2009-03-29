@@ -1,0 +1,21 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libflate.a
+OFILES=\
+	deflate.$O\
+	deflatezlib.$O\
+	deflateblock.$O\
+	deflatezlibblock.$O\
+	inflate.$O\
+	inflatezlib.$O\
+	inflateblock.$O\
+	inflatezlibblock.$O\
+	flateerr.$O\
+	crc.$O\
+	adler.$O\
+
+HFILES=\
+	$PLAN9/include/flate.h\
+	zlib.h\
+
+<$PF9/src/mksyslib

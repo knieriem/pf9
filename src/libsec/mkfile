@@ -1,0 +1,7 @@
+<$PF9/$objtype/mkfile
+
+DIRS=\
+	port\
+	$objbasetype\
+
+<$PF9/src/mkdirs

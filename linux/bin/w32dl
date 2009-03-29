@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#
+# Build a windows DLL, and create a .def file containing
+# export definitions (to be used by dlltool to create the .a lib)
+
+test -f $PF9/$objtype/config && . $PF9/$objtype/config
+
+${TOOLPFX}gcc -s -mwindows -shared \
+	-Wl,--output-def,$O.def \
+	-Wl,--kill-at  "$@"

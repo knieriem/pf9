@@ -1,0 +1,25 @@
+<$PF9/$objtype/mkfile
+
+<../config
+TARG=psdownload
+
+OFILES=download.$O
+
+COMMONDIR=../common
+
+HFILES=download.h\
+	$COMMONDIR/comments.h\
+	$COMMONDIR/gen.h\
+	$COMMONDIR/path.h\
+	$COMMONDIR/ext.h\
+
+LIB=$COMMONDIR/libcom.$O.a
+BIN=$POSTBIN
+
+<$PF9/src/mkone
+CFLAGS=-Dplan9 -I$COMMONDIR
+
+$LIB:
+	cd $COMMONDIR
+	mk install
+	mk clean

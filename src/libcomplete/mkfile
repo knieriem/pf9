@@ -1,0 +1,9 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libcomplete.a
+OFILES=\
+	complete.$O\
+
+HFILES=$PF9/include/complete.h
+
+<$PF9/src/mksyslib

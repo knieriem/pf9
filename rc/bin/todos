@@ -1,0 +1,10 @@
+#!/usr/local/plan9/bin/rc
+
+for(i) {
+echo ',s/^$/
+/g
+,s/[^]$/&
+/g
+w
+q' | ed $i >/dev/null
+}

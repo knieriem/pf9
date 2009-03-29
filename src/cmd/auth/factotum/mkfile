@@ -1,0 +1,40 @@
+<$PF9/$objtype/mkfile
+
+TARG=factotum
+PROTO=\
+	apop.$O\
+	chap.$O\
+	dsa.$O\
+	httpdigest.$O\
+	p9any.$O\
+	p9cr.$O\
+	p9sk1.$O\
+	pass.$O\
+	rsa.$O\
+	wep.$O\
+
+OFILES=\
+	$PROTO\
+	attr.$O\
+	confirm.$O\
+	conv.$O\
+	ctl.$O\
+	fs.$O\
+	key.$O\
+	log.$O\
+	main.$O\
+	plan9.$O\
+	pkcs1.$O\
+	proto.$O\
+	rpc.$O\
+	secstore.$O\
+	util.$O\
+	xio.$O\
+
+HFILES=dat.h
+
+<$PF9/src/mkone
+
+$O.test: test.$O
+	$LD -o $target $prereq
+

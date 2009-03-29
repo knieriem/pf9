@@ -1,0 +1,94 @@
+#include <u.h>
+#include <mingw32.h>
+#include <mingwutil.h>
+#define NOPLAN9DEFINES
+#include <libc.h>
+
+#include "util.h"
+#include "fdtab.h"
+
+int
+p9create(char *path, int mode, ulong perm)
+{
+	int	fd, rdwr;
+	int	trytrunc;
+	DWORD	da, share, flags;
+	HANDLE	h;
+
+	rdwr = mode&3;
+	da = 0;
+	trytrunc = 0;
+	h = INVALID_HANDLE_VALUE;
+	switch (rdwr) {
+	case OREAD:
+		da |= GENERIC_READ;
+		break;
+	case ORDWR:
+		da |= GENERIC_READ;
+	case OWRITE:
+ 		da |= GENERIC_WRITE;
+		trytrunc = 1;
+	}
+	mode &= ~(OCEXEC|OLOCK);
+	share = FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE;
+	flags = 0;
+
+	path = winpathdup(path);
+	if (path==nil)
+		return -1;
+	
+	/* XXX should get mode mask right? */
+	if(perm&DMDIR){
+		if(mode != OREAD){
+			werrstr("bad mode in directory create");
+			goto fail;
+		}
+		if(!wincreatedir(path))
+			goto fail;
+	}else{
+		mode &= ~(3|OTRUNC);
+		if(mode&OEXCL){
+			share = 0;
+			mode &= ~OEXCL;
+		}
+		if(mode&OAPPEND){
+			da = FILE_APPEND_DATA;
+			mode ^= OAPPEND;
+		}
+		if(mode&ODIRECT){
+			flags |= FILE_FLAG_WRITE_THROUGH;
+			mode ^= ODIRECT;
+		}
+		if(mode&ORCLOSE){
+			flags |= FILE_FLAG_DELETE_ON_CLOSE;
+			mode ^= ORCLOSE;
+		}
+		if(mode){
+			werrstr("unsupported mode in create");
+			goto fail;
+		}
+		if (flags==0)
+			flags = FILE_ATTRIBUTE_NORMAL;
+		if (trytrunc)
+			h = wincreatefile(path, da, share, TRUNCATE_EXISTING, flags);
+		if (h==INVALID_HANDLE_VALUE) {
+			h = wincreatefile(path, da, share, CREATE_NEW, flags);
+			if (h==INVALID_HANDLE_VALUE) {
+				winerror("CreateFile");
+			fail:
+				if (fdtdebug>1)
+					fprint(2, "create %s failed: %r\n", path);
+				free(path);
+				return -1;
+			}
+		}
+	}
+
+	fd = fdtalloc(nil);
+	fdtab[fd]->h = h;
+	fdtab[fd]->type = Fdtypefile;
+	fdtab[fd]->name = path;
+	if (fdtdebug>1)
+		fprint(2, "%d: create %s %p\n", fd, path, h);
+	return fd;
+}

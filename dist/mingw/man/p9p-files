@@ -1,0 +1,57 @@
+files=(fonts junkwords mkindex)
+
+man1=man1/^(cal\
+	cat\
+	cmp\
+	comm\
+	date\
+	dc\
+	deroff\
+	diff\
+	doctype\
+	echo\
+	ed\
+	eqn\
+	fmt\
+	grap\
+	grep\
+	gzip\
+	join\
+	lex\
+	look\
+	ls\
+	man\
+	mc\
+	mk\
+	mkdir\
+	p\
+	pic\
+	pr\
+	psfonts\
+	rc\
+	rm\
+	sed\
+	seq\
+	sort\
+	strings\
+	sum\
+	tail\
+	tbl\
+	tcs\
+	tee\
+	test\
+	tr\
+	tr2post\
+	touch\
+	troff\
+	wc\
+	xd \
+	yacc\
+)^.1
+
+man7=man7/^(\
+	man\
+	ms\
+)^.7
+
+echo man/^($files $man1 $man7)

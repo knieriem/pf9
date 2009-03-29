@@ -1,0 +1,48 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libmp.a
+FILES=\
+	mpaux\
+	mpfmt\
+	strtomp\
+	mptobe\
+	mptole\
+	betomp\
+	letomp\
+	mpadd\
+	mpsub\
+	mpcmp\
+	mpfactorial\
+	mpmul\
+	mpleft\
+	mpright\
+	mpvecadd\
+	mpvecsub\
+	mpvecdigmuladd\
+	mpveccmp\
+	mpdigdiv\
+	mpdiv\
+	mpexp\
+	mpmod\
+	mpextendedgcd\
+	mpinvert\
+	mprand\
+	crt\
+	mptoi\
+	mptoui\
+	mptov\
+	mptouv\
+
+ALLOFILES=${FILES:%=%.$O}
+# cull things in the per-machine directories from this list
+OFILES=	`{sh ./reduce $O $objbasetype $ALLOFILES}
+
+HFILES=\
+	$PF9/include/lib9.h\
+	$PF9/include/mp.h\
+	dat.h\
+
+<$PF9/src/mksyslib
+
+poot:
+	echo $OFILES

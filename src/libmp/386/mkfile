@@ -1,0 +1,13 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libmp.a
+OFILES=\
+	mpdigdiv.$O\
+	mpvecadd.$O\
+	mpvecdigmuladd.$O\
+	mpvecdigmulsub.$O\
+	mpvecsub.$O\
+
+HFILES=$PF9/include/mp.h ../port/dat.h
+
+<$PF9/src/mksyslib

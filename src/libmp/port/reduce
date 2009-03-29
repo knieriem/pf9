@@ -1,0 +1,13 @@
+O=$1
+shift
+objtype=$1
+shift
+
+for i in $*
+do
+	j=`echo $i | sed "s/\.$O//"`
+	if test ! -f ../$objtype/$j.c -a ! -f ../$objtype/$j.s -a ! -f ../$objtype/$j.spp
+	then
+		echo $i
+	fi
+done

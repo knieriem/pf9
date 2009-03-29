@@ -1,0 +1,4 @@
+#!/usr/local/plan9/bin/rc
+
+echo %!PS-Adobe-2.0
+psdownload -f -mfontmap -r $PF9'/postscript/font/lw+' $*

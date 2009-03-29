@@ -1,0 +1,21 @@
+<$PF9/$objtype/mkfile
+
+<../config
+
+LIB=libcom.$O.a
+OFILES=bbox.$O\
+	glob.$O\
+	misc.$O\
+	request.$O\
+	tempnam.$O\
+	getopt.$O\
+
+HFILES=comments.h\
+	gen.h\
+	ext.h\
+	request.h\
+	path.h\
+
+<$PF9/src/mklib
+
+CFLAGS=-c -D$SYSTEM 

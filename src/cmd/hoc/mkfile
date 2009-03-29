@@ -1,0 +1,19 @@
+<$PF9/$objtype/mkfile
+
+TARG=hoc
+HFILES=\
+	y.tab.h\
+	hoc.h\
+
+OFILES=\
+	y.tab.$O\
+	code.$O\
+	init.$O\
+	math.$O\
+	symbol.$O\
+
+YFILES=hoc.y\
+
+BIN=/$objtype/bin
+<$PF9/src/mkone
+

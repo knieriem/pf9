@@ -1,0 +1,27 @@
+<$PF9/$objtype/mkfile
+
+TARG=devdraw
+
+WSYSOFILES=\
+	devdraw.$O\
+	latin1.$O\
+	parsewsize.$O\
+	
+<|sh ./mkwsysrules.sh
+
+OFILES=$WSYSOFILES
+
+HFILES=\
+	devdraw.h\
+
+BIN=/$objtype/bin
+<$PF9/src/mkone
+
+$WSYS-%.$O:	$WSYS/%.c
+	$CC $CFLAGS -I. -o $WSYS-$stem.$O $WSYS/$stem.c
+
+$O.drawclient: drawclient.$O drawfcall.$O
+	$LD -o $target $prereq
+
+$O.snarf: x11-alloc.$O x11-cload.$O x11-draw.$O x11-fill.$O x11-get.$O x11-init.$O x11-itrans.$O x11-keysym2ucs.$O x11-load.$O x11-pixelbits.$O x11-unload.$O x11-wsys.$O snarf.$O latin1.$O devdraw.$O
+	$LD -o $target $prereq

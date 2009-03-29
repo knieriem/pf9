@@ -1,0 +1,9 @@
+<$PF9/$objtype/mkfile
+
+OFILES=
+
+TARG=tprimes thello tdaemon tpipe
+
+#tspawn tspawnloop 
+
+<$PF9/src/mkmany

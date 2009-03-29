@@ -1,0 +1,3 @@
+#!/usr/local/plan9/bin/rc
+
+9 ls -p $* | 9 mc

@@ -1,0 +1,6 @@
+mingw_mach=i586
+mingw_os=mingw32msvc
+gcc_ver=3.4.2
+
+TOOLPFX=$mingw_mach-$mingw_os-
+O=W

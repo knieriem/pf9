@@ -1,0 +1,11 @@
+dir-%:V:
+	for i in $DIRS
+	do
+		(cd $i && echo cd `pwd`';' mk $MKFLAGS $stem && mk $MKFLAGS $stem) || exit 1
+	done
+
+all:V: dir-all
+clean:V: dir-clean
+install:V: dir-install
+nuke:V: dir-nuke
+

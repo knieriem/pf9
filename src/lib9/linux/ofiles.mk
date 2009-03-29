@@ -1,0 +1,2 @@
+SYSOFILES=\
+	chdir.$O\

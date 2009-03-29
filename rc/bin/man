@@ -1,0 +1,143 @@
+#!/usr/local/plan9/bin/rc
+
+. 9.rc
+. $PLAN9/man/fonts
+
+#
+# formatters
+# 
+fn roff {
+	preproc=()
+	x=`{doctype $2}
+	if (~ $1 t) {
+		if(~ $x *grap*)
+			preproc=($preproc grap)
+		if(~ $x *pic*)
+			preproc=($preproc pic)
+		Nflag=-Tutf
+	}
+	if not {
+		Nflag=-N
+	}
+	if(~ $x *eqn*)
+		preproc=($preproc eqn)
+	if(~ $x *tbl*)
+		preproc=($preproc tbl)
+
+	switch($#preproc) {
+		case 0
+			{echo -n $FONTS; cat $2< /dev/null} | troff $Nflag -$MAN 
+		case 1
+			{echo -n $FONTS; cat $2< /dev/null} | $preproc | troff $Nflag -$MAN
+		case 2
+			{echo -n $FONTS; cat $2< /dev/null} | $preproc(1) | $preproc(2) | troff $Nflag -$MAN
+		case 3
+			{echo -n $FONTS; cat $2< /dev/null} | $preproc(1) | $preproc(2) | $preproc(3) | | troff $Nflag -$MAN
+		case *
+			{echo -n $FONTS; cat $2< /dev/null} | $preproc(1) | $preproc(2) | $preproc(3) | | $preproc(4) | troff $Nflag -$MAN
+	}
+}
+
+fn doecho { echo $1 }
+fn dotroff { roff t $1 }
+fn doproof { roff t $1 | proof }
+fn dopage { roff t $1 | tr2post | psfonts | page }
+fn donroff {
+	roff n $1 | sed '
+		${
+			/^$/p
+		}
+		//N
+		/^\n$/D
+	'
+}
+seq=0
+fn dohtml {
+	MAN=manhtml
+	b=`{echo $1 | sed 's/\.[0-9].*//'}
+	if(test -f $b.html)
+		web $b.html
+	if not{
+		roff t $1 | troff2html >/tmp/man.$pid.$seq.html
+		web /tmp/man.$pid.$seq.html
+		seq=`{echo 1+$seq | hoc}
+	}
+}
+
+#
+# parse flags and sections
+#
+cmd=donroff
+sec=()
+S=$PLAN9/man
+d=0
+while(~ $d 0) {
+	if(~ $#* 0) {
+		echo 'Usage: man [-hnpPtw] [-s sec] [0-9] [0-9] ... [--] name1 name2 ...' >[1=2]
+		exit
+	}
+	if(test -d $S/man$1){
+		sec=($sec $1)
+		shift
+	}
+	if not switch($1) {
+		case -t ; cmd=dotroff ; shift
+		case -n ; cmd=donroff ; shift
+		case -p ; cmd=doproof ; shift
+		case -P ; cmd=dopage ; shift
+		case -w ; cmd=doecho ; shift
+		case -h ; cmd=dohtml ; shift
+		case -- ; d=1 ; shift
+		case * ; d=1
+	}
+}
+if(~ $#sec 0) {
+	sec=`{ls -pd $S/man[0-9]* | sed 's/man//'}
+}
+
+#
+# search index
+#
+allfiles=()
+missing=no
+for(word){
+	files=()
+	regexp='^'^$word^' '
+	for(i in $S/man$sec){
+		if(test -f $i/INDEX){
+			try=`{grep $regexp $i/INDEX | sed 's/^[^ ]* //'}
+			if(! ~ $#try 0)
+				files=($files $i/$try)
+		}
+	}
+	if(~ $#files 0){
+		for(i in $S/man$sec){
+			if(test -f $i/$word.[0-9]*)
+				files=($files $i/$word.[0-9]*)
+		}
+	}
+	if(~ $#files 0){
+		echo 'man: no manual page' $word >[1=2]
+		missing=yes
+	}
+	allfiles=($allfiles $files)
+}
+if(~ $#allfiles 0)
+	exit 'no man'
+# complicated sort order: want 9p.3, 9p-cmdbuf.3, 9pclient.3
+allfiles=`{ls -Q $allfiles | sed 's/[.\-]/ &/g;s/\./ &/g' | sort -u | tr -d ' '}
+
+files=()
+for(i in $allfiles){
+	if(test -f $i)
+		files=($files $i)
+	if not
+		echo need $i >[1=2]
+}
+
+#
+# format pages
+# 
+for(i in $files)
+	$cmd $i
+

@@ -1,0 +1,5 @@
+find -type f -name '*.[ch]' > ,f
+for (i in `{cat ,f}){
+	if (! cmp -s $i $PLAN9/src/$i)
+		echo $i
+}

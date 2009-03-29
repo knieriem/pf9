@@ -1,0 +1,7 @@
+#!/bin/sh
+
+objtype=mingw
+
+f=`echo $0 |  9 sed 's,.*(.)$,\1,'`
+
+exec w32$f "$@"

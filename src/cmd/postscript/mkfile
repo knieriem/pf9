@@ -1,0 +1,25 @@
+<$PF9/$objtype/mkfile
+
+<config
+
+DIRS=\
+	common\
+	tr2post\
+	download\
+#	cropmarks\
+#	grabit\
+#	hardcopy\
+#	mpictures\
+#	postgif\
+#	postprint\
+#	postreverse\
+#	posttek\
+#	printfont\
+#	psencoding\
+#	psfiles\
+#	g3p9bit\
+#	p9bitpost\
+#	tcpostio\
+#	text2post\
+
+<$PF9/src/mkdirs

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+test -f $PF9/$objtype/config && . $PF9/$objtype/config
+
+exec ${TOOLPFX}ar "$@"

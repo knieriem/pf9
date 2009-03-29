@@ -1,0 +1,74 @@
+MKSHELL=rc
+
+objtype=mingw
+
+<../../$objtype/config
+
+#<troff.mk
+#<draw.mk
+
+p9pdirs=\
+	$TROFFDIRS\
+	$DRAWDIRS\
+	plumb\
+
+p9pfiles=\
+	`{. ./man/p9p-files}\
+	$p9pdirs\
+	$TROFFFILES\
+	$DRAWFILES\
+	\
+	lib/hyphen.tex\
+	lib/words\
+	\
+	lib/yaccpar\
+	lib/yaccpars\
+	lib/lex.ncform\
+	\
+	lib/unicode\
+
+binzip=\
+	$objtype\
+	rc\
+	pf9.bat\
+	rcmain\
+
+libzip=\
+	$p9pdirs\
+	lib\
+	man\
+
+all:V:	copy-p9p	copy-bin copy-rc binzip libzip
+
+clean:V:
+	rm -rf $objtype
+	rm -rf $p9pfiles
+	rm -f copy-*
+	rm -rf rc
+
+copy-p9p:
+	if (test -d $PLAN9)
+		p9pdir=$PLAN9
+	if not
+		p9pdir = /usr/local/plan9
+	
+	@{cd $p9pdir && tar cf - $p9pfiles} | tar xf -
+	
+	echo > $target
+
+copy-bin:
+	@{cd ../.. && tar cf - mingw/bin} | tar xf -
+	for (i in $objtype/bin/*.exe) {
+		$TOOLPFX^strip -s $i
+	}
+	
+copy-rc:
+	@{cd ../.. && tar cf - rc} | tar xf -
+	echo > $target
+
+binzip:V:
+	9 zip -9 -f pf9-$objtype.bin.zip $binzip && echo success
+
+libzip:V:
+	9 zip -9 -f pf9-$objtype.lib.zip $libzip && echo success
+

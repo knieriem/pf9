@@ -1,0 +1,11 @@
+SYSTEM=plan9
+VERSION=3.3.1
+
+ROOT=
+POSTBIN=/$objtype/bin
+DKHOST=FALSE
+DKSTREAMS=FALSE
+ROUNDPAGE=TRUE
+
+FONTDIR=$PF9/troff/font
+POSTLIB=$PF9/postscript/prologues

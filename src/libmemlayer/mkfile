@@ -1,0 +1,24 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libmemlayer.a
+
+OFILES=\
+	draw.$O\
+	lalloc.$O\
+	layerop.$O\
+	ldelete.$O\
+	lhide.$O\
+	line.$O\
+	load.$O\
+	lorigin.$O\
+	lsetrefresh.$O\
+	ltofront.$O\
+	ltorear.$O\
+	unload.$O\
+
+HFILES=\
+	$PF9/include/draw.h\
+	$PF9/include/memdraw.h\
+	$PF9/include/memlayer.h\
+
+<$PF9/src/mksyslib

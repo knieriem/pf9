@@ -1,0 +1,12 @@
+#!/bin/sh
+
+objtype=cygwin
+frontend=cygc
+
+f=`echo $0 |  9 sed 's,.*(.)$,\1,'`
+
+export \
+	frontend\
+	objtype\
+
+exec w32$f "$@"

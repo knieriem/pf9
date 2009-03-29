@@ -1,0 +1,16 @@
+# use glob syntax.
+syntax: glob
+
+core
++*
+*.orig
+[58W].*
+*.[58aW]
+PFE
+.arch-ids
+,*
+*~
+[#]*
+
+syntax: regexp
+{arch}/

@@ -1,0 +1,8 @@
+<$PF9/src/mkfile.proto
+
+CC=9c
+LD=9l
+O=8
+AS=9a
+PROGSFX=
+objbasetype=386

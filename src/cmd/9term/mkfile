@@ -1,0 +1,16 @@
+<$PF9/$objtype/mkfile
+
+TARG=9term win
+
+OFILES=\
+	rcstart.$O\
+	$objsys.$O\
+
+HFILES=dat.h fns.h term.h
+
+<$PF9/src/mkmany
+
+Darwin.$O linux.$O FreeBSD.$O: bsdpty.c
+
+$O.9term: data.$O scrl.$O time.$O util.$O wind.$O
+

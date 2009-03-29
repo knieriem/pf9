@@ -1,0 +1,21 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libframe.a
+
+OFILES=\
+	frbox.$O\
+	frdelete.$O\
+	frdraw.$O\
+	frinit.$O\
+	frinsert.$O\
+	frptofchar.$O\
+	frselect.$O\
+	frstr.$O\
+	frutil.$O\
+
+HFILES=\
+	$PF9/include/frame.h\
+	$PF9/include/draw.h\
+
+<$PF9/src/mksyslib
+

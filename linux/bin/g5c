@@ -1,0 +1,7 @@
+#!/bin/sh
+
+objtype=lpc214x
+
+f=`echo $0 |  sed 's,.*\(.\)$,\1,'`
+
+exec pfx$f "$@"

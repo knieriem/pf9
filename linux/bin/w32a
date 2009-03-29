@@ -1,0 +1,34 @@
+#!/bin/sh
+
+if [ $# != 1 ]; then
+	echo 'usage: w32a file.[sS]' 1>&2
+	exit 1
+fi
+
+test -f $PF9/$objtype/config && . $PF9/$objtype/config
+
+out=`echo $1 | sed 's/\.[sS]$//;s/$/.'"$O/"`
+
+
+
+# prepend each global symbol with an underscore
+gsyms=`9 grep '[.]globl' *.s | 9 sed 's,.*globl[ 	]*([^ ]*).*,\1,'`
+
+list=
+for i in $gsyms; do
+	list="$list|$i"
+done
+
+tmp=/tmp/w32a-$$-`echo $1 | sed 's,/,_,'`
+cat $1 | 9 sed "s,(knieriem$list),_\1,g" > $tmp
+
+if ${TOOLPFX}gcc -o $out -I. -c $tmp; then
+	rm $tmp
+	r=0
+else
+	rm $out
+	rm $tmp
+	r=1
+fi
+
+exit $r

@@ -1,0 +1,55 @@
+<$PF9/$objtype/mkfile
+
+TARG=jpg\
+	gif\
+	togif\
+	ppm\
+	toppm\
+	png\
+	topng\
+	yuv\
+	ico\
+	toico\
+	bmp\
+
+IMFILES=\
+	torgbv.$O\
+	totruecolor.$O\
+	writerawimage.$O\
+
+HFILES=imagefile.h\
+
+<$PF9/src/mkmany
+
+$O.jpg:		$IMFILES readjpg.$O jpg.$O
+$O.gif:		$IMFILES readgif.$O gif.$O
+$O.togif:	writegif.$O onechan.$O togif.$O torgbv.$O multichan.$O
+$O.ppm:		$IMFILES readppm.$O ppm.$O
+$O.toppm:	writeppm.$O multichan.$O toppm.$O
+$O.png:		$IMFILES readpng.$O png.$O multichan.$O
+$O.topng:	writepng.$O topng.$O
+$O.yuv:		$IMFILES readyuv.$O yuv.$O
+$O.bmp:		$IMFILES readbmp.$O bmp.$O
+
+torgbv.$O:	ycbcr.h rgbv.h
+
+cpuO=`{sed -n 's/^O=//p' $PF9/$cputype/mkfile}
+ycbcr.h:	$cpuO.rgbycc
+	./$cpuO.rgbycc >ycbcr.h
+
+$cpuO.%:	%.c
+	objtype=$cputype
+	mk $stem.$cputype
+
+%.$cputype:V:	%.$O
+	$LD $LDFLAGS -o $O.$stem $prereq
+
+rgbv.h:	$cpuO.rgbrgbv
+	./$cpuO.rgbrgbv >rgbv.h
+
+nuke:V:	nuke-headers
+
+nuke-headers:V:
+	rm -f rgbv.h ycbcr.h
+
+CLEANFILES=$CLEANFILES o.rgbycc o.rgbrgbv rgbv.h ycbcr.h

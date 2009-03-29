@@ -1,0 +1,65 @@
+#! /bin/sh
+
+# check whether we are inside of a pf9 tree,
+# and try to guess a value for PF9
+
+if pwd | grep sys/src > /dev/null; then
+	base=`pwd | sed 's,/sys/src.*,,'`
+else
+	base=`pwd`
+fi
+
+if test -f "$base/pf9.defaults"; then
+	
+	PF9=$base
+
+	# derive default value for objtype from cputype
+	test "$objtype" || objtype=$cputype
+
+	# save them as used-defined settings
+	user_objtype=$objtype
+	user_cputype=$cputype
+
+	# load distribution defaults
+	. $base/pf9.defaults
+
+	# user settings have precedence
+	test -z "$user_objtype" || objtype=$user_objtype
+	test -z "$user_cputype" || cputype=$user_cputype
+		
+	export \
+		PF9 \
+		cputype \
+		objtype
+
+else
+	cat <<EOF >&2
+Not able to find the base directory. Please either move into
+the sys/src hierarchy or into the base directory
+and re-run $0.
+
+EOF
+	exit 1
+fi
+
+cat <<EOF
+PF=$PF9
+cputype=$cputype
+objtype=$objtype
+--
+EOF
+
+cpusys=`cat  $PF9/$cputype/sysname`
+PATH=$PF9/$cpusys/bin:$PF9/$cputype/bin:$PATH
+
+# try to make rc runable
+if test -z "$PLAN9"; then
+	PLAN9=$PF9/$cputype
+	export PLAN9
+elif test -d "$PLAN9"; then :
+else
+	PLAN9=$PF9/$cputype
+	export PLAN9
+fi
+
+exec rc

@@ -1,0 +1,12 @@
+MKSHELL=$PLAN9/bin/rc
+use-rc:V:
+	for(i in a b c)
+		echo $i
+
+MKSHELL=/bin/sh
+use-sh:V:
+	for i in a b c
+	do
+		echo $i
+	done
+

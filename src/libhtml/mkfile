@@ -1,0 +1,16 @@
+<$PF9/$objtype/mkfile
+
+LIB=$PF9/$objtype/lib/libhtml.a
+
+OFILES=\
+	build.$O\
+	lex.$O\
+	strinttab.$O\
+	utils.$O\
+	runetab.$O\
+
+HFILES=\
+	$PLAN9/include/html.h\
+	impl.h\
+
+<$PF9/src/mksyslib

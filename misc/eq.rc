@@ -1,0 +1,5 @@
+find include src -type f -name '*.[ch]' > ,f
+for (i in `{cat ,f}){
+	if (cmp -s $i $PLAN9/$i)
+		echo $i
+}
