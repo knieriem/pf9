@@ -12,5 +12,8 @@ PFE
 *~
 [#]*
 
+*y.tab.h
+*y.tab.c
+
 syntax: regexp
 {arch}/
