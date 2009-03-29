@@ -538,7 +538,6 @@ src/lib9/waitpid.c
 src/lib9/pin.c
 src/lib9/needstack.c
 src/lib9/convM2D.c
-src/lib9/dirwstat.c
 src/lib9/convD2M.c
 src/lib9/lrand.c
 src/lib9/convM2S.c
