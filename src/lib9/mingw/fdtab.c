@@ -215,24 +215,36 @@ fdtdup(int oldfd, int newfd)
 int
 fdtclose(int fd)
 {
-	Fd	*f, *rf;
+	Fd	*f, *rf, tf;
 	int	type;
+	int	i, fatal;
 
 	rf = nil;
 	f = fdtget(fd);
 	if (f==nil)
 		return -1;
 
+	fatal = 0;
 	qlock(&lk);
 	fdtab[fd] = nil;
 	--nfd;
 	--f->users;
+	tf = *f;
 	if (f->users==0) {
 		type = f->type;
 		f->type = 0;
 		rf = f;
+	}else{
+		/* consistency check: there must be at least one more reference */
+		for (i=0; i<fdtabsz; i++)
+			if(fdtab[i]==f)
+				goto out;
+		fatal = 1;
 	}
+out:
 	qunlock(&lk);
+	if (fatal)
+		sysfatal("fdtclose: fd %d: no %d users\n", fd, f->users);
 	if (fdtdebug>1)
 		fprint(2, "closing %d (%s, %d users) of %d\n", fd, f->name, f->users, nfd);
 	if (rf!=nil)
