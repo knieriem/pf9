@@ -158,7 +158,7 @@ _xattach(char *label, char *winsize)
 		a->y = CW_USEDEFAULT;
 	}
 
-	fprint(2, "%d %d %d %d\n", a->x, a->y, a->dx, a->dy);
+//	fprint(2, "%d %d %d %d\n", a->x, a->y, a->dx, a->dy);
 	a->csync = chancreate(sizeof(ulong), 0);
 	proccreate(winproc, a, STACK);
 	recvul(a->csync);
