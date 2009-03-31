@@ -36,8 +36,7 @@ fdtprint(void)
 		if (f==nil)
 			continue;
 
-		dprint(2, "\t%d:\t%08p %d\t%s\t\"%s\"\n",
-			i, f, f->users, typestr[f->type], f->name!=nil?f->name:"");
+		dprint(2, "%D\n", i, f, "");
 		++n;
 		if (n==nfd)
 			break;
@@ -130,6 +129,22 @@ need(int n)
 
 static QLock lk;
 
+static
+int
+Dconv(Fmt *fmt)
+{
+	char *fn;
+	Fd *f;
+	int fd;
+
+	fd = va_arg(fmt->args, int);
+	f = va_arg(fmt->args, Fd*);
+	fn = va_arg(fmt->args, char*);
+	
+	return fmtprint(fmt, "[%d] %d /%d\t%s\t%s \"%s\"", getpid(),
+		fd, f->users, fn, typestr[f->type], f->name!=nil?f->name:"");
+}
+
 void
 fdtabinit(void)
 {
@@ -139,6 +154,8 @@ fdtabinit(void)
 	if (d!=nil) {
 		fdtdebug= atoi(d);
 		free(d);
+		if(fdtdebug)
+			fmtinstall('D', Dconv);
 	}
 	nfd = 3;
 	need(nfd);
@@ -196,6 +213,7 @@ fdtdup(int oldfd, int newfd)
 			f = fdtab[newfd];
 			if (f!=nil) {
 				--f->users;
+				dprint(2, "%D: closing %d\n", oldfd, f, "dup", newfd);
 				if (f->users==0) {
 					rf = f;
 					type = f->type;
@@ -211,6 +229,7 @@ fdtdup(int oldfd, int newfd)
 		if (rf!=nil)
 			releasef(f, type);
 	}
+	dprint(2, "%D ->%d\n", oldfd, oldf, "dup", newfd);
 	return newfd;
 }
 
@@ -248,7 +267,7 @@ out:
 	if (fatal)
 		sysfatal("fdtclose: fd %d: no %d users\n", fd, f->users);
 	if (fdtdebug>1)
-		fprint(2, "closing %d (%s, %d users) of %d\n", fd, f->name, f->users, nfd);
+		fprint(2, "%D #%d\n", fd, &tf, "closed", nfd);
 	if (rf!=nil)
 		releasef(f, type);
 
