@@ -21,10 +21,11 @@ TARG=\
 
 DIRS=\
 #	factotum\
-#	secstore\
+	secstore\
 
-HFILES=$PF9/include/auth.h $PF9/sys/include/authsrv.h
+HFILES=$PF9/include/auth.h $PF9/include/authsrv.h
 
+BIN=/$objtype/bin/auth
 <$PF9/src/mkmany
 <$PF9/src/mkdirs
 

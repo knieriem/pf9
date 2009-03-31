@@ -1087,7 +1087,6 @@ src/cmd/sam/README
 src/cmd/auth/secstore/CVS/Entries
 src/cmd/auth/secstore/CVS/Root
 src/cmd/auth/secstore/CVS/Repository
-src/cmd/auth/secstore/mkfile
 src/cmd/hoc/.cvsignore
 src/cmd/postscript/README
 src/cmd/postscript/download/README
