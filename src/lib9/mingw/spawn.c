@@ -268,7 +268,7 @@ txhelper(void*v)
 }
 
 static HANDLE
-fdexport(int fd, int tx)
+fdexport(int fd, int i, int tx, int *fused)
 {
 	Fd *f;
 	HANDLE l, r, hr, hw;
@@ -309,7 +309,9 @@ fdexport(int fd, int tx)
 			}
    			SetHandleInformation(l, HANDLE_FLAG_INHERIT, 0);
 			m = malloc(sizeof(Commap));
-			m->fd = fd!=-1? dup(fd, -1) : -1;
+			if (fd!=-1)
+				*fused |= 1<<i;
+			m->fd = fd;
 			m->h = l;
 //			ht = CreateThread(NULL, 8192, tx? txhelper: rxhelper, m, 0, NULL);
 //			CloseHandle(ht);
@@ -330,6 +332,7 @@ winspawn(int fd[3], char *file, char *argv[], int search)
 	PROCESS_INFORMATION pi;
 	DWORD cflags;
 	int r;
+	int used;
 	extern char **environ;
 
 	margv = argv;
@@ -339,9 +342,9 @@ winspawn(int fd[3], char *file, char *argv[], int search)
 	memset(&si, 0, sizeof(si));
 	si.cb = sizeof(si);
 	si.dwFlags = STARTF_USESTDHANDLES;
-	si.hStdInput = fdexport(fd[0], 1);
-	si.hStdOutput = fdexport(fd[1], 0);
-	si.hStdError = fdexport(fd[2], 0);
+	si.hStdInput = fdexport(fd[0], 0, 1, &used);
+	si.hStdOutput = fdexport(fd[1], 1, 0, &used);
+	si.hStdError = fdexport(fd[2], 2, 0, &used);
 
 	eb = exportenv(environ);
 
@@ -378,10 +381,15 @@ winspawn(int fd[3], char *file, char *argv[], int search)
 	if(winaddchild(pi.dwProcessId, pi.hProcess) == -1)
 		return -1;
 
-	close(fd[0]);
+	if (!(used&1<<0))
+		close(fd[0]);
+
 	if(fd[1] != fd[0])
+	if (!(used&1<<1))
 		close(fd[1]);
+
 	if(fd[2] != fd[1] && fd[2] != fd[0])
+	if (!(used&1<<2))
 		close(fd[2]);
 
 	return pi.dwProcessId;
