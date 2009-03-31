@@ -79,16 +79,18 @@ static
 void
 cleanup(void)
 {
-	int	i, n;
-	Fd	*f;
+	int	i;
 
 	fdtprint();
-	n = 0;
 	for (i=0; i<fdtabsz; i++)
-		if(i != 2)
 		if(fdtab[i] != nil)
+		if(i != 2)
 			close(i);
-	close(2);
+	if(fdtab[2]!=nil){
+		if(nfd!=1)
+			sysfatal("fdt cleanup: nfd still %d\n", nfd-1);
+		close(2);
+	}
 }
 static Fd*
 initstdfd(char *s, int n)
