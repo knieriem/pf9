@@ -53,8 +53,9 @@ releasef(Fd *f, int type)
 			FlushFileBuffers(f->h); 
 			DisconnectNamedPipe(f->h);
 			break;
-		case Fdtypefile:
 		case Fdtypestd:
+			break;
+		case Fdtypefile:
 		case Fdtypecons:
 		case Fdtypepipecl:
 			CloseHandle(f->h);
