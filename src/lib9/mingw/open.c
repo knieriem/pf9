@@ -96,13 +96,14 @@ open(char *name, int mode)
 		return -1;
 	}
 
-	if (fdtdebug>1)
-		fprint(2, "%d: open %s %p %08x\n", fd, name, h, da);
 	if (GetConsoleMode(h, &cmode))
 		f->type = Fdtypecons;
 	else
 		f->type = Fdtypefile;
 	f->h = h;
+
+	if (fdtdebug>1)
+		fprint(2, "%D h:%p da:%08x\n", fd, f, "open", h, da);
 
 	return fd;
 }

@@ -15,12 +15,12 @@ alloc(HANDLE h, char *name, int type)
 	Fd	*f;
 
 	fd = fdtalloc(nil);
-	if (fdtdebug>1)
-		fprint(2, "pipealloc: %d - %s\n", fd, name);
 	f = fdtab[fd];
 	f->h = h;
 	f->type = type;
 	f->name = strdup(name);
+	if (fdtdebug>1)
+		fprint(2, "%D\n", fd, f, "create");
 	return fd;
 }
 static int npipes;
