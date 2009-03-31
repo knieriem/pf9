@@ -182,23 +182,21 @@ bootterm(char *machine, char **argv)
 {
 	int ph2t[2], pt2h[2];
 
-#if 0
 	if(machine){
-		
 		dup(remotefd0, 0);
 		dup(remotefd1, 1);
 		close(remotefd0);
 		close(remotefd1);
 		argv[0] = "samterm";
-		execvp(samterm, argv);
+		exec(samterm, argv);
 		fprint(2, "can't exec %s: %r\n", samterm);
-		_exits("damn");
+		threadexitsall("damn");
 	}
-#endif
 	if(pipe(ph2t)==-1 || pipe(pt2h)==-1)
 		panic("pipe");
 	argv[0] = "samterm";
-	ForkExecute("samterm", argv, ph2t[0], pt2h[1], 2);
+	if (ForkExecute("samterm", argv, ph2t[0], pt2h[1], 2)<0)
+		panic("can't fork samterm");
 	dup(pt2h[0], 0);
 	dup(ph2t[1], 1);
 	close(ph2t[0]);
@@ -236,21 +234,9 @@ connectto(char *machine, char **argv)
 	}
 	remotefd0 = p1[0];
 	remotefd1 = p2[1];
-	switch(-1 /*fork()*/){
-	case 0:
-		dup(p2[0], 0);
-		dup(p1[1], 1);
-		close(p1[0]);
-		close(p1[1]);
-		close(p2[0]);
-		close(p2[1]);
-		execvp(RXPATH, av);
-		dprint("can't exec %s\n", RXPATH);
-		exits("exec");
-
-	case -1:
+	if(ForkExecute(RXPATH, av, p2[0], p1[1], 2)<0){
 		dprint("can't fork\n");
-		exits("fork");
+		threadexitsall("fork");
 	}
 	free(av);
 	close(p1[1]);
