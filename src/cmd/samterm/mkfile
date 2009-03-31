@@ -22,4 +22,5 @@ HFILES=\
 
 CFLAGS=$CFLAGS -I../sam
 
+BIN=/$objtype/bin
 <$PF9/src/mkone

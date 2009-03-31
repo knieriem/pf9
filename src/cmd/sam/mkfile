@@ -27,4 +27,5 @@ HFILES=sam.h\
 	mesg.h\
 
 
+BIN=/$objtype/bin
 <$PF9/src/mkone
