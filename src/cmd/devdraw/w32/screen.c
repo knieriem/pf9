@@ -312,7 +312,7 @@ winproc(void *v)
 		DispatchMessage(&msg);
 	}
 //	MessageBox(0, "winproc", "exits", MB_OK);
-	threadexits(nil);
+	threadexitsall(nil);
 }
 
 int
