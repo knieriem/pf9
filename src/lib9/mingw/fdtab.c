@@ -83,18 +83,11 @@ cleanup(void)
 
 	fdtprint();
 	n = 0;
-	for (i=0; i<fdtabsz && n<nfd; i++) {
-		f = fdtab[i];
-		if (f==nil)
-			continue;
-		--f->users;
-		if (f->users==0)
-			releasef(f, f->type);
-		fdtab[i] = nil;
-		++n;
-		if (n==nfd)
-			break;
-	}
+	for (i=0; i<fdtabsz; i++)
+		if(i != 2)
+		if(fdtab[i] != nil)
+			close(i);
+	close(2);
 }
 static Fd*
 initstdfd(char *s, int n)
