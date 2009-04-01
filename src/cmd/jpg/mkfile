@@ -1,16 +1,17 @@
 <$PF9/$objtype/mkfile
 
-TARG=jpg\
-	gif\
+TARG=\
+#	jpg\
+#	gif\
 	togif\
-	ppm\
+#	ppm\
 	toppm\
-	png\
+#	png\
 	topng\
-	yuv\
-	ico\
-	toico\
-	bmp\
+#	yuv\
+#	ico\
+#	toico\
+#	bmp\
 
 IMFILES=\
 	torgbv.$O\
