@@ -1,0 +1,6 @@
+5c
+#define exit(x) threadexitsall((x) ? "whoops" : nil)
+.
+2a
+#include <thread.h>
+.

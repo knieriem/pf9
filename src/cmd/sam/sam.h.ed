@@ -1,0 +1,7 @@
+408a
+
+#include <thread.h>
+#undef exits
+#define exits threadexitsall
+
+.

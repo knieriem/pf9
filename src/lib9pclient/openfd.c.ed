@@ -1,0 +1,4 @@
+23,24c
+//	if(mode&OCEXEC && rx.unixfd>=0)
+//		fcntl(rx.unixfd, F_SETFL, FD_CLOEXEC);
+.

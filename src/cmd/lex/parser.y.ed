@@ -1,0 +1,6 @@
+11d
+0a
+%{
+# include "ldefs.h"
+%}
+.

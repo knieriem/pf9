@@ -1,0 +1,12 @@
+76c
+	threadexitsall(ok ? nil: "errors");
+.
+23c
+threadmain(int argc, char **argv)
+.
+19c
+	threadexitsall("usage");
+.
+3a
+#include <thread.h>
+.

@@ -167,6 +167,7 @@ src/libthread/iorw.c
 src/libthread/BSD.c
 src/libthread/OpenBSD-power-asm.S
 src/libthread/Linux-sparc64-swapcontext.c
+src/libthread/thread.c
 src/libthread/OpenBSD-386-asm.S
 src/libthread/Linux-sparc64-context.S
 src/libthread/ioproc.h
@@ -279,6 +280,7 @@ src/libbio/bwrite.c
 src/libbio/brdstr.c
 src/libbio/bvprint.c
 src/libbio/bputc.c
+src/libbio/bseek.c
 src/libbio/bread.c
 src/libbio/bbuffered.c
 src/libbio/bgetc.c
@@ -559,9 +561,11 @@ src/lib9pclient/wstat.c
 src/lib9pclient/read.c
 src/lib9pclient/fsimpl.h
 src/lib9pclient/dirread.c
+src/lib9pclient/openfd.c
 src/lib9pclient/print.c
 src/lib9pclient/seek.c
 src/lib9pclient/remove.c
+src/lib9pclient/ns.c
 src/lib9pclient/stat.c
 src/lib9pclient/write.c
 src/lib9pclient/close.c
@@ -712,6 +716,7 @@ src/cmd/bzip2/lib/bzcompress.c
 src/cmd/bzip2/lib/bzbuffcompress.c
 src/cmd/bzip2/lib/bzlib.c
 src/cmd/bzip2/lib/huffman.c
+src/cmd/bzip2/lib/os.h
 src/cmd/bzip2/lib/bzlib_stdio.h
 src/cmd/bzip2/lib/blocksort.c
 src/cmd/bzip2/lib/randtable.c
@@ -723,13 +728,16 @@ src/cmd/bzip2/lib/bzzlib.c
 src/cmd/bzip2/lib/bzlib_private.h
 src/cmd/bzip2/lib/bzlib_stdio_private.h
 src/cmd/bzip2/lib/unix.h
+src/cmd/bzip2/lib/plan9.h
 src/cmd/bzip2/lib/bzwrite.c
 src/cmd/bzip2/lib/bzversion.c
 src/cmd/bzip2/lib/bzassert.c
 src/cmd/bzip2/lib/compress.c
+src/cmd/bzip2/lib/bzlib.h
 src/cmd/bzip2/lib/bzfeof.c
 src/cmd/bzip2/lib/buffcompress.c
 src/cmd/bzip2/lib/buffdecompress.c
+src/cmd/bzip2/bzip2.c
 src/cmd/pr.c
 src/cmd/pic/prevy.tab.h
 src/cmd/xd.c
@@ -751,11 +759,13 @@ src/cmd/sam/parse.h
 src/cmd/sam/error.c
 src/cmd/sam/multi.c
 src/cmd/sam/_libc.h
+src/cmd/sam/sam.c
 src/cmd/sam/file.c
 src/cmd/sam/plan9.c
 src/cmd/sam/disk.c
 src/cmd/sam/plumb.h
 src/cmd/sam/list.c
+src/cmd/sam/sam.h
 src/cmd/sam/xec.c
 src/cmd/sam/moveto.c
 src/cmd/sam/string.c
@@ -988,6 +998,7 @@ src/cmd/samterm/io.c
 src/cmd/deroff.c
 src/cmd/lex/header.c
 src/cmd/lex/lmain.c
+src/cmd/lex/parser.y
 src/cmd/lex/ldefs.h
 src/cmd/lex/sub2.c
 src/cmd/lex/sub1.c
@@ -1049,6 +1060,8 @@ src/libframe/frbox.c
 src/libframe/frstr.c
 src/libframe/frinsert.c
 src/libframe/frdelete.c
+src/libsec/386/md5block.spp
+src/libsec/386/sha1block.spp
 src/libflate/portdate
 src/libregexp/portdate
 src/libregexp/README

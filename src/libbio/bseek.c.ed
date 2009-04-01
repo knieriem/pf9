@@ -1,0 +1,3 @@
+48c
+		n = seek(bp->fid, n, base);
+.

@@ -1,0 +1,3 @@
+124c
+#ifdef _WIN32_but_not_mingwpf9
+.
