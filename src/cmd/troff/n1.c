@@ -11,6 +11,8 @@
 #include "ext.h"
 #include "dwbinit.h"
 
+#include <setjmp.h>
+
 char	*Version	= "March 11, 1994";
 
 #ifndef DWBVERSION
