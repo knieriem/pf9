@@ -648,6 +648,7 @@ src/cmd/tcs/kuten212.c
 src/cmd/tcs/big5.h
 src/cmd/tcs/kuten212.h
 src/cmd/tcs/tune.c
+src/cmd/gzip/gzip.c
 src/cmd/gzip/zip.h
 src/cmd/gzip/unzip.c
 src/cmd/gzip/zip.c
@@ -989,6 +990,7 @@ src/cmd/troff/n10.c
 src/cmd/troff/n9.c
 src/cmd/troff/n4.c
 src/cmd/troff/n6.c
+src/cmd/troff/tdef.h
 src/cmd/troff/t6.c
 src/cmd/troff/n2.c
 src/cmd/troff/mbwc.c

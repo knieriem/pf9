@@ -1,0 +1,6 @@
+5,6d
+2d
+0a
+#include <u.h>
+#include <libc.h>
+.
