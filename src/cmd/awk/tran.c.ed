@@ -1,0 +1,6 @@
+29,30d
+27d
+25a
+#include <u.h>
+#include <libc.h>
+.

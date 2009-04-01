@@ -1,0 +1,8 @@
+34a
+#include "regexp.h"
+.
+31,32d
+29a
+#include <stdio.h>
+.
+27d

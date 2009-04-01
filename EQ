@@ -769,6 +769,17 @@ src/cmd/grep/main.c
 src/cmd/ed.c
 src/cmd/echo.c
 src/cmd/read.c
+src/cmd/awk/awk.h
+src/cmd/awk/awkgram.y
+src/cmd/awk/re.c
+src/cmd/awk/run.c
+src/cmd/awk/lib.c
+src/cmd/awk/parse.c
+src/cmd/awk/maketab.c
+src/cmd/awk/tran.c
+src/cmd/awk/proto.h
+src/cmd/awk/main.c
+src/cmd/awk/lex.c
 src/cmd/fsize.c
 src/cmd/sleep.c
 src/cmd/join.c

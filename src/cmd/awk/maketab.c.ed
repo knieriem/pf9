@@ -1,0 +1,12 @@
+167c
+	exits(nil);
+.
+120a
+	printf("#include <u.h>\n");
+	printf("#include <libc.h>\n");
+.
+32,33d
+30a
+#include <u.h>
+#include <libc.h>
+.
