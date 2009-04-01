@@ -1,0 +1,5 @@
+14,16d
+12a
+#include <u.h>
+#include <libc.h>
+.

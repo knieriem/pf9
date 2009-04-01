@@ -1,0 +1,5 @@
+0a
+#define print	picprint
+#define input	picinput
+
+.

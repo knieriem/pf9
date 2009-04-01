@@ -1,0 +1,8 @@
+108a
+#endif
+.
+61a
+#ifdef __MINGW32__
+	return winspawn(fd, cmd, argv, 1);
+#else
+.

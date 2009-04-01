@@ -1,0 +1,4 @@
+14a
+extern	int fchdir(int);
+
+.

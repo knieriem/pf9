@@ -1,0 +1,4 @@
+413,414c
+//	fcntl(pfd[0], F_SETFD, FD_CLOEXEC);
+//	fcntl(pfd[1], F_SETFD, FD_CLOEXEC);
+.

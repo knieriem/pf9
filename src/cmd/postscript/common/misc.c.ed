@@ -1,0 +1,11 @@
+236c
+    exits("interrupt");
+.
+214c
+	exits("fatal");
+.
+11,14d
+9d
+7a
+#include <libc.h>
+.

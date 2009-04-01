@@ -1,0 +1,8 @@
+24a
+#endif
+.
+22a
+#ifdef __MINGW32__
+	return 0;
+#else
+.
