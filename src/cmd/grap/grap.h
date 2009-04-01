@@ -131,8 +131,6 @@ extern	int	pointsize, ps_set;
 #define	Exp(x)	errcheck(exp(x), "exp")
 #define	Sqrt(x)	errcheck(sqrt(x), "sqrt")
 
-#undef	min
-#undef	max
 #define	min(x,y)	(((x) <= (y)) ? (x) : (y))
 #define	max(x,y)	(((x) >= (y)) ? (x) : (y))
 
