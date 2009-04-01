@@ -48,6 +48,7 @@ TARG=\
 	mkdir\
 	mtime\
 	mv\
+	namespace\
 	p\
 	pr\
 	primes\

@@ -902,6 +902,7 @@ src/cmd/mtime.c
 src/cmd/sort.c
 src/cmd/tee.c
 src/cmd/touch.c
+src/cmd/namespace.c
 src/cmd/tbl/ti.c
 src/cmd/tbl/tr.c
 src/cmd/tbl/tu.c
