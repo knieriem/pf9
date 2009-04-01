@@ -916,6 +916,7 @@ src/cmd/hoc/symbol.c
 src/cmd/hoc/hoc.h
 src/cmd/strings.c
 src/cmd/sed.c
+src/cmd/devdraw/devdraw.h
 src/cmd/devdraw/drawclient.c
 src/cmd/devdraw/latin1.c
 src/cmd/devdraw/devdraw.c
@@ -1000,6 +1001,7 @@ src/cmd/troff/hytab.c
 src/cmd/troff/dwbinit.h
 src/cmd/troff/fns.h
 src/cmd/troff/t11.c
+src/cmd/troff/n8.c
 src/cmd/9p.c
 src/cmd/md5sum.c
 src/cmd/ascii.c
