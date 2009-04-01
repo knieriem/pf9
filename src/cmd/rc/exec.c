@@ -137,6 +137,7 @@ threadmain(int argc, char *argv[])
 	int i;
 	
 	/* needed for rcmain later */
+	putenv("PLAN9", unsharp("#9"));
 	putenv("PF9", unsharp("#9"));
 
 	argc = getflags(argc, argv, "SsrdiIlxepvVc:1m:1[command]", 1);
