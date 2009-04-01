@@ -654,6 +654,7 @@ src/cmd/gzip/unzip.c
 src/cmd/gzip/zip.c
 src/cmd/gzip/gunzip.c
 src/cmd/gzip/gzip.h
+src/cmd/rc/syn.y
 src/cmd/rc/getflags.h
 src/cmd/rc/fmtquote.c
 src/cmd/rc/tree.c
@@ -666,10 +667,12 @@ src/cmd/rc/getflags.c
 src/cmd/rc/glob.c
 src/cmd/rc/pcmd.c
 src/cmd/rc/havefork.c
+src/cmd/rc/simple.c
 src/cmd/rc/subr.c
 src/cmd/rc/fns.h
 src/cmd/rc/lex.c
 src/cmd/rc/io.h
+src/cmd/rc/exec.c
 src/cmd/rc/pfnc.c
 src/cmd/rc/io.c
 src/cmd/seq.c
@@ -917,6 +920,7 @@ src/cmd/hoc/init.c
 src/cmd/hoc/symbol.c
 src/cmd/hoc/hoc.h
 src/cmd/strings.c
+src/cmd/dc.c
 src/cmd/sed.c
 src/cmd/devdraw/devdraw.h
 src/cmd/devdraw/drawclient.c
@@ -1005,6 +1009,7 @@ src/cmd/troff/dwbinit.h
 src/cmd/troff/fns.h
 src/cmd/troff/t11.c
 src/cmd/troff/n8.c
+src/cmd/troff/ni.c
 src/cmd/9p.c
 src/cmd/md5sum.c
 src/cmd/ascii.c

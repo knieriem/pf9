@@ -1,0 +1,7 @@
+140a
+	putenv("PF9", unsharp("#9"));
+.
+132,133c
+void
+threadmain(int argc, char *argv[])
+.
