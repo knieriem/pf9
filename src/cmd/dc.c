@@ -1922,7 +1922,7 @@ command(void)
 		while((c = readc()) != '\n')
 			*sl++ = c;
 		*sl = 0;
-		if((pid = fork()) == 0) {
+		if((pid = -1/*fork()*/) == 0) {
 			execl("/bin/rc","rc","-c",line,0);
 			exits("shell");
 		}
