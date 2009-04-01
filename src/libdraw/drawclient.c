@@ -10,7 +10,7 @@
 #include <drawfcall.h>
 #include <mux.h>
 
-int chattydrawclient;
+int chattydrawclient = 0;
 
 static int	drawgettag(Mux *mux, void *vmsg);
 static void*	drawrecv(Mux *mux);
@@ -38,7 +38,20 @@ _displayconnect(Display *d)
 		 * The argv0 has no meaning to devdraw.
 		 * Pass it along only so that the various
 		 * devdraws in psu -a can be distinguished.
+		 * The NOLIBTHREADDAEMONIZE keeps devdraw from
+		 * forking before threadmain. OS X hates it when
+		 * guis fork.
+		 *
+		 * If client didn't use ARGBEGIN, argv0 == nil.
+		 * Can't send nil through because OS X expects
+		 * argv[0] to be non-nil.  Also, OS X apparently
+		 * expects argv[0] to be a valid executable name,
+		 * so "(argv0)" is not okay.  Use "devdraw"
+		 * instead.
 		 */
+		putenv("NOLIBTHREADDAEMONIZE", "1");
+		if(argv0 == nil)
+			argv0 = "devdraw";
 	pid = threadspawnl(fd, "devdraw", "devdraw", argv0, nil);
 	if(pid<0){
 		close(fd[0]);
@@ -378,9 +391,9 @@ _displayresize(Display *d, Rectangle r)
 static int
 canreadfd(int fd)
 {
+#ifdef __MINGW32__
 	sysfatal("canreadfd");
-
-#if 0
+#else
 	fd_set rs, ws, xs;
 	struct timeval tv;
 	
