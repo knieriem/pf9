@@ -768,6 +768,7 @@ src/cmd/grep/sub.c
 src/cmd/grep/grep.y
 src/cmd/grep/main.c
 src/cmd/ed.c
+src/cmd/dd.c
 src/cmd/echo.c
 src/cmd/read.c
 src/cmd/awk/awk.h
@@ -1062,6 +1063,7 @@ src/cmd/lex/ldefs.h
 src/cmd/lex/sub2.c
 src/cmd/lex/sub1.c
 src/cmd/resample.c
+src/cmd/du.c
 src/cmd/9term/win.c
 src/cmd/9term/NetBSD.c
 src/cmd/9term/bsdpty.c
