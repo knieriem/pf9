@@ -267,6 +267,7 @@ out:
 	if (fatal)
 		sysfatal("fdtclose: fd %d: no %d users\n", fd, f->users);
 	if (fdtdebug>1)
+	if (tf.type!=Fdtypenone)
 		fprint(2, "%D #%d\n", fd, &tf, "closed", nfd);
 	if (rf!=nil)
 		releasef(f, type);
