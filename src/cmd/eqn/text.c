@@ -112,6 +112,7 @@ void text(int t, char *p1)	/* convert text string p1 of type t */
 	printf(".ds %d \"%s\n", (int)yyval, p);
 }
 
+#define isalpharune eqnisalpharune
 int isalpharune(int c)
 {
 	return ('a'<=c && c<='z') || ('A'<=c && c<='Z');
