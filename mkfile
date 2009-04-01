@@ -5,6 +5,9 @@ pop=+P9
 all:VQ:
 	echo "targets: eq, rm(equals), pop(ulate)"
 
+ls:VQ:
+	hg manifest | grep -v '\(\.ed\|mkfile\)'
+
 pop:V:	populate
 rm:V:	rmequals
 
