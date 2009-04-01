@@ -345,6 +345,8 @@ src/libip/myetheraddr.c
 src/libip/none.c
 src/libip/testreadipifc.c
 src/libip/OpenBSD.c
+src/libsec/386/md5block.spp
+src/libsec/386/sha1block.spp
 src/libsec/port/dsaalloc.c
 src/libsec/port/egverify.c
 src/libsec/port/rsaprivtopub.c
@@ -742,6 +744,7 @@ src/cmd/bzip2/bzip2.c
 src/cmd/pr.c
 src/cmd/pic/picy.y
 src/cmd/pic/pic.h
+src/cmd/pic/picl.lx
 src/cmd/pic/arcgen.c
 src/cmd/pic/movegen.c
 src/cmd/pic/textgen.c
@@ -1012,6 +1015,19 @@ src/cmd/eqn/font.c
 src/cmd/eqn/input.c
 src/cmd/eqn/integral.c
 src/cmd/cleanname.c
+src/cmd/grap/grap.h
+src/cmd/grap/for.c
+src/cmd/grap/print.c
+src/cmd/grap/label.c
+src/cmd/grap/frame.c
+src/cmd/grap/grapl.lx
+src/cmd/grap/misc.c
+src/cmd/grap/grap.y
+src/cmd/grap/plot.c
+src/cmd/grap/main.c
+src/cmd/grap/ticks.c
+src/cmd/grap/coord.c
+src/cmd/grap/input.c
 src/cmd/cmp.c
 src/cmd/samterm/menu.c
 src/cmd/samterm/flayer.h
@@ -1088,8 +1104,6 @@ src/libframe/frbox.c
 src/libframe/frstr.c
 src/libframe/frinsert.c
 src/libframe/frdelete.c
-src/libsec/386/md5block.spp
-src/libsec/386/sha1block.spp
 src/libflate/portdate
 src/libregexp/portdate
 src/libregexp/README

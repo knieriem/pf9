@@ -1,0 +1,11 @@
+190c
+			snprint(buf1, sizeof buf, "copy \"%s\"\n", lib_defines);
+.
+186c
+	snprint(buf, sizeof buf, "define pid /%d/\n", getpid());
+.
+7d
+3,5d
+1a
+#include <libc.h>
+.

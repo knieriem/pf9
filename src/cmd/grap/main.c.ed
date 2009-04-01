@@ -1,0 +1,5 @@
+4,7d
+1c
+#include <u.h>
+#include <libc.h>
+.
