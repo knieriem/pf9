@@ -13,7 +13,7 @@ HFILES=download.h\
 	$COMMONDIR/path.h\
 	$COMMONDIR/ext.h\
 
-LIB=$COMMONDIR/libcom.$O.a
+LIB=$COMMONDIR/libcom.a.$O
 BIN=$POSTBIN
 
 <$PF9/src/mkone

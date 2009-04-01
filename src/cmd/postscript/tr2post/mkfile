@@ -28,7 +28,7 @@ HFILES=tr2post.h\
 
 BIN=$POSTBIN
 
-LIB=../common/libcom.$O.a
+LIB=../common/libcom.a.$O
 
 <$PF9/src/mkone
 
