@@ -1194,7 +1194,7 @@ Cell *split(Node **a, int nnn)	/* split(a[0], a[1], a[2]); a[3] is type */
 	char *s;
 	int sep;
 	char *t, temp, num[50], *fs = 0;
-	int n, tempstat, arg3type;
+	int n, arg3type;
 
 	y = execute(a[0]);	/* source string */
 	s = getsval(y);
@@ -1893,3 +1893,4 @@ void backsub(char **pb_ptr, char **sptr_ptr)	/* handle \\& variations */
 	*pb_ptr = pb;
 	*sptr_ptr = sptr;
 }
+

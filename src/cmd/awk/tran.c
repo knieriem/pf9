@@ -431,3 +431,4 @@ char *qstring(char *s, int delim)	/* collect string up to next delim */
 	*bp++ = 0;
 	return buf;
 }
+

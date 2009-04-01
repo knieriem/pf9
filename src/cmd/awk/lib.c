@@ -394,7 +394,7 @@ int refldbld(char *rec, char *fs)	/* build fields from reg expr in FS */
 	/* the fields are all stored in this one array with \0's */
 	char *fr;
 	void *p;
-	int i, tempstat, n;
+	int i, n;
 
 	n = strlen(rec);
 	if (n > fieldssize) {
@@ -709,3 +709,4 @@ int is_number(char *s)
 	else
 		return 0;
 }
+

@@ -269,3 +269,4 @@ Node *itonp(int i)	/* and vice versa */
 {
 	return (Node *) (long) i;
 }
+

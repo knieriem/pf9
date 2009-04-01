@@ -184,7 +184,7 @@ void
 
 	/* T/F match indication - matched string not exported */
 int
-match(void *p, char *s, char *dummy)
+match(void *p, char *s, char *start)
 {
 	return regexec((Reprog *) p, (char *) s, 0, 0);
 }
@@ -220,6 +220,7 @@ nematch(void *p, char *s, char *start)
 /* in the parsing of regular expressions, metacharacters like . have */
 /* to be seen literally;  \056 is not a metacharacter. */
 
+int
 hexstr(char **pp)	/* find and eval hex string at pp, return new p */
 {
 	char c;
@@ -320,3 +321,4 @@ overflow(void)
 {
 	FATAL("%s", "regular expression too big");
 }
+
