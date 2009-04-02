@@ -378,6 +378,7 @@ extern	int	encodefmt(Fmt*);
 extern	int	dirmodefmt(Fmt*);
 extern	int	exitcode(char*);
 extern	void	exits(char*);
+extern	void	p9exit(int);
 extern	double	frexp(double, int*);
 extern	ulong	getcallerpc(void*);
 extern	char*	p9getenv(char*);
@@ -427,6 +428,9 @@ extern	void	(*_unpin)(void);
 #define atol		p9atol
 #define atoll		p9atoll
 #define encrypt		p9encrypt
+#ifndef NOEXITDEFINE
+# define exit		p9exit
+#endif
 #define decrypt		p9decrypt
 #define getenv		p9getenv
 #define	getwd		p9getwd
