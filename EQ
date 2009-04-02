@@ -523,7 +523,6 @@ src/lib9/utf/lib9.h
 src/lib9/utf/utfrrune.c
 src/lib9/nulldir.c
 src/lib9/errstr.c
-src/lib9/atexit.c
 src/lib9/lnrand.c
 src/lib9/testfork.c
 src/lib9/tokenize.c
