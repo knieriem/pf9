@@ -20,7 +20,7 @@ alloc(HANDLE h, char *name, int type)
 	f->type = type;
 	f->name = strdup(name);
 	if (fdtdebug>1)
-		fprint(2, "%D\n", fd, f, "create");
+		fprint(2, "%\f\n", fd, f, "create");
 	return fd;
 }
 static int npipes;

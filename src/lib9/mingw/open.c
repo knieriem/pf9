@@ -103,7 +103,7 @@ open(char *name, int mode)
 	f->h = h;
 
 	if (fdtdebug>1)
-		fprint(2, "%D h:%p da:%08x\n", fd, f, "open", h, da);
+		fprint(2, "%\f h:%p da:%08x\n", fd, f, "open", h, da);
 
 	return fd;
 }

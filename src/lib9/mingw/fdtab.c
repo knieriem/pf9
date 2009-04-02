@@ -36,7 +36,7 @@ fdtprint(void)
 		if (f==nil)
 			continue;
 
-		dprint(2, "%D\n", i, f, "");
+		dprint(2, "%\f\n", i, f, "");
 		++n;
 		if (n==nfd)
 			break;
@@ -155,7 +155,7 @@ fdtabinit(void)
 		fdtdebug= atoi(d);
 		free(d);
 		if(fdtdebug)
-			fmtinstall('D', Dconv);
+			fmtinstall('\f', Dconv);
 	}
 	nfd = 3;
 	need(nfd);
@@ -213,7 +213,7 @@ fdtdup(int oldfd, int newfd)
 			f = fdtab[newfd];
 			if (f!=nil) {
 				--f->users;
-				dprint(2, "%D: closing %d\n", oldfd, f, "dup", newfd);
+				dprint(2, "%\f: closing %d\n", oldfd, f, "dup", newfd);
 				if (f->users==0) {
 					rf = f;
 					type = f->type;
@@ -229,7 +229,7 @@ fdtdup(int oldfd, int newfd)
 		if (rf!=nil)
 			releasef(f, type);
 	}
-	dprint(2, "%D ->%d\n", oldfd, oldf, "dup", newfd);
+	dprint(2, "%\f ->%d\n", oldfd, oldf, "dup", newfd);
 	return newfd;
 }
 
@@ -268,7 +268,7 @@ out:
 		sysfatal("fdtclose: fd %d: no %d users\n", fd, f->users);
 	if (fdtdebug>1)
 	if (tf.type!=Fdtypenone)
-		fprint(2, "%D #%d\n", fd, &tf, "closed", nfd);
+		fprint(2, "%\f #%d\n", fd, &tf, "closed", nfd);
 	if (rf!=nil)
 		releasef(f, type);
 

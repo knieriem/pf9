@@ -89,6 +89,6 @@ p9create(char *path, int mode, ulong perm)
 	fdtab[fd]->type = Fdtypefile;
 	fdtab[fd]->name = path;
 	if (fdtdebug>1)
-		fprint(2, "%D h:%p\n", fd, &fdtab[fd], "create", h);
+		fprint(2, "%\f h:%p\n", fd, &fdtab[fd], "create", h);
 	return fd;
 }
