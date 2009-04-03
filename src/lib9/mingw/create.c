@@ -45,6 +45,11 @@ p9create(char *name, int mode, ulong perm)
 	f = fdtab[fd];
 	f->name = path;
 	
+	if (!strcmp("/dev/null", name)) {
+		f->type = Fdtypedevnull;
+		return fd;
+	}
+
 	/* XXX should get mode mask right? */
 	if(perm&DMDIR){
 		if(mode != OREAD){
