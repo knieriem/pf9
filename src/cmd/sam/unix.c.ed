@@ -1,0 +1,3 @@
+187c
+	w = procwait(pid);
+.

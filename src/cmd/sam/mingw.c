@@ -25,10 +25,10 @@ Rune *right[]= { r1, r2, r3, 0};
 #define TMPDIRNAME "/tmp"
 #endif
 #ifndef SHNAME
-#define SHNAME "sh"
+#define SHNAME "rc"
 #endif
 #ifndef SHPATHNAME
-#define SHPATHNAME "/bin/sh"
+#define SHPATHNAME "rc"
 #endif
 #ifndef RXNAME
 #define RXNAME "ssh"
@@ -163,7 +163,7 @@ samwaitfor(int pid)
 	int r;
 	Waitmsg *w;
 
-	w = p9waitfor(pid);
+	w = procwait(pid);
 	if(w == nil)
 		return -1;
 	r = atoi(w->msg);

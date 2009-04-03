@@ -19,13 +19,44 @@ setname(File *f)
 	putenv("samfile", buf);
 }
 
+static
+void
+procpipe(void *v)
+{
+	int	retcode;
+	long l;
+	int m;
+
+	io = (int)v;
+#ifdef __MINGW32__
+	retcode = 0;				/* would crash when calling p9longjmp later */
+	{
+#else
+	/*
+	 * It's ok if we get SIGPIPE here
+	 */
+	if(retcode=!setjmp(mainloop)){	/* assignment = */
+#endif
+		char *c;
+		for(l = 0; l<plan9buf.nc; l+=m){
+			m = plan9buf.nc-l;
+			if(m>BLOCKSIZE-1)
+				m = BLOCKSIZE-1;
+			bufread(&plan9buf, l, genbuf, m);
+			genbuf[m] = 0;
+			c = Strtoc(tmprstr(genbuf, m+1));
+			Write(io, c, strlen(c));
+			free(c);
+		}
+	}
+	close(io);
+	threadexits(retcode? "error" : 0);
+}
 int
 plan9(File *f, int type, String *s, int nest)
 {
-	long l;
-	int m;
 	int volatile pid;
-	int fd;
+	int fds[3];
 	int retcode;
 	int pipe1[2], pipe2[2];
 
@@ -41,71 +72,38 @@ plan9(File *f, int type, String *s, int nest)
 		error(Epipe);
 	if(type=='|')
 		snarf(f, addr.r.p1, addr.r.p2, &plan9buf, 1);
-	if((pid=-1/*fork()*/) == 0){
-		setname(f);
-		if(downloaded){	/* also put nasty fd's into errfile */
-			fd = create(errfile, 1, 0666L);
-			if(fd < 0)
-				fd = create("/dev/null", 1, 0666L);
-			dup(fd, 2);
-			close(fd);
-			/* 2 now points at err file */
-			if(type == '>')
-				dup(2, 1);
-			else if(type=='!'){
-				dup(2, 1);
-				fd = open("/dev/null", 0);
-				dup(fd, 0);
-				close(fd);
-			}
-		}
-		if(type != '!') {
-			if(type=='<' || type=='|')
-				dup(pipe1[1], 1);
-			else if(type == '>')
-				dup(pipe1[0], 0);
-			close(pipe1[0]);
-			close(pipe1[1]);
-		}
-		if(type == '|'){
-			if(pipe(pipe2) == -1)
-				exits("pipe");
-			if((pid = -1/*fork()*/)==0){
-				/*
-				 * It's ok if we get SIGPIPE here
-				 */
-				close(pipe2[0]);
-				io = pipe2[1];
-				if(retcode=!setjmp(mainloop)){	/* assignment = */
-					char *c;
-					for(l = 0; l<plan9buf.nc; l+=m){
-						m = plan9buf.nc-l;
-						if(m>BLOCKSIZE-1)
-							m = BLOCKSIZE-1;
-						bufread(&plan9buf, l, genbuf, m);
-						genbuf[m] = 0;
-						c = Strtoc(tmprstr(genbuf, m+1));
-						Write(pipe2[1], c, strlen(c));
-						free(c);
-					}
-				}
-				exits(retcode? "error" : 0);
-			}
-			if(pid==-1){
-				fprint(2, "Can't fork?!\n");
-				exits("fork");
-			}
-			dup(pipe2[0], 0);
-			close(pipe2[0]);
-			close(pipe2[1]);
-		}
-		if(type=='<'){
-			close(0);	/* so it won't read from terminal */
-			open("/dev/null", 0);
-		}
-		execl(SHPATH, SH, "-c", Strtoc(&plan9cmd), (char *)0);
-		exits("exec");
+
+	fds[0] = fds[1] = fds[2] = -1;
+	setname(f);
+	if(downloaded){	/* also put nasty fd's into errfile */
+		fds[2] = create(errfile, 1, 0666L);
+		if(fds[2] < 0)
+			fds[2] = create("/dev/null", 1, 0666L);
+
+		/* fds[2] now points at err file */
+		if(type=='>' || type=='!')
+			fds[1] = fds[2];
 	}
+	if(type != '!') {
+		if(type=='<' || type=='|')
+			fds[1] = pipe1[1];
+		else if(type == '>')
+			fds[0] = pipe1[0];
+	}
+	if(type == '|'){
+		if(pipe(pipe2) != -1){
+			proccreate(&procpipe, (void*)pipe2[1], 32768);
+			fds[0] = pipe2[0];
+		}
+	}
+	if(fds[0]==-1)
+		fds[0] = open("/dev/null", 0);	/* so it won't read from terminal */
+	if(fds[1]==-1)
+		fds[1] = dup(1, -1);
+	if(fds[2]==-1)
+		fds[2] = dup(2, -1);
+	threadwaitchan();
+	pid = threadspawnl(fds, SHPATH, SH, "-c", Strtoc(&plan9cmd), nil);
 	if(pid == -1)
 		error(Efork);
 	if(type=='<' || type=='|'){
@@ -114,14 +112,12 @@ plan9(File *f, int type, String *s, int nest)
 			outTl(Hsnarflen, addr.r.p2-addr.r.p1);
 		snarf(f, addr.r.p1, addr.r.p2, &snarfbuf, 0);
 		logdelete(f, addr.r.p1, addr.r.p2);
-		close(pipe1[1]);
 		io = pipe1[0];
 		f->tdot.p1 = -1;
 		f->ndot.r.p2 = addr.r.p2+readio(f, &nulls, 0, FALSE);
 		f->ndot.r.p1 = addr.r.p2;
 		closeio((Posn)-1);
 	}else if(type=='>'){
-		close(pipe1[0]);
 		io = pipe1[1];
 		bpipeok = 1;
 		writeio(f);
