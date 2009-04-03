@@ -8,12 +8,14 @@
 #include "fdtab.h"
 
 int
-p9create(char *path, int mode, ulong perm)
+p9create(char *name, int mode, ulong perm)
 {
 	int	fd, rdwr;
 	int	trytrunc;
-	DWORD	da, share, flags;
+	DWORD	da, share, flags, cmode;
 	HANDLE	h;
+	char *path;
+	Fd	*f;
 
 	rdwr = mode&3;
 	da = 0;
@@ -33,9 +35,15 @@ p9create(char *path, int mode, ulong perm)
 	share = FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE;
 	flags = 0;
 
-	path = winpathdup(path);
+	name = winadjustcons(name, rdwr, &da);
+	if (name==nil)
+		return -1;
+	path = winpathdup(name);
 	if (path==nil)
 		return -1;
+	fd = fdtalloc(nil);
+	f = fdtab[fd];
+	f->name = path;
 	
 	/* XXX should get mode mask right? */
 	if(perm&DMDIR){
@@ -78,17 +86,18 @@ p9create(char *path, int mode, ulong perm)
 			fail:
 				if (fdtdebug>1)
 					fprint(2, "create %s failed: %r\n", path);
-				free(path);
+				fdtclose(fd);
 				return -1;
 			}
 		}
 	}
 
-	fd = fdtalloc(nil);
-	fdtab[fd]->h = h;
-	fdtab[fd]->type = Fdtypefile;
-	fdtab[fd]->name = path;
+	if (GetConsoleMode(h, &cmode))
+		f->type = Fdtypecons;
+	else
+		f->type = Fdtypefile;
+	f->h = h;
 	if (fdtdebug>1)
-		fprint(2, "%\f h:%p\n", fd, &fdtab[fd], "create", h);
+		fprint(2, "%\f h:%p\n", fd, f, "create", h);
 	return fd;
 }

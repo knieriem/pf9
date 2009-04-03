@@ -16,6 +16,7 @@ extern	HANDLE	wincreatenamedpipe(char*, int omode, int pmode, int maxinst, int o
 extern	BOOL	winwritecons(HANDLE, void*, int);
 extern	int	winreadcons(HANDLE, void*, int);
 extern	int	winhascons(void);
+extern	char*	winadjustcons(char*, int rdwr, DWORD *dap);
 
 /* getenv.c */
 extern	int	mingwinitenv(Rune*[]);

@@ -26,7 +26,7 @@ open(char *name, int mode)
 	case ORDWR:
 		da |= GENERIC_READ;
 	case OWRITE:
- 		da |= GENERIC_WRITE;
+		da |= GENERIC_WRITE;
 	}
 	mode &= ~(3|OCEXEC|OLOCK);
 	dis = OPEN_EXISTING;
@@ -57,8 +57,9 @@ open(char *name, int mode)
 		return dup(0, -1);
 	if (!strcmp(name, "/dev/fd/0"))
 		return dup(0, -1);
-	if (!strcmp(name, "/dev/tty"))
-		name = "CON";
+	name = winadjustcons(name, rdwr, &da);
+	if (name==nil)
+		return -1;
 
 	if (!strcmp(name, "."))
 		name = getwd(buf, sizeof buf);

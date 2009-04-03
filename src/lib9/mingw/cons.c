@@ -175,9 +175,36 @@ winhascons(void)
 {
 	int	fd;
 
-	fd = open("CONOUT$", OWRITE);
+	fd = open("/dev/tty", OWRITE);
 	if (fd<0)
 		return 0;
 	close(fd);
 	return 1;
+}
+
+char*
+winadjustcons(char *name, int rdwr, DWORD *dap)
+{
+	assert(dap!=nil);
+
+	if (!strcmp(name, "CONIN$"))
+		goto adjaccess;
+	if (!strcmp(name, "CONOUT$"))
+		goto adjaccess;
+	if(!strcmp(name, "/dev/tty") || !strcmp(name, "CON")){
+		switch(rdwr){
+		case OREAD:
+			name = "CONIN$";
+			break;
+		case OWRITE:
+			name = "CONOUT$";
+			break;
+		case ORDWR:
+			werrstr("ORDWR not allowed on tty");
+			return nil;
+		}
+	adjaccess:
+		*dap |= GENERIC_READ|GENERIC_WRITE;		/* otherwise GetConsoleMode would fail */
+	}
+	return name;
 }
