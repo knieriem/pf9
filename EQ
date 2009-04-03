@@ -791,6 +791,7 @@ src/cmd/unicode.c
 src/cmd/date.c
 src/cmd/sum.c
 src/cmd/rm.c
+src/cmd/sam/unix.c
 src/cmd/sam/parse.h
 src/cmd/sam/error.c
 src/cmd/sam/multi.c
