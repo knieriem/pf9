@@ -143,6 +143,10 @@ _pthreadinit(void)
 void
 threadexitsall(char *msg)
 {
+	/* Increase our priority so that other procs have less of a chance to interrupt exits()
+	 */
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+
 	exits(msg);
 }
 
