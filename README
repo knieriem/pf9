@@ -1,7 +1,11 @@
-`Pf9' is a  of parts of plan9port
-(http://www.swtch.com/plan9port/), slightly adapted to get
-them compiled with the MinGW compiler.  The License
-is the same as in plan9port, see LICENSE.
+`Pf9' is a port of some libraries and programs from `Plan9 from
+User Space' (http://www.swtch.com/plan9port/) to Windows
+using the MinGW compiler. A lot of files are used without
+modification, some need only slight adaptions. The actual porting
+has been done in lib9/mingw and libthread/mingw.c, with
+help of ideas from inferno and 9pm.
+
+See LICENSE file for which licenses apply to the source files.
 
 For a list of ported programs see DIRS and TARG definitions
 in src/cmd/mkfile.
@@ -16,6 +20,9 @@ libraries:
 		programs using the thread-based mouse
 		interface will run.
 
+
+Status of the support of various concepts:
+
 Pipes
 	Implemented using Named Pipes.
 
@@ -27,8 +34,8 @@ Internet Sockets
 	Implemented using Winsock.
 
 Unicode
-	All programs get UTF-8 encoded streams on stdin, UTF-8 encoded
-	environment and command line arguments.
+	All programs get UTF-8 encoded streams on stdin, UTF-8
+	encoded environment and command line arguments.
 
 Console support
 	Reading from the console input and writing to the console
@@ -36,10 +43,10 @@ Console support
 	the Windows console will produce UTF-8 characters, regardless
 	of which codepage is installed.
 
-	Also you can use the history feature of the console window without
+	You can also use the history feature of the console window without
 	extra support in programs.
 
-Because the mkfile system's structure has been derived from Plan9's, you
+Because the mkfile system's structure has been derived from Plan9, you
 can compile the libs and sources for Linux and MinGW in a similar way:
 On Linux, to compile for the MinGW, run
 
@@ -121,3 +128,8 @@ Run it
 		% cd $PF9/sys/man
 		% ./mkindex
 
+
+Debugging
+--------
+
+Define FDTDEBUG=2 to get debug output from the file descriptor layer.
