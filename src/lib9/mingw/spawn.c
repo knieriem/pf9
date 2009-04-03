@@ -8,6 +8,10 @@
 #include "util.h"
 
 /*
+ * derived from inferno's rcsh/Nt.c
+ */
+
+/*
  * windows quoting rules - I think
  * Words are seperated by space or tab
  * Words containing a space or tab can be quoted using "
