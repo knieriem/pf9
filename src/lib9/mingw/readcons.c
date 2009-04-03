@@ -28,7 +28,7 @@ readcons(char *prompt, char *def, int secret)
 	char *s, *t;
 	int l;
 
-	if((fd = open("CONIN$", OREAD)) < 0)
+	if((fd = open("/dev/tty", OREAD)) < 0)
 		return nil;
 
 	raw = -1;
