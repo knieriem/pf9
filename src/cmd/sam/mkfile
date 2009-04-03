@@ -1,6 +1,7 @@
 <$PF9/$objtype/mkfile
 
 TARG=sam
+SYSOFILES=`{sh ./sysofiles.sh}
 OFILES=sam.$O\
 	address.$O\
 	buff.$O\
@@ -18,7 +19,7 @@ OFILES=sam.$O\
 	shell.$O\
 	string.$O\
 	sys.$O\
-	unix.$O\
+	$SYSOFILES\
 	util.$O\
 	xec.$O\
 
