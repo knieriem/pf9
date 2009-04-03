@@ -21,8 +21,6 @@
 #include "flayer.h"
 #include "samterm.h"
 
-static char *exname;
-
 #define STACK 16384
 
 void
@@ -103,12 +101,6 @@ dumperrmsg(int count, int type, int count0, int c)
 		count, type, count0, c, rcvstring());
 }
 
-void
-removeextern(void)
-{
-	remove(exname);
-}
-
 Readbuf	hostbuf[2];
 Readbuf	plumbbuf[2];
 
@@ -116,83 +108,57 @@ void
 extproc(void *argv)
 {
 	Channel *c;
-	int i, n, which, fd;
+	int i, n, which, ctl, fd;
 	void **arg;
+	char *adir, dir[40];
 
 	arg = argv;
 	c = arg[0];
-	fd = (int)(uintptr)arg[1];
+	adir = arg[1];
 
+	fd = -1;
 	i = 0;
 	for(;;){
 		i = 1-i;	/* toggle */
+		if(fd<0){
+			ctl = listen(adir, dir);
+			if(ctl < 0)
+				sysfatal("listen: %r");
+			fd = accept(ctl, dir);
+			close(ctl);
+		}
 		n = read(fd, plumbbuf[i].data, sizeof plumbbuf[i].data);
 if(0) fprint(2, "ext %d\n", n);
 		if(n <= 0){
-			fprint(2, "samterm: extern read error: %r\n");
-			threadexits("extern");	/* not a fatal error */
+			close(fd);
+			fd = -1;
+		}else{
+			plumbbuf[i].n = n;
+			which = i;
+			send(c, &which);
 		}
-		plumbbuf[i].n = n;
-		which = i;
-		send(c, &which);
 	}
 }
 
 void
 extstart(void)
 {
-	char *user, *disp;
-	int fd, flags;
 	static void *arg[2];
+	static char adir[40];
+	char addr[200], *ns;
 
-	user = getenv("USER");
-	if(user == nil)
-		return;
-	disp = getenv("DISPLAY");
-	if(disp)
-		exname = smprint("/tmp/.sam.%s.%s", user, disp);
-	else
-		exname = smprint("/tmp/.sam.%s", user);
-	if(exname == nil){
-		fprint(2, "not posting for B: out of memory\n");
+	ns = getns();
+	snprint(addr, sizeof addr, "unix!%s/sam", ns);
+	free(ns);
+	if(announce(addr, adir) < 0){
+		fprint(2, "announce %s: %r", addr);
 		return;
 	}
-
-/*	if(mkfifo(exname, 0600) < 0)*/{
-		struct stat st;
-		if(errno != EEXIST || stat(exname, &st) < 0)
-			return;
-		if(!S_ISFIFO(st.st_mode)){
-			removeextern();
-//			if(mkfifo(exname, 0600) < 0)
-				return;
-		}
-	}
-
-	fd = open(exname, OREAD|ONONBLOCK);
-	if(fd == -1){
-		removeextern();
-		return;
-	}
-
-	/*
-	 * Turn off no-delay and provide ourselves as a lingering
-	 * writer so as not to get end of file on read.
-	 */
-//	flags = fcntl(fd, F_GETFL, 0);
-//	if(flags<0 || fcntl(fd, F_SETFL, flags&~O_NONBLOCK)<0
-//	||open(exname, OWRITE) < 0){
-		close(fd);
-		removeextern();
-		return;
-//	}
-
 	plumbc = chancreate(sizeof(int), 0);
 	chansetname(plumbc, "plumbc");
 	arg[0] = plumbc;
-	arg[1] = (void*)(uintptr)fd;
+	arg[1] = &adir[0];
 	proccreate(extproc, arg, STACK);
-	atexit(removeextern);
 }
 
 int
