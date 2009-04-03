@@ -6,33 +6,27 @@ modifications. This includes the source files within the directories
 the scripts 9a, 9c, 9l in linux/bin 9.rc, doctype, man, lookman, lc and
 psfonts in rc/bin, and some yacc/lex support files in lib.
 
-
 Homepage of Plan9port: http://www.swtch.com/plan9port/
 
-For plan9port the Lucent Public License, v1.02, applies, please see
+For plan9port (mostly), and additional files distributed with pf9,
+the Lucent Public License, v1.02, applies, please see
 LICENSE.plan9port for details.
+
+Some code has been derived from Inferno utilities sources
+(utils/rcsh/Nt.c, dirstat-Nt.c), other ideas have been taken
+from 9pm.
+
+Devdraw.exe for MinGW has been derived from drawterm, adapted
+to plan9port's devdraw structure.
 
 ---------------------------------------------------
 
 The mkfile-hierarchy is based on files from Plan 9, i.e. the files
 
-	sys/src/mkfile sys/src/mkfile.proto sys/src/cmd/mk*
+	src/mk*
 
-are copies of the original Plan 9 files, some with slight modifications.
-
-
----------------------------------------------------
-
-Sys/src/mcmd contains some additional programs from the following
-sources. For license information please look into each of the directories:
-
-	awk
-		source: http://cm.bell-labs.com/who/bwk/awk.tar.gz
-		license: see sys/src/mcmd/awk/README
-		
-	v7sh
-		source: http://www.collyer.net/who/geoff/v7sh.tar
-		license: see sys/src/mcmd/v7sh/NOTICE.pdf
+are copies of the original Plan 9 files, some with slight modifications
+and some additions from plan9port.
 
 
 ---------------------------------------------------
@@ -40,6 +34,6 @@ sources. For license information please look into each of the directories:
 Two scripts, todos and fromdos, written by Russ Cox, have been
 copied from the contrib directory of the Plan 9 system:
 	http://cm.bell-labs.com/sources/contrib/rsc/scripts/
-
+(The rely on ed, whose port is broken again, unfortunately.)
 
 -- 

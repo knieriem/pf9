@@ -1,1 +1,15 @@
-isatty for mingw
+-	isatty for mingw
+
+-	libthread: works mostly, daemonizing works not
+
+-	libdraw:	works basically, tested with tcolors, acme
+		and sam. Events have not been ported, so only
+		programs using the thread-based mouse
+		interface will run.
+
+-	cmd/test.c might need an update
+
+-	cmd/ed.c could be made linkable again
+
+-	cmd/9term/win.c could be ported, so that
+	acme would also have a shell on Windows/MinGW

@@ -1,34 +1,22 @@
-`Pf9' is a distribution of parts of plan9port
+`Pf9' is a  of parts of plan9port
 (http://www.swtch.com/plan9port/), slightly adapted to get
-it compiled for use with the MinGW libraries.  The License
+them compiled with the MinGW compiler.  The License
 is the same as in plan9port, see LICENSE.
 
+For a list of ported programs see DIRS and TARG definitions
+in src/cmd/mkfile.
 
-Ported programs from $PLAN9/src/cmd:
+For a list of ported libraries see src/lib*. Status of some
+libraries:
 
-	9p 9pserve ascii cal calendar cat cmp comm cp date
-	dd deroff dial du echo env factor fmt fsize hget
-	join listen1 look ls mc md5sum mkdir mtime mv p pr
-	primes pwd read resample rm sed seq sha1sum sleep
-	sort srv strings sum tail tar tee test time touch
-	tr unicode uniq wc xd yacc
-
-
-Directories from $PLAN9/src/cmd (only parts):
-	acme awk lex diff devdraw draw bzip2 grep gzip
-	hoc plumb postscript rc tcs troff eqn tbl pic grap
-
-
-Libraries:
 	libthread: works mostly, daemonizing works not
 
-	libdraw:	works basically, tested with tcolors and
-		acme. Events are not implemented, so only
+	libdraw:	works basically, tested with tcolors, acme
+		and sam. Events have not been ported, so only
 		programs using the thread-based mouse
 		interface will run.
 
-
-Pipes:
+Pipes
 	Implemented using Named Pipes.
 
 Unix Sockets
@@ -38,14 +26,18 @@ Unix Sockets
 Internet Sockets
 	Implemented using Winsock.
 
+Unicode
+	All programs get UTF-8 encoded streams on stdin, UTF-8 encoded
+	environment and command line arguments.
 
-	All programs get UTF-8 encoded streams. A "cat > file" from
+Console support
+	Reading from the console input and writing to the console
+	screen buffer is supported transparently. A "cat > file" from
 	the Windows console will produce UTF-8 characters, regardless
 	of which codepage is installed.
 
-One result of the console support is that you can use in e.g. `rc' the history
-feature of the console window without extra support in rc.
-
+	Also you can use the history feature of the console window without
+	extra support in programs.
 
 Because the mkfile system's structure has been derived from Plan9's, you
 can compile the libs and sources for Linux and MinGW in a similar way:
@@ -68,13 +60,17 @@ You can run
 	mk pop		- to populate the source directory with identical
 					source files from p9p
 
-	mk eq		... to check which files are identical
+	mk rm		... remove identical source files; this undos the
+				effect of `mk pop'
 
 	mk tkdiff		... to get a list of tkdiff commands you can click at in rc to
 				explore the differences between p9p and pf9
 
-	mk rm		... remove identical source files
+	mk eqdiff		... like `mk tkdiff', but this time a list showing on which
+				files an ed script has been run.
 
+Some files will be modified slightly after copying from plan9port. This
+is done using one ed script per file.
 
 
 How to build for mingw
@@ -95,18 +91,18 @@ How to build for mingw
 	run `misc/enterpf9' in step 1, this has already been done.
 
 3.	You should have run `mk pop' once to copy identical source files from
-	your plan9port distribution.
+	your plan9port distribution, and to apply changes, where neccessary.
 
 4.		cd src
 		mk
 		mk install
 	
-	This should build the all programs, on success you will
+	This should build all the programs, on success you will
 	find them in mingw/bin.
 
 5.	To get a distribution for windows, e.g. the compiled binaries
 	and additional files like troff fonts from plan9port, look into
-	dist/mingw.
+	dist/mingw/mkfile.
 
 	This needs some further explanations ...
 

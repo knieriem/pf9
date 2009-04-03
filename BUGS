@@ -1,0 +1,18 @@
+A list of known bugs in the MinGW port:
+
+* cmd/src/rc
+	If at the beginning of a command line is a variable definition like in
+		foo=1 cat
+	and the command is interrupted using ^C, then commands started
+	later also see the value of foo.
+
+* lib9/mingw/fdtab
+-	If a file descriptor is dup'ed, only the descriptor entry is duplicated, but
+	not the file or resources. This seems to be ok for all stream-like files, but
+	might cause problems for normal files, if one tried to read or write in the
+	same file at different offsets via the original and a dup'ed fd. Most programs
+	in p9p, though, don't seem to do this.
+
+-	There is a bug in, or near, the dirstat code. It can be observed when running
+	`du.exe -a' -- sometimes there will be files (or rather directories) missing.
+
