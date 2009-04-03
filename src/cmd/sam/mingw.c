@@ -72,69 +72,58 @@ print_s(char *s, String *a)
 }
 
 int     
-statfile(char *name, ulong *dev, uvlong *id, long *time, long *length, long *appendonly) 
+statfile(char *name, ulong *dev, uvlong *id, long *time, long *length, long *appendonly)
 {
-        Dir *d;
+	Dir *dirb;
 
-        d = dirstat(name);
-	if (d==nil)
-                return -1;
-        if (dev)
-                *dev = d->dev;
-        if (id) 
-                *id = d->qid.path;
-        if (time)
-                *time = d->mtime;
-        if (length)
-                *length = d->length;
-        if(appendonly)
-                *appendonly = 0;
-	free(d);
-        return 1;
+	dirb = dirstat(name);
+	if (dirb==nil)
+		return -1;
+	if (dev)
+		*dev = dirb->dev;
+	if (id)
+		*id = dirb->qid.path;
+	if (time)
+		*time = dirb->mtime;
+	if (length)
+		*length = dirb->length;
+	if(appendonly)
+		*appendonly = 0;
+	free(dirb);
+	return 1;
 }
 
 int
 statfd(int fd, ulong *dev, uvlong *id, long *time, long *length, long *appendonly)
 {
-        Dir *d;
+	Dir *dirb;
 
-        d = dirfstat(fd);
-	if (d==nil)
-                return -1;
-        if (dev)
-                *dev = d->dev;
-        if (id) 
-                *id = d->qid.path;
-        if (time)
-                *time = d->mtime;
-        if (length)
-                *length = d->length;
-        if(appendonly)
-                *appendonly = 0;
-	free(d);
-        return 1;
+	dirb = dirfstat(fd);
+	if (dirb==nil)
+		return -1;
+	if (dev)
+		*dev = dirb->dev;
+	if (id)
+		*id = dirb->qid.path;
+	if (time)
+		*time = dirb->mtime;
+	if (length)
+		*length = dirb->length;
+	if(appendonly)
+		*appendonly = 0;
+	free(dirb);
+	return 1;
 }
 
 void
-hup(int sig)
+notifyf(void *a, char *s)       /* never called; hup is instead */
 {
-        panicking = 1; /* ??? */
-        rescue();
-        exit(1);
-}
-
-int
-mynotify(void(*f)(void *, char *))
-{
-//        signal(SIGINT, SIG_IGN);
-//        signal(SIGPIPE, SIG_IGN);  /* XXX - bpipeok? */
-//        signal(SIGHUP, hup);
-        return 1;
-}
-
-void
-notifyf(void *a, char *b)       /* never called; hup is instead */
-{
+	USED(a);
+	if(strcmp(s, "interrupt") == 0)
+		noted(NCONT);
+	panicking = 1;
+	rescue();
+	noted(NDFLT);
 }
 
 static int
