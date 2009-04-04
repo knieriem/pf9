@@ -37,3 +37,11 @@ A list of known bugs in the MinGW port:
 	Perhaps a string hash of the full path of a file could be
 	used as qid.path, although there would still be a problem
 	in case of collisions.
+
+* cmd/src/sam:
+* lib9/mingw/fdtab
+* programs using announce/listen, or pipe:
+	When the file descriptor of the server side of a named pipe is
+	closed, it is disconnected only, but the handle is not closed. This
+	causes in an increasing number of used handles for each listen()
+	or pipe() call.
