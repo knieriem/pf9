@@ -6,6 +6,9 @@ A list of known bugs in the MinGW port:
 	and the command is interrupted using ^C, then commands started
 	later also see the value of foo.
 
+	Commands like ssh.exe `eat' the console (characters typed in later
+	are not visible anymore)
+
 * lib9/mingw/fdtab
 -	If a file descriptor is dup'ed, only the descriptor entry is duplicated, but
 	not the file or resources. This seems to be ok for all stream-like files, but
@@ -13,6 +16,24 @@ A list of known bugs in the MinGW port:
 	same file at different offsets via the original and a dup'ed fd. Most programs
 	in p9p, though, don't seem to do this.
 
--	There is a bug in, or near, the dirstat code. It can be observed when running
-	`du.exe -a' -- sometimes there will be files (or rather directories) missing.
+* cmd/src/sam:
+* cmd/du:
+* lib9/mingw/dirread:
+-	As there is no `inode' defined on Windows file systems,
+	the qid.path member of a `Dir' struct is always set to
+	zero at the moment. This can be a problem if some code
+	relies on qid.path being equal for the same but not for
+	different files.
 
+	One result of qid.path being always the same can be observed
+	using `du.exe -a': sometimes there are directories missing
+	as there is a seen() function which checks for files already
+	seen -- it is mislead by qid.path.
+
+	In sam this situation is causing a warning about possibly
+	aliased files (io.c:checkqid()), but it seems not to break
+	consistency.
+
+	Perhaps a string hash of the full path of a file could be
+	used as qid.path, although there would still be a problem
+	in case of collisions.
