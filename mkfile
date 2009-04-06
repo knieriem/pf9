@@ -67,9 +67,23 @@ tkdiff:VQ:	,,f
 eqdiff:VQ:	P9 EQ
 	for (i in `{cat EQ})
 		if (test -f $i)
-		if (test -f $PLAN9/$i)
-		if (! cmp -s $i $PLAN9/$i)
-			echo tkdiff $PLAN9/$i $i
+		if (test -f $PLAN9/$i){
+			if (test -f $i.ed){
+				rm -f ,,eqf
+				{
+					cat $i.ed
+					echo w ,,eqf
+					echo q
+				} | ed $PLAN9/$i >[2=1] | egrep -v '^[0-9?]+$' || true
+				if (! cmp -s ,,eqf $i)
+					echo tkdiff $PLAN9/$i $i	'# '$i.ed
+			}
+			if not{
+				if (! cmp -s $i $PLAN9/$i)
+					echo tkdiff $PLAN9/$i $i
+			}
+			
+		}
 	echo
 
 upded:VQ: 	P9 EQ
