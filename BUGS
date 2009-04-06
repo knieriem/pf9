@@ -17,7 +17,7 @@ A list of known bugs in the MinGW port:
 	in p9p, though, don't seem to do this.
 
 * cmd/src/sam:
-* cmd/du:
+(* cmd/du:)
 * lib9/mingw/dirread:
 -	As there is no `inode' defined on Windows file systems,
 	the qid.path member of a `Dir' struct is always set to
@@ -28,7 +28,7 @@ A list of known bugs in the MinGW port:
 	One result of qid.path being always the same can be observed
 	using `du.exe -a': sometimes there are directories missing
 	as there is a seen() function which checks for files already
-	seen -- it is mislead by qid.path.
+	seen -- it is mislead by qid.path.	-- FIXED (workaround in du.c)
 
 	In sam this situation is causing a warning about possibly
 	aliased files (io.c:checkqid()), but it seems not to break

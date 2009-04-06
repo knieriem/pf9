@@ -1,0 +1,5 @@
+155a
+#ifdef __MINGW32__
+	return 0;			/* qid.path always zero */
+#endif
+.
