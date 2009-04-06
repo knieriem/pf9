@@ -48,12 +48,12 @@ releasef(Fd *f, int type)
 {
 	/* don't call this function in a locked section */
 		switch (type) {
+		case Fdtypestd:
+			break;
 		case Fdtypepipesrv:
 			FlushFileBuffers(f->h); 
 			DisconnectNamedPipe(f->h);
-			break;
-		case Fdtypestd:
-			break;
+			/* fall through */
 		case Fdtypefile:
 		case Fdtypecons:
 		case Fdtypepipecl:
