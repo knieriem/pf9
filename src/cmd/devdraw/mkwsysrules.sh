@@ -52,7 +52,7 @@ if [ $WSYSTYPE = x11 ]; then
 fi
 if [ $WSYSTYPE = w32 ]; then
 	XO=`ls w32/*.c 2>/dev/null | sed 's,w32/,w32-,;s/\.c$/.$O/'`
-	echo 'WSYSOFILES=$WSYSOFILES '$XO
+	echo 'WSYSOFILES=$WSYSOFILES glenda.$O '$XO
 	echo 'WSYS=w32'
 fi
 if [ $WSYSTYPE = nowsys ]; then
