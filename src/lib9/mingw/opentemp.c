@@ -20,7 +20,7 @@ mingwmkstemp(char *template)
 }
 
 int
-opentemp(char *template)
+opentemp(char *template, int mode)
 {
-	return tmp(template, ORDWR|ORCLOSE);
+	return tmp(template, mode|ORCLOSE);
 }

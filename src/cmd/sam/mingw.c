@@ -139,7 +139,7 @@ temp_file(char *buf, int bufsize)
         n = snprint(buf, bufsize, "%s/sam.%d.XXXXXXX", tmp, 1000 /*getuid()*/);		/* FIXME */
         if (bufsize <= n)
                 return -1;
-        if ((fd = opentemp(buf)) < 0)
+        if ((fd = opentemp(buf, ORDWR)) < 0)
                 return -1;
 //	if (fcntl(fd, F_SETFD, fcntl(fd,F_GETFD,0) | FD_CLOEXEC) < 0)
 //                return -1;
