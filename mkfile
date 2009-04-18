@@ -6,7 +6,7 @@ all:VQ:
 	echo "targets: eq, rm(equals), pop(ulate)"
 
 ls:VQ:
-	hg manifest | grep -v '\(\.ed\|mkfile\)'
+	hg manifest | grep -v '\([.]\(ed\|mk\)\|mkfile\)'
 
 pop:V:	populate
 rm:V:	rmequals
@@ -47,9 +47,9 @@ rmequals:V:	$pop EQ
 
 
 ,,f:
-	find include src -type f | grep '/[^/]*\.\([chysS]\|lx\|spp\|utf\|pdf\|ps\|tr\)$' > ,,f
+	find include src -type f | grep '/[^/]*\.\([chysS]\|lx\|spp\|utf\|lib\|pdf\|ps\|tr\)$' > ,,f
 	find src -type f \
-		| grep '/\(README.*\|portdate\|mkfile\|COPYRIGHT\|NOTICE\|Root\|Repository\|Entries\|mkfile\|\.cvsignore\)$' >> ,,f
+		| grep '/\(README.*\|portdate\|reduce\|utfmap\|cvt\|find\|unansi\|mkfile\|COPYRIGHT\|NOTICE\|FIXES\|Root\|Repository\|Entries\|mkfile\|\.cvsignore\)$' >> ,,f
 	find lib | grep '\(lex\|yacc\).*' >> ,,f
 
 eq:V:	P9 ,,f uned
