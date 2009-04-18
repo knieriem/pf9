@@ -615,6 +615,7 @@ src/cmd/mk/match.c
 src/cmd/mk/shprint.c
 src/cmd/mk/file.c
 src/cmd/mk/bufblock.c
+src/cmd/mk/mk.pdf
 src/cmd/mk/rule.c
 src/cmd/mk/env.c
 src/cmd/mk/symtab.c
@@ -650,8 +651,11 @@ src/cmd/tcs/font/kmap.c
 src/cmd/tcs/font/main.c
 src/cmd/tcs/font/bmap.c
 src/cmd/tcs/font/font.c
+src/cmd/tcs/ex3.utf
 src/cmd/tcs/conv_ksc.c
+src/cmd/tcs/ex5.utf
 src/cmd/tcs/gb.c
+src/cmd/tcs/ex4.utf
 src/cmd/tcs/jis.h
 src/cmd/tcs/ksc.h
 src/cmd/tcs/conv_big5.c
@@ -667,8 +671,10 @@ src/cmd/tcs/kuten208.h
 src/cmd/tcs/cyrillic.h
 src/cmd/tcs/8859.h
 src/cmd/tcs/plan9.h
+src/cmd/tcs/ex6.utf
 src/cmd/tcs/misc.h
 src/cmd/tcs/ksc.c
+src/cmd/tcs/ex2.utf
 src/cmd/tcs/conv_jis.c
 src/cmd/tcs/conv_gb.c
 src/cmd/tcs/html.c
@@ -974,6 +980,7 @@ src/cmd/devdraw/latin1.c
 src/cmd/devdraw/devdraw.c
 src/cmd/devdraw/snarf.c
 src/cmd/devdraw/nowsys.c
+src/cmd/postscript/tr2post/test.tr
 src/cmd/postscript/tr2post/ps_include.h
 src/cmd/postscript/tr2post/Bgetfield.c
 src/cmd/postscript/tr2post/conv.c
@@ -1224,3 +1231,6 @@ src/cmd/samterm/CVS/Root
 src/cmd/samterm/CVS/Repository
 src/cmd/lex/.cvsignore
 src/libframe/portdate
+lib/yaccpar
+lib/yaccpars
+lib/lex.ncform
