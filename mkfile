@@ -50,7 +50,7 @@ rmequals:V:	$pop EQ
 	find include src -type f | grep '/[^/]*\.\([chysS]\|lx\|spp\|utf\|lib\|pdf\|ps\|tr\)$' > ,,f
 	find src -type f \
 		| grep '/\(README.*\|portdate\|reduce\|utfmap\|cvt\|find\|unansi\|mkfile\|COPYRIGHT\|NOTICE\|FIXES\|Root\|Repository\|Entries\|mkfile\|\.cvsignore\)$' >> ,,f
-	find lib | grep '\(lex\|yacc\).*' >> ,,f
+	find lib | grep '\(lex\|yacc\).*' >> ,,f || true
 
 eq:V:	P9 ,,f uned
 	rm -f ,EQ
