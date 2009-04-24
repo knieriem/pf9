@@ -1,4 +1,5 @@
 5c
+#undef exit
 #define exit(x) threadexitsall((x) ? "whoops" : nil)
 .
 2a
