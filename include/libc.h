@@ -781,7 +781,7 @@ extern	long	p9pwrite(int, void*, long, vlong);
 extern	long	p9read(int, void*, long);
 extern	long	readn(int, void*, long);
 /* extern	long	readv(int, IOchunk*, int); <unistd.h> */
-extern	int	p9remove(char*);
+extern	int	remove(const char*);
 /* extern	void*	sbrk(ulong); <unistd.h> */
 /* extern	long	oseek(int, long, int); */
 extern	vlong	p9seek(int, vlong, int);
@@ -827,7 +827,6 @@ extern	ulong	rendezvous(ulong, ulong);
 #define pread		p9pread
 #define pwrite		p9pwrite
 #define close		p9close
-#define remove	p9remove
 #define pipe		p9pipe
 #define	waitfor		p9waitfor
 #endif

@@ -6,6 +6,7 @@ SYSOFILES=\
 	fdtab.$O\
 	spawn.$O\
 	close.$O\
+	remove.$O\
 	fork.$O\
 	xpath.$O\
 

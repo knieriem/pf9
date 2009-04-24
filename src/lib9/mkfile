@@ -144,7 +144,6 @@ LIB9OFILES=\
 	readcons.$O\
 	pread.$O\
 	readn.$O\
-	remove.$O\
 	rfork.$O\
 #	searchpath.$O\
 	seek.$O\

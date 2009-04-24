@@ -63,6 +63,10 @@ typedef struct MingwCritSect
 #define	mkstemp	mingwmkstemp
 extern	int	mingwmkstemp(char*);
 
+#undef remove
+#define remove mingwremove
+extern	int	mingwremove(const char*);
+
 extern	void* winsbrk(unsigned long);
 #define	sbrk	winsbrk
 

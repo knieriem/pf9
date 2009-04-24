@@ -5,12 +5,13 @@
 #include "util.h"
 
 int
-p9remove(char *file)
+mingwremove(const char *f)
 {
 	struct _stat st;
 	Rune *wf;
+	char *file;
 
-	file = winpathdup(file);
+	file = winpathdup((char*)f);
 	if(file==nil)
 		return -1;
 	wf = winutf2wpath(file);
