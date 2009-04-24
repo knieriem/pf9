@@ -52,7 +52,7 @@ OFILES=\
 	vsnprintf.$O\
 	vsprintf.$O\
 
-HFILES=$PF9/include/stdio.h\
+HFILES=\
 	iolib.h\
 
 <$PF9/src/mksyslib

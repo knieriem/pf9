@@ -13,7 +13,7 @@ default:V:  ,$objtype-prereqs-built
 
 $buildprogpaths:
 	rm -f $target
-	for (i in 9 bio regexp stdio draw mux)
+	for (i in 9 bio regexp draw mux)
 		@{cd lib$i && mk && mk clean}
 	
 	cd cmd

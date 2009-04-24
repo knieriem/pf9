@@ -1,9 +1,11 @@
 <$PF9/$objtype/mkfile
 
-BUGGERED='fs|fmt|utf'
+BUGGERED='fs|fmt|utf|stdio'
 LIBDIRS=`ls -ld lib* | sed -n 's/^d.* //p' |egrep -v "^lib($BUGGERED)$"`
 
+SYSLIBDIRS=`{sh ./syslibdirs.sh}
 DIRS=\
+	$SYSLIBDIRS\
 	$LIBDIRS\
 	cmd\
 
