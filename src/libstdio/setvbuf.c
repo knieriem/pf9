@@ -31,8 +31,9 @@ int setvbuf(FILE *f, char *buf, int mode, long size){
 	f->state=RDWR;
 	return 0;
 }
+#define isatty myisatty
+static int isatty(int);
 int _IO_setvbuf(FILE *f){
-	static int isatty(int);
 	if(f==stderr || (f==stdout && isatty(1)))
 		return setvbuf(f, (char *)0, _IOLBF, BUFSIZ);
 	else return setvbuf(f, (char *)0, _IOFBF, BUFSIZ);

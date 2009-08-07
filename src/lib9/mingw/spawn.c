@@ -280,9 +280,9 @@ fdexport(int fd, int i, int tx, int *fused)
 	Commap *m;
 
 	seca = (SECURITY_ATTRIBUTES) {
-		.nLength	sizeof seca,
-		.lpSecurityDescriptor	NULL,
-		.bInheritHandle TRUE,
+		.nLength=	sizeof seca,
+		.lpSecurityDescriptor=	NULL,
+		.bInheritHandle= TRUE,
 	};
 	f = fdtget(fd);
 	if (f!=nil)
