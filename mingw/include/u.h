@@ -155,7 +155,7 @@ union FPdbleword
  */
 #if defined(__GNUC__)
 #	undef strcmp	/* causes way too many warnings */
-#	if __GNUC__ >= 4 || (__GNUC__==3 && !defined(__MINGW32__))
+#	if __GNUC__ >= 4 && !defined(__MINGW32__)
 #		undef AUTOLIB
 #		define AUTOLIB(x) int __p9l_autolib_ ## x __attribute__ ((weak));
 #		undef AUTOFRAMEWORK
