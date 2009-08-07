@@ -287,9 +287,6 @@ wincreatefile(char *name, int desiacc, int share, int creatdisp, int flagsattr)
 	Rune *wname;
 	HANDLE h;
 
-	if (flagsattr==0)
-		flagsattr = FILE_ATTRIBUTE_NORMAL;
-
 	if (pureasc(name))
 		h = CreateFileA(name, desiacc, share, nil, creatdisp, flagsattr, nil);
 	else {

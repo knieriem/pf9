@@ -87,6 +87,9 @@ open(char *name, int mode)
 		return fd;
 	}
 	free(wname);
+
+	if (flags==0)
+		flags = FILE_ATTRIBUTE_NORMAL;
 	h = wincreatefile(f->name, da, share, dis, flags);
 	if (h==INVALID_HANDLE_VALUE) {
 		winerror(nil);
