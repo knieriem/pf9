@@ -43,7 +43,7 @@ _CRTIMP int	__cdecl	_wexecve(Rune*, Rune*[], Rune*[]);
 #endif
 
 int
-exec(char *prog, char *argv[])
+winexecve(char *prog, char *argv[], char *env[])
 {
 	Waitmsg *w;
 	int pid;
@@ -53,7 +53,7 @@ exec(char *prog, char *argv[])
 	fd[1] = dup(1, -1);
 	fd[2] = dup(2, -1);
 
-	pid = winspawn(fd, prog, argv, 1);
+	pid = winspawne(fd, prog, argv, env, 1);
 	if (pid<0) {
 		close(fd[0]);
 		close(fd[1]);
@@ -68,4 +68,11 @@ exec(char *prog, char *argv[])
 	}
 
 	return 0;
+}
+int
+exec(char *prog, char *argv[])
+{
+	extern char **environ;
+
+	return winexecve(prog, argv, environ);
 }
