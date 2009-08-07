@@ -7,7 +7,7 @@ test -f $PF9/$objtype/config && . $PF9/$objtype/config
 
 usegcc()
 {
-	cc=gcc-3.3
+	cc=gcc
 	ngflags=-c
 	if $opti; then
 		ngflags="-O2 $ngflags"
