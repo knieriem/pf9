@@ -140,12 +140,24 @@ _pthreadinit(void)
 	tlsproc = TlsAlloc();
 }
 
+extern void (*_sysfatal)(char*, va_list);
 void
 threadexitsall(char *msg)
 {
 	/* Increase our priority so that other procs have less of a chance to interrupt exits()
 	 */
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_TIME_CRITICAL);
+	_lock = nil;
+	_unlock = nil;
+	_qlock = nil;
+	_qunlock = nil;
+	_rlock = nil;
+	_runlock = nil;
+	_wlock = nil;
+	_wunlock = nil;
+	_rsleep = nil;
+	_rwakeup = nil;
+	_sysfatal = nil;
 
 	exits(msg);
 }
