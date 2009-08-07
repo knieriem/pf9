@@ -330,6 +330,13 @@ fdexport(int fd, int i, int tx, int *fused)
 int
 winspawn(int fd[3], char *file, char *argv[], int search)
 {
+	extern char **environ;
+
+	return winspawne(fd, file, argv, environ, search);
+}
+int
+winspawne(int fd[3], char *file, char *argv[], char *env[], int search)
+{
 	Rune	*wpath, *wcmd, *eb;
 	char path[MAX_PATH], *cmd, **margv;
 	STARTUPINFOW si;
@@ -337,7 +344,6 @@ winspawn(int fd[3], char *file, char *argv[], int search)
 	DWORD cflags;
 	int r;
 	int used;
-	extern char **environ;
 
 	margv = argv;
 	if (lookupexe(path, file, &margv, search)==-1)
@@ -350,7 +356,7 @@ winspawn(int fd[3], char *file, char *argv[], int search)
 	si.hStdOutput = fdexport(fd[1], 1, 0, &used);
 	si.hStdError = fdexport(fd[2], 2, 0, &used);
 
-	eb = exportenv(environ);
+	eb = exportenv(env);
 
 	cmd = proccmd(margv);
 	if (margv!=argv)
