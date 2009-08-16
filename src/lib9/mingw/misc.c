@@ -274,7 +274,7 @@ pureasc(char *s)
 {
 	uchar *p;
 
-	p = s;
+	p = (uchar*)s;
 	for(; *p!='\0'; p++)
 		if (*p >= Runeself)
 			return 0;
