@@ -123,6 +123,8 @@ winexecpath(char path[], char *file, char **shell)
 
 	n = read(fd, buf, sizeof(buf));
 	close(fd);
+	if(n<1)
+		return 0;
 	buf[n-1] = '\0';
 	if (n > 4 && buf[0] == '#' && buf[1] == '!') {
 		char *p, *ep, *sl;
