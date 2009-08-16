@@ -1,6 +1,4 @@
 #include <u.h>
-#define NOPLAN9DEFINES
-#include <u.h>
 #include <mingwutil.h>
 #include <libc.h>
 
