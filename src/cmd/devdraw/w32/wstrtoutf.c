@@ -23,7 +23,7 @@ wstrtoutf(char *s, Rune *t, int n)
 	while(*t) {
 		if(n < UTFmax+1 && n < runelen(*t)+1) {
 			*s = 0;
-			return i+wstrutflen(t)+1;
+			return s-s0+wstrutflen(t)+1;
 		}
 		i = runetochar(s, t);
 		s += i;
