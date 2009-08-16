@@ -23,6 +23,9 @@ p9read(int fd, void *buf, long nbytes)
 	lk = nil;
 	nread = -1;
 	switch (f->type) {
+	case Fdtypedir:
+		werrstr("reading from a directory fd not implemented");
+		break;
 	case Fdtypecons:
 		nread = winreadcons(f->h, buf, nbytes);
 		break;
