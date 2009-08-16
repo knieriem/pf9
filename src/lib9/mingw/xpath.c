@@ -2,6 +2,8 @@
 #include <mingw32.h>
 #include <libc.h>
 
+#include "util.h"
+
 static int
 setpath(char *path, char *file)
 {
@@ -47,7 +49,7 @@ setpath(char *path, char *file)
 	}
 
 	for(p=path; *p; p++) {
-		if(*p < 32 || *p == '*' || *p == '?') {
+		if(*(uchar*)p < 32 || *p == '*' || *p == '?') {
 			werrstr("file not found");
 			return -1;
 		}
@@ -83,6 +85,19 @@ setpath(char *path, char *file)
 	return 0;
 }
 
+static
+int
+fexists(char *name)
+{
+	DWORD attr;
+	Rune *wname;
+
+	wname = winutf2wpath(name);
+	attr = GetFileAttributesW(wname);
+	free(wname);
+	return attr != INVALID_FILE_ATTRIBUTES;
+}
+
 int
 winexecpath(char path[], char *file, char **shell)
 {
@@ -96,21 +111,20 @@ winexecpath(char path[], char *file, char **shell)
 		return 0;
 
 	n = strlen(path)-4;
-	if(path[n] == '.') {
-		if(GetFileAttributes(path) != INVALID_FILE_ATTRIBUTES)
-			return 1;
-	}
+	if(path[n] == '.')
+	if(fexists(path))
+		return 1;
 	strncat(path, ".exe", MAX_PATH);
 	path[MAX_PATH-1] = 0;
 //	fprint(2, "look exe %s\n", path);
-	if(GetFileAttributes(path) != INVALID_FILE_ATTRIBUTES)
+	if(fexists(path))
 		return 1;
 	path[n+4] = '\0';
 
 	strncat(path, ".com", MAX_PATH);
 	path[MAX_PATH-1] = 0;
 //	fprint(2, "look com %s\n", path);
-	if(GetFileAttributes(path) != INVALID_FILE_ATTRIBUTES)
+	if(fexists(path))
 		return 1;
 	path[n+4] = '\0';
 
