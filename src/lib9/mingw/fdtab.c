@@ -227,7 +227,7 @@ fdtdup(int oldfd, int newfd)
 		++oldf->users;
 		qunlock(&lk);
 		if (rf!=nil)
-			releasef(f, type);
+			releasef(rf, type);
 	}
 	dprint(2, "%\f ->%d\n", oldfd, oldf, "dup", newfd);
 	return newfd;
@@ -237,7 +237,6 @@ int
 fdtclose(int fd)
 {
 	Fd	*f, *rf, tf;
-	int	type;
 	int	i, fatal;
 
 	rf = nil;
@@ -252,7 +251,6 @@ fdtclose(int fd)
 	--f->users;
 	tf = *f;
 	if (f->users==0) {
-		type = f->type;
 		f->type = 0;
 		rf = f;
 	}else{
@@ -270,7 +268,7 @@ out:
 	if (tf.type!=Fdtypenone)
 		fprint(2, "%\f #%d\n", fd, &tf, "closed", nfd);
 	if (rf!=nil)
-		releasef(f, type);
+		releasef(rf, tf.type);
 
 	return 0;
 }
