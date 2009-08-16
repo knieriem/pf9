@@ -45,13 +45,13 @@ static char utf[UTFmax], nutf;
 			++r;
 		} else {
 			if (n<UTFmax)
-				if (!fullrune(s, n)) {
+				if (!fullrune((char*)s, n)) {
 					nutf = n;
 					memcpy(utf, s, nutf);
 //					fprintf(stderr, "CONS: not a full rune!");
 					break;
 				}
-			l = chartorune(r, s);
+			l = chartorune(r, (char*)s);
 			if (*r!=Runeerror)
 				++r;
 //			else
@@ -86,6 +86,7 @@ winreadcons(HANDLE h, void *buf, int nwant)
 	if (nwant==0)
 		return 0;
 
+	wascr = 0;
 	ncalls = 0;
 	s = buf;
 	for (n=0; n<nwant;) {
