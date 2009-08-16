@@ -232,12 +232,11 @@ rxhelper(void*v)
 				break;
 	}
 out:
-//	fprint(2, "Rexit");
+//	fprint(2, "[%d]\tRexit", getpid());
 	if (fd!=-1)
 		close(fd);
 	CloseHandle(m->h);
 	free(v);
-//	return 0;
 }
 static void
 txhelper(void*v)
@@ -263,12 +262,11 @@ txhelper(void*v)
 		if (n != nw)
 			break;
 	}
-//	fprint(2, "Texit");
+//	fprint(2, "[%d]\tTexit", getpid());
 	if (fd!=-1)
 		close(fd);
 	CloseHandle(m->h);
 	free(v);
-//	return 0;
 }
 
 static HANDLE
