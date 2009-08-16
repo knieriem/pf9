@@ -345,6 +345,7 @@ winspawne(int fd[3], char *file, char *argv[], char *env[], int search)
 	int r;
 	int used;
 
+	used = 0;
 	margv = argv;
 	if (lookupexe(path, file, &margv, search)==-1)
 		return -1;
