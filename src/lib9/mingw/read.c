@@ -21,6 +21,7 @@ p9read(int fd, void *buf, long nbytes)
 
 //	fprint(2, "Rd%d ", fd);
 	lk = nil;
+	nread = -1;
 	switch (f->type) {
 	case Fdtypecons:
 		nread = winreadcons(f->h, buf, nbytes);
