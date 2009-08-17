@@ -75,7 +75,7 @@ Xbackq(void)
 	Updenv();
 
 	argv = rcargv(runq->code[runq->pc].s);
-	pid = ForkExecute(argv0, argv, -1, pfd[1], 2);
+	pid = ForkExecute(argv0, argv, 0, pfd[1], 2);
 	free(argv);
 
 	close(pfd[1]);
@@ -167,7 +167,7 @@ Xsubshell(void)
 	Updenv();
 
 	argv = rcargv(runq->code[runq->pc].s);
-	pid = ForkExecute(argv0, argv, -1, 1, 2);
+	pid = ForkExecute(argv0, argv, 0, 1, 2);
 	free(argv);
 
 	if(pid < 0) {
