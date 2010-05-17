@@ -162,9 +162,9 @@ union FPdbleword
 #		define AUTOFRAMEWORK(x) int __p9l_autoframework_ ## x __attribute__ ((weak));
 #	else
 #		undef AUTOLIB
-#		define AUTOLIB(x) static int __p9l_autolib_ ## x __attribute__ ((unused));
+#		define AUTOLIB(x) int __p9l_autolib_ ## x;
 #		undef AUTOFRAMEWORK
-#		define AUTOFRAMEWORK(x) static int __p9l_autoframework_ ## x __attribute__ ((unused));
+#		define AUTOFRAMEWORK(x) int __p9l_autoframework_ ## x;
 #	endif
 #endif
 
