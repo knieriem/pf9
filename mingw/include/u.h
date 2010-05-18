@@ -77,8 +77,6 @@ extern	int	fchmod(int, mode_t);
 #define O_DIRECT 0
 #endif
 
-typedef const char	cchar;
-
 typedef signed char schar;
 
 #ifdef _NEEDUCHAR
