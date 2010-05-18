@@ -1064,6 +1064,7 @@ src/cmd/troff/fns.h
 src/cmd/troff/t11.c
 src/cmd/troff/n8.c
 src/cmd/troff/ni.c
+src/cmd/basename.c
 src/cmd/9p.c
 src/cmd/md5sum.c
 src/cmd/ascii.c
