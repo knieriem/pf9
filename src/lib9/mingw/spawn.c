@@ -85,11 +85,11 @@ proccmd(char **argv)
 	return cmd;
 }
 
-static Rune *
+static WCHAR *
 exportenv(char **e)
 {
 	int i, j, n;
-	Rune *buf;
+	WCHAR *buf;
 
 	if(e == 0 || *e == 0)
 		return 0;
@@ -100,9 +100,9 @@ exportenv(char **e)
 	n = 0;
 	for(i = 0; *e; e++, i++) {
 		j = utflen(*e)+1;
-		buf = realloc(buf, sizeof(Rune)*(n+j));
-		runesnprint(buf+n, j, "%s", *e);
-//		fprint(2, "export: %S\n", buf+n);
+		buf = realloc(buf, sizeof(WCHAR)*(n+j));
+		winutftowstr(buf+n, *e, j);
+//		fprint(2, "export: %*s\n", j, *e);
 		n += j;
 	}
 	/* final null */
@@ -335,7 +335,7 @@ winspawn(int fd[3], char *file, char *argv[], int search)
 int
 winspawne(int fd[3], char *file, char *argv[], char *env[], int search)
 {
-	Rune	*wpath, *wcmd, *eb;
+	WCHAR	*wpath, *wcmd, *eb;
 	char path[MAX_PATH], *cmd, **margv;
 	STARTUPINFOW si;
 	PROCESS_INFORMATION pi;

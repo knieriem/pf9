@@ -1,2 +1,2 @@
-extern  int	wstrtoutf(char*, Rune*, int);
-extern  int	wstrutflen(Rune*);
+extern  int	wstrtoutf(char*, WCHAR*, int);
+extern  int	wstrutflen(WCHAR*);

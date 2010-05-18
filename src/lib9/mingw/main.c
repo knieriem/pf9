@@ -29,23 +29,11 @@ fatal(char *fmt, ...)
 }
 
 static
-int
-wstrlen(Rune *r)
-{
-	int	n;
-
-	n = 0;
-	for (; *r!=0; r++)
-		++n;
-	return n;	
-}
-
-static
 char **
-uutfargv(int argc, Rune *wargv[])
+uutfargv(int argc, WCHAR *wargv[])
 {
 	int	i, len;
-	char **argv, *args, *w;
+	char **argv, *args, *w, *ep;
 
 	argv = malloc((argc+1) * sizeof(char*));
 	if (argv==nil)
@@ -53,15 +41,16 @@ uutfargv(int argc, Rune *wargv[])
 
 	len = 0;
 	for (i=0; i<argc; i++)
-		len += runenlen(wargv[i], wstrlen(wargv[i]))+1;
+		len += winwstrutflen(wargv[i])+1;
 	args = malloc(len*sizeof(char));
 	if (args==nil)
 		fatal("malloc UTF args failed");
 
 	w = args;
+	ep = args+len*sizeof(char);
 	for (i=0; i<argc; i++) {
 		argv[i] = w;
-		w += sprint(w, "%S", wargv[i])+1;
+		w = winwstrtoutfe(w, ep, wargv[i])+1;
 	}
 	argv[i] = nil;
 
@@ -71,9 +60,9 @@ static
 char **
 utfargv(int *np)
 {
-	Rune **wargv;
+	WCHAR **wargv;
 	int	i, argc, len;
-	char **argv, *args, *w;
+	char **argv, *args, *w, *ep;
 
 	wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
 
@@ -83,15 +72,16 @@ utfargv(int *np)
 
 	len = 0;
 	for (i=0; i<argc; i++)
-		len += runenlen(wargv[i], wstrlen(wargv[i]))+1;
+		len += winwstrutflen(wargv[i])+1;
 	args = malloc(len*sizeof(char));
 	if (args==nil)
 		fatal("malloc UTF args failed");
 
+	ep = args+len*sizeof(char);
 	w = args;
 	for (i=0; i<argc; i++) {
 		argv[i] = w;
-		w += sprint(w, "%S", wargv[i])+1;
+		w = winwstrtoutfe(w, ep, wargv[i])+1;
 	}
 	argv[i] = nil;
 

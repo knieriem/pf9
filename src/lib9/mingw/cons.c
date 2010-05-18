@@ -12,7 +12,8 @@ winwritecons(HANDLE h, void *v, int n)
 {
 static char utf[UTFmax], nutf;
 	DWORD nw;
-	Rune *wbuf, *r;
+	WCHAR *wbuf, *wp;
+	Rune r;
 	uchar *buf, *s;
 	int	res, l;
 
@@ -20,12 +21,12 @@ static char utf[UTFmax], nutf;
 		return 1;
 
 	n += nutf;
-	wbuf = malloc(n*sizeof(Rune));
+	wbuf = malloc(n*sizeof(WCHAR));
 	if (wbuf==nil)
 		return 0;
 
 	if (nutf>0) {
-		buf = malloc(n*sizeof(char));
+		buf = malloc(n*sizeof(WCHAR));
 		if (buf==nil) {
 			free(wbuf);
 			return 0;
@@ -37,12 +38,12 @@ static char utf[UTFmax], nutf;
 	} else
 		buf = v;
 	s = buf;
-	for (r=wbuf; n>0; ) {
+	for (wp=wbuf; n>0; ) {
 		if (*s<Runeself) {
-			*r = *s;
+			*wp = *s;
 			--n;
 			++s;
-			++r;
+			++wp;
 		} else {
 			if (n<UTFmax)
 				if (!fullrune((char*)s, n)) {
@@ -51,16 +52,17 @@ static char utf[UTFmax], nutf;
 //					fprintf(stderr, "CONS: not a full rune!");
 					break;
 				}
-			l = chartorune(r, (char*)s);
-			if (*r!=Runeerror)
-				++r;
+			l = chartorune(&r, (char*)s);
+			*wp = r;
+			if (r!=Runeerror)
+				++wp;
 //			else
 //				fprintf(stderr, "CONS: runerror: %02x\n", *s);
 			n -= l;
 			s += l;
 		}
 	}
-	n = r-wbuf;
+	n = wp-wbuf;
 	res = WriteConsoleW(h, wbuf, n, &nw, nil);
 	if (nw!=n)
 		res = 0;
@@ -74,8 +76,9 @@ static int eof;
 int
 winreadcons(HANDLE h, void *buf, int nwant)
 {
-	static Rune wbuf[8], *wp;
+	static WCHAR wbuf[8], *wp;
 	static DWORD	wn;
+	Rune r;
 	char	utf[UTFmax], *s;
 	int	n, l, wascr;
 	int	ncalls;
@@ -118,7 +121,8 @@ winreadcons(HANDLE h, void *buf, int nwant)
 			wascr = 0;
 		}
 //		fprintf(stderr, "R%04x\n", *wp);
-		l = runetochar(utf, wp);
+		r = *wp;
+		l = runetochar(utf, &r);
 		if (l > nwant-n)
 			return n;
 		memcpy(s+n, utf, l);

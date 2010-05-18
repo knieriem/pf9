@@ -11,7 +11,7 @@
 int
 dirwstat(char *file, Dir *dir)
 {
-	Rune *wfile, *wto;
+	WCHAR *wfile, *wto;
 	int	ret;
 	struct _utimbuf ub;
 

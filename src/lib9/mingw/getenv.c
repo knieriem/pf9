@@ -10,14 +10,14 @@ enum {
 char **mingwenviron;
 static int	envsz;
 int
-mingwinitenv(Rune *wenv[])
+mingwinitenv(WCHAR *wenv[])
 {
 	int	n;
-	Rune **rp;
+	WCHAR **rp;
 	char **p;
 
 	if (wenv==nil) {
-		Rune dummy[] = {'D', '\0'};
+		WCHAR dummy[] = {'D', '\0'};
 
 		_wgetenv(dummy);			/* initialize */
 		wenv = _wenviron;
@@ -34,7 +34,7 @@ mingwinitenv(Rune *wenv[])
 
 	p = environ;
 	for (rp=wenv; *rp!=nil; rp++) {
-		*p = smprint("%S", *rp);
+		*p = winwstrtoutfm(*rp);
 		if (*p!=nil) {
 			/* make sure PATH is uppercase */
 			if ((*p)[0]=='P' && !strncasecmp("Path=", *p, 5))
@@ -129,10 +129,10 @@ p9putenv(char *s, char *v)
 }
 
 
-Rune **
+WCHAR **
 winruneenv(void)
 {
-	Rune **rp, **wenv, *r;
+	WCHAR **rp, **wenv, *r;
 	char **p;
 	int n;
 
@@ -142,15 +142,15 @@ winruneenv(void)
 	for (p=environ; *p!=nil; p++)
 		n += utflen(*p)+1;
 
-	wenv = malloc(sizeof(Rune*)*(envsz+1) + sizeof(Rune)*n);
+	wenv = malloc(sizeof(WCHAR*)*(envsz+1) + sizeof(WCHAR)*n);
 	if (wenv==nil)
 		return nil;
 
 	rp = wenv;
-	r = (Rune*) (rp + envsz+1);
+	r = (WCHAR*) (rp + envsz+1);
 	for (p=environ; *p!=nil; p++) {
 		*rp++ = r;
-		r += runesnprint(r, strlen(*p), "%s", *p);
+		r += winutftowstr(r, *p, strlen(*p));
 	}
 	*rp = '\0';
 	return wenv;

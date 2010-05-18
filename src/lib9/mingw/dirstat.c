@@ -65,7 +65,7 @@ Dir*
 dirstat(char *f)
 {
 	Dir *d;
-	Rune *wf;
+	WCHAR *wf;
 	struct _stat sbuf;
 	char *p;
 

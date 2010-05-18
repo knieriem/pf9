@@ -11,7 +11,7 @@ int
 open(char *name, int mode)
 {
 	char buf[MAX_PATH];
-	Rune	*wname;
+	WCHAR	*wname;
 	Fd	*f;
 	int fd, rdwr;
 	DWORD	da, share, flags, dis, attr, cmode;

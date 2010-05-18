@@ -1,4 +1,5 @@
 #include <u.h>
+#include <mingw32.h>
 #define NOPLAN9DEFINES
 #include <libc.h>
 #include <sys/types.h>
@@ -6,6 +7,8 @@
 #include <dirent.h>
 //#include <pwd.h>
 //#include <grp.h>
+
+#include "util.h"
 
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
 #include <sys/disklabel.h>
@@ -86,7 +89,7 @@ int _p9usepwlibrary = 1;
  * getpwnam in the first place, so I'm not too worried.
  */
 int
-_p9dir(struct stat *st, Rune *wname, Dir *d, char **str, char *estr)
+_p9dir(struct stat *st, WCHAR *wname, Dir *d, char **str, char *estr)
 {
 	char *s, *name;
 	char tmp[20];
@@ -102,7 +105,7 @@ _p9dir(struct stat *st, Rune *wname, Dir *d, char **str, char *estr)
 		memset(d, 0, sizeof *d);
 
 	/* name */
-	name = smprint("%S", wname);
+	name = winwstrtoutfm(wname);
 	if (name==nil)
 		name = oops;
 	s = strrchr(name, '/');

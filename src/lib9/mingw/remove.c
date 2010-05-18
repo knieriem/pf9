@@ -8,7 +8,7 @@ int
 mingwremove(const char *f)
 {
 	struct _stat st;
-	Rune *wf;
+	WCHAR *wf;
 	char *file;
 
 	file = winpathdup((char*)f);

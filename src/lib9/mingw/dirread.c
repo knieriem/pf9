@@ -10,7 +10,7 @@
 #define	DIR		_WDIR
 #define	stat		_stat
 
-extern int _p9dir(struct stat*, Rune*, Dir*, char**, char*);
+extern int _p9dir(struct stat*, WCHAR*, Dir*, char**, char*);
 
 enum {
 	STRUCT_ALIGN = sizeof(int),

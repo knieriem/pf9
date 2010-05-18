@@ -1,8 +1,9 @@
 #include <u.h>
+#include <mingw32.h>
 #include <libc.h>
 
 int
-wstrutflen(Rune *s)
+wstrutflen(WCHAR *s)
 {
 	int n;
 	
@@ -12,10 +13,11 @@ wstrutflen(Rune *s)
 }
 
 int
-wstrtoutf(char *s, Rune *t, int n)
+wstrtoutf(char *s, WCHAR *t, int n)
 {
 	int i;
 	char *s0;
+	Rune r;
 
 	s0 = s;
 	if(n <= 0)
@@ -25,7 +27,8 @@ wstrtoutf(char *s, Rune *t, int n)
 			*s = 0;
 			return s-s0+wstrutflen(t)+1;
 		}
-		i = runetochar(s, t);
+		r = *t;
+		i = runetochar(s, &r);
 		s += i;
 		n -= i;
 		t++;

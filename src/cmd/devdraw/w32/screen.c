@@ -646,7 +646,7 @@ setcolor(ulong index, ulong red, ulong green, ulong blue)
 uchar*
 clipreadunicode(HANDLE h)
 {
-	Rune *p;
+	WCHAR *p;
 	int n;
 	uchar *q;
 	

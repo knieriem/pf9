@@ -7,15 +7,15 @@
 
 enum {
 	NBUF	= _MAX_PATH,
-	BUFSZ	= sizeof(Rune)*NBUF,
+	BUFSZ	= sizeof(WCHAR)*NBUF,
 };
 
 static
-Rune*
-beautyseg(Rune *w, Rune *ep, Rune **ppl, Rune **pps)
+WCHAR*
+beautyseg(WCHAR *w, WCHAR *ep, WCHAR **ppl, WCHAR **pps)
 {
 	int	copyshort;
-	Rune *p, *w0;
+	WCHAR *p, *w0;
 
 	if (w>=ep)
 		return w;
@@ -64,9 +64,9 @@ oflow:
 WINBASEAPI DWORD WINAPI GetLongPathNameW(LPCWSTR,LPWSTR,DWORD);
 static
 void
-beautypath(Rune *wbuf)
+beautypath(WCHAR *wbuf)
 {
-	Rune *wl, *ws, *pl, *ps, *p, *ep;
+	WCHAR *wl, *ws, *pl, *ps, *p, *ep;
 
 	ws = malloc(BUFSZ);
 	if (ws==nil)
@@ -96,7 +96,7 @@ fws:
 char*
 p9getwd(char *s, int ns)
 {
-	Rune wbuf[NBUF];
+	WCHAR wbuf[NBUF];
 	char *ep;
 	long	sz;
 
@@ -106,11 +106,14 @@ p9getwd(char *s, int ns)
 	beautypath(wbuf);
 
 	ep = s+ns;
-	seprint(s, ep, "/%S", wbuf);
+	if(s<ep){
+		*s = '/';
+		winwstrtoutfe(s+1, ep, wbuf);
+	}
 	if (winisdrvspec(s+1))
 		s[2] = '-';
 	else
-		seprint(s, ep, "%S", wbuf);
+		winwstrtoutfe(s, ep, wbuf);
 	winbsl2sl(s);
 	sz = strlen(s);
 	if (s[sz-1]=='/')

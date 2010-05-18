@@ -90,7 +90,7 @@ int
 fexists(char *name)
 {
 	DWORD attr;
-	Rune *wname;
+	WCHAR *wname;
 
 	wname = winutf2wpath(name);
 	attr = GetFileAttributesW(wname);

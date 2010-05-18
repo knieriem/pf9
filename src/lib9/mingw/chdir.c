@@ -8,7 +8,7 @@
 int
 p9chdir(char *d)
 {
-	Rune	*wname;
+	WCHAR	*wname;
 	long	s;
 	int	r;
 

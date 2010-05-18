@@ -13,7 +13,12 @@
 #include "util.h"
 #include "fdtab.h"
 
+#define	wstrtoutfm	winwstrtoutfm
+#define	wstrtoutfe	winwstrtoutfe
+#define	wstrutflen	winwstrutflen
+#define	wstrtoutfn	winwstrtoutfn
 #define	utf2wstr	winutf2wstr
+#define	utftowstr	winutftowstr
 #define	utf2wpath winutf2wpath
 #define	sl2bsl	winsl2bsl
 #define	bsl2sl	winbsl2sl
@@ -124,41 +129,104 @@ winovresult(int ret, HANDLE h, OVERLAPPED *ov, DWORD *np, int evclose)
 }
 
 int
-utf2wstrn(LPWSTR r, DWORD n, char *s)
+wstrlen(WCHAR *w)
+{
+	int	n;
+
+	for(n=0; *w != 0; n++)
+		;
+	return n;
+}
+int
+wstrutflen(WCHAR *w)
+{
+	int n;
+	
+	for(n=0; *w; n+=runelen(*w), w++)
+		;
+	return n;
+}
+int
+wstrtoutfn(char *s, int n, WCHAR *w)
+{
+	int i;
+	char *s0;
+	Rune r;
+
+	s0 = s;
+	if(n <= 0)
+		return 0;
+	while(*w) {
+		if(n < UTFmax+1 && n < runelen(*w)+1) {
+			*s = 0;
+			return s-s0+wstrutflen(w)+1;
+		}
+		r = *w;
+		i = runetochar(s, &r);
+		s += i;
+		n -= i;
+		w++;
+	}
+	*s = 0;
+	return s-s0;
+}
+char*
+wstrtoutfm(WCHAR *w)
+{
+	char *s;
+	int n;
+
+	n = wstrutflen(w);
+	s = malloc(n+1);
+	if(s==nil)
+		return nil;
+	wstrtoutfn(s, n+1, w);
+	return s;
+}
+char*
+wstrtoutfe(char *wp, char *ep, WCHAR *w)
+{
+	return wp+wstrtoutfn(wp, ep-wp, w);
+}
+
+int
+utftowstr(WCHAR *w, char *s, int n)
 {
 	int len;
-	Rune *e, *or;
+	WCHAR *e, *ow;
+	Rune r;
 
 	len = utflen(s);
 	if(len >= n)
 		return len;
-	or = r;
-	e = r+n-1;
-	while(r<e && *s){
-		s += chartorune(r, s);
-		r++;
+	ow = w;
+	e = w+n-1;
+	while(w<e && *s){
+		s += chartorune(&r, s);
+		*w = r&0xFFFF;
+		w++;
 	}
-	*r = '\0';
+	*w = '\0';
 	return len;
 }
 
 LPWSTR
 utf2wstr(char *s)
 {
-	Rune *r;
+	WCHAR *w;
 	int len;
 
 	if(s == nil)
 		return nil;
 
 	len = utflen(s)+1;
-	r = malloc(sizeof(Rune)*len);
-	utf2wstrn(r, len, s);
-	return r;
+	w = malloc(sizeof(WCHAR)*len);
+	utftowstr(w, s, len);
+	return w;
 }
 
 void
-sl2bsl(Rune *r)
+sl2bsl(WCHAR *r)
 {
 	for (;*r != '\0'; r++)
 		if (*r=='/')
@@ -175,13 +243,13 @@ bsl2sl(char *s)
 LPWSTR
 utf2wpath(char *s)
 {
-	Rune *r;
+	WCHAR *w;
 
-	r = utf2wstr(s);
-	if (r==nil)
+	w = utf2wstr(s);
+	if (w==nil)
 		return nil;
-	sl2bsl(r);
-	return r;
+	sl2bsl(w);
+	return w;
 }
 
 int
@@ -284,7 +352,7 @@ pureasc(char *s)
 HANDLE
 wincreatefile(char *name, int desiacc, int share, int creatdisp, int flagsattr)
 {
-	Rune *wname;
+	WCHAR *wname;
 	HANDLE h;
 
 	if (pureasc(name))
@@ -300,7 +368,7 @@ wincreatefile(char *name, int desiacc, int share, int creatdisp, int flagsattr)
 BOOL
 wincreatedir(char *name)
 {
-	Rune *wname;
+	WCHAR *wname;
 	int	r;
 
 	if (pureasc(name))
@@ -317,7 +385,7 @@ HANDLE
 wincreatenamedpipe(char *name, int omode, int pmode, int maxinst, int outsz, int insz, int timeout)
 {
 	HANDLE h;
-	Rune *wname;
+	WCHAR *wname;
 
 	if (pureasc(name))
 		h = CreateNamedPipeA(name, omode, pmode, maxinst, outsz, insz, timeout, nil);
