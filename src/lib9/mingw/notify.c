@@ -21,8 +21,11 @@
 
 #include <u.h>
 #include <signal.h>
+#include <mingw32.h>
 #define NOPLAN9DEFINES
 #include <libc.h>
+
+#include "util.h"
 
 static struct {
 	int sig;
@@ -235,6 +238,19 @@ notifyoff(char *msg)
 	return notifyseton(_p9strsig(msg), 0);
 }
 
+static
+BOOL WINAPI
+ctrlhandler(DWORD type)
+{
+	switch(type){
+	case CTRL_BREAK_EVENT:
+		raise(SIGINT);
+		return TRUE;
+	}
+	return FALSE;	
+}
+
+
 /*
  * Initialization follows sigs table.
  */
@@ -257,5 +273,6 @@ noteinit(void)
 			continue;
 		notifyseton(sig->sig, 1);
 	}
+	if(winhascons())
+		SetConsoleCtrlHandler(ctrlhandler, 1);
 }
-
