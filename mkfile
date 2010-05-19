@@ -80,12 +80,25 @@ eq:V:	P9 ,,f uned
 	rm ,,f
 
 tkdiff:VQ:	,,f
-	for (i in `{hg manifest})
+	for (i in `{hg manifest}){
 		if (! echo $i | grep '\(CVS\|mkfile\)' >/dev/null)
 		if (test -f $i)
 		if (test -f $PLAN9/$i)
 		if (! cmp -s $i $PLAN9/$i)
 			echo tkdiff $PLAN9/$i $i
+	}
+	rm ,,f
+
+tkdiffed:VQ:	,,f
+	for (i in `{hg manifest}){
+		e = `{echo $i | sed 's,[.]ed$,,'}
+		if(! ~ $e $i)
+		if (! echo $i | grep '\(CVS\|mkfile\)' >/dev/null)
+		if (test -f $e)
+		if (test -f $PLAN9/$e)
+		if (! cmp -s $e $PLAN9/$e)
+			echo tkdiff $PLAN9/$e $e
+	}
 	rm ,,f
 
 eqdiff:VQ:	P9 EQ
