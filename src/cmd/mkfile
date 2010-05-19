@@ -21,9 +21,11 @@ TARG=\
 	9p\
 	9pserve\
 	ascii\
+	basename\
 	cal\
 	calendar\
 	cat\
+	cleanname\
 	cmp\
 	comm\
 	cp\
