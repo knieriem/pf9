@@ -73,20 +73,28 @@ open(char *name, int mode)
 		return fd;
 	}
 
-	wname = winutf2wpath(f->name);
-	attr = GetFileAttributesW(wname);
-	if (attr!=INVALID_FILE_ATTRIBUTES)
-	if (attr & FILE_ATTRIBUTE_DIRECTORY) {
-		f->dir = _wopendir(wname);
+	if(strncmp(f->name, "//./pipe", 8)==0){
+		f->type = Fdtypepipecl;
+		flags = FILE_FLAG_OVERLAPPED;
+	}else{
+		wname = winutf2wpath(f->name);
+		attr = GetFileAttributesW(wname);
+		if (attr!=INVALID_FILE_ATTRIBUTES)
+		if (attr & FILE_ATTRIBUTE_DIRECTORY) {
+			f->dir = _wopendir(wname);
+			free(wname);
+			if (f->dir==nil) {
+				werrstr("could not open directory: %s", name);
+				goto failed;
+			}
+			f->type = Fdtypedir;
+			return fd;
+		}/* else
+		  * f->type is still unset
+		  */
+
 		free(wname);
-		if (f->dir==nil) {
-			werrstr("could not open directory: %s", name);
-			goto failed;
-		}
-		f->type = Fdtypedir;
-		return fd;
 	}
-	free(wname);
 
 	if (flags==0)
 		flags = FILE_ATTRIBUTE_NORMAL;
@@ -102,7 +110,7 @@ open(char *name, int mode)
 
 	if (GetConsoleMode(h, &cmode))
 		f->type = Fdtypecons;
-	else
+	else if(!f->type)
 		f->type = Fdtypefile;
 	f->h = h;
 
