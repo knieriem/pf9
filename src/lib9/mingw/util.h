@@ -30,3 +30,6 @@ extern	char*	winadjustcons(char*, int rdwr, DWORD *dap);
 extern	int	mingwinitenv(WCHAR*[]);
 extern	WCHAR **winruneenv(void);
 extern	void	winsortenv(char **e);
+
+/* spawn */
+extern	void	wincreaterxtxproc(int fd, int mode, HANDLE);

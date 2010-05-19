@@ -9,4 +9,5 @@ SYSOFILES=\
 	remove.$O\
 	fork.$O\
 	xpath.$O\
+	rxtxproc.$O\
 	wstr.$O\

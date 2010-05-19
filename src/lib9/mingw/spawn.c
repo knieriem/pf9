@@ -2,7 +2,6 @@
 #include <mingw32.h>
 #include <mingwutil.h>
 #include <libc.h>
-#include <thread.h>
 
 #include "fdtab.h"
 #include "util.h"
@@ -203,79 +202,12 @@ lookupexe(char path[], char *file, char ***argvp, int search)
 	return 0;
 }
 
-
-typedef
-struct Commap {
-	HANDLE h;
-	int	fd;
-} Commap;
-static void
-rxhelper(void*v)
-{
-	Commap *m;
-	uchar buf[4096];
-	DWORD	n;
-	int	fd;
-
-	m = v;
-	fd = m->fd;
-	for (;;) {
-//		fprint(2, "Rx");
-		if (!ReadFile(m->h, buf, sizeof buf, &n, NULL))
-			switch(GetLastError()) {
-			case ERROR_BROKEN_PIPE:
-			case ERROR_PIPE_NOT_CONNECTED:
-				goto out;
-			}
-		if (fd!=-1)
-			if (write(fd, buf, n) != n)
-				break;
-	}
-out:
-//	fprint(2, "[%d]\tRexit", getpid());
-	if (fd!=-1)
-		close(fd);
-	CloseHandle(m->h);
-	free(v);
-}
-static void
-txhelper(void*v)
-{
-	Commap *m;
-	uchar buf[4096];
-	DWORD	nw;
-	int	n;
-	int	fd;
-
-	m = v;
-	fd = m->fd;
-	for (;;) {
-//		fprint(2, "Tx");
-		if (fd==-1)
-			n = 0;
-		else
-			n = read(m->fd, buf, sizeof buf);
-		if (n<=0)
-			break;
-		if (!WriteFile(m->h, buf, n, &nw, NULL))
-			break;
-		if (n != nw)
-			break;
-	}
-//	fprint(2, "[%d]\tTexit", getpid());
-	if (fd!=-1)
-		close(fd);
-	CloseHandle(m->h);
-	free(v);
-}
-
 static HANDLE
 fdexport(int fd, int i, int tx, int *fused)
 {
 	Fd *f;
 	HANDLE l, r, hr, hw;
 	SECURITY_ATTRIBUTES	seca;
-	Commap *m;
 
 	seca = (SECURITY_ATTRIBUTES) {
 		.nLength=	sizeof seca,
@@ -310,14 +242,9 @@ fdexport(int fd, int i, int tx, int *fused)
 				r = hw;
 			}
    			SetHandleInformation(l, HANDLE_FLAG_INHERIT, 0);
-			m = malloc(sizeof(Commap));
 			if (fd!=-1)
 				*fused |= 1<<i;
-			m->fd = fd;
-			m->h = l;
-//			ht = CreateThread(NULL, 8192, tx? txhelper: rxhelper, m, 0, NULL);
-//			CloseHandle(ht);
-			proccreate(tx? txhelper: rxhelper, m, 8192);
+			wincreaterxtxproc(fd, tx? OREAD: OWRITE, l);
 			return r;
 		}
 	winerror(nil);
