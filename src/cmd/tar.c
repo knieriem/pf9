@@ -411,7 +411,7 @@ isustar(Hdr *hp)
  * be NUL.
  */
 static int
-strnlen(char *s, int n)
+sstrnlen(char *s, int n)
 {
 	return s[n - 1] != '\0'? n: strlen(s);
 }
@@ -425,7 +425,7 @@ name(Hdr *hp)
 	char *fullname;
 
 	fullname = fullnamebuf+2;
-	namlen = strnlen(hp->name, sizeof hp->name);
+	namlen = sstrnlen(hp->name, sizeof hp->name);
 	if (hp->prefix[0] == '\0' || !isustar(hp)) {	/* old-style name? */
 		memmove(fullname, hp->name, namlen);
 		fullname[namlen] = '\0';
@@ -433,7 +433,7 @@ name(Hdr *hp)
 	}
 
 	/* name is in two pieces */
-	pfxlen = strnlen(hp->prefix, sizeof hp->prefix);
+	pfxlen = sstrnlen(hp->prefix, sizeof hp->prefix);
 	memmove(fullname, hp->prefix, pfxlen);
 	fullname[pfxlen] = '/';
 	memmove(fullname + pfxlen + 1, hp->name, namlen);
