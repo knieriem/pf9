@@ -131,6 +131,8 @@ void Vinit(void){
 		/*	pfmt(err, "rc: odd environment %q?\n", *env); */
 			break;
 		case '=':
+			if(strncmp(*env, "fn#", 3)==0)	/* ignore functions */
+				break;
 			*s='\0';
 			setvar(*env, enval(s+1));
 			*s='=';
