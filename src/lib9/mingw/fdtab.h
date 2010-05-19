@@ -27,6 +27,9 @@ struct Fd {
 
 	void	*dir;
 
+	void	(*onclose)(void*);
+	void	*onclosearg;
+
 	struct {
 		QLock	r, w, rw;
 	} lk;
@@ -41,6 +44,8 @@ extern	void	fdtabinit(void);
 extern	int	fdtalloc(Fd*dupf);
 extern	int	fdtdup(int oldfd, int newfd);
 extern	int	fdtclose(int i, int);
+
+extern	void	fdtonclose(int, void (*f)(void*), void*);
 
 extern	void	fdtprint(void);
 

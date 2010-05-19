@@ -10,4 +10,5 @@ SYSOFILES=\
 	fork.$O\
 	xpath.$O\
 	rxtxproc.$O\
+	exportfd.$O\
 	wstr.$O\

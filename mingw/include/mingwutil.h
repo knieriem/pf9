@@ -14,3 +14,5 @@ extern	int	winspawne(int[3], char*, char*[], char*[], int search);
 extern	int	winspawnl(int[3], char*, ...);
 
 extern	int	winexecve(char*, char *[], char *[]);
+
+extern	int	winexportfd(char[], int, int fd, int mode);

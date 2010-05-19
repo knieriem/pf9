@@ -91,6 +91,8 @@ if(closehandle)
 			CloseHandle(f->ev.r);
 		if (f->ev.w!=nil)
 			CloseHandle(f->ev.w);
+		if (f->onclose!=nil)
+			(*f->onclose)(f->onclosearg);
 		free(f);
 }
 static
@@ -234,6 +236,18 @@ fdtdup(int oldfd, int newfd)
 	}
 	dprint(2, "%\f ->%d\n", oldfd, oldf, "dup", newfd);
 	return newfd;
+}
+
+void
+fdtonclose(int fd, void (*fn)(void*), void *v)
+{
+	Fd	*f;
+
+	f = fdtget(fd);
+	if (f==nil)
+		return;
+	f->onclosearg = v;
+	f->onclose = fn;	
 }
 
 int
