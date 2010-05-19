@@ -226,7 +226,7 @@ ld=${TOOLPFX}gcc
 case $objtype in
 mingw)
 	startfiles=
-	extralibs="-lm -lws2_32"
+	extralibs="-lm -lws2_32 -ladvapi32 -lmpr -lshell32 -lole32 -luuid"
 	ldflags=
 	;;
 cygwin)
