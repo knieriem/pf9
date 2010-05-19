@@ -9,4 +9,4 @@ SYSOFILES=\
 	remove.$O\
 	fork.$O\
 	xpath.$O\
-
+	wstr.$O\
