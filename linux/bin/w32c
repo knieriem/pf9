@@ -16,7 +16,7 @@ usegcc()
 	ngflags=-c
 	
 	# switch off optimization due to problems with *jmp functions
-	opti=false
+	#opti=false
 
 	if $opti; then
 		ngflags="-O2 $ngflags"
@@ -74,7 +74,7 @@ for src in $srcs; do
 		;;
 	esac
 	grep -v '__p9l_autolib_' $xtmp |
-	egrep -v ': error: .Each undeclared identifier|: error: for each function it appears|is dangerous, better use|is almost always misused|: In function |: At top level:|support .long long.|In file included from|        from|use of C99 long long|ISO C forbids conversion' |
+	egrep -v ': error: .Each undeclared identifier|: error: for each function it appears|is dangerous, better use|is almost always misused|: In function |: At top level:|support .long long.|In file included from|        from|use of C99 long long|ISO C forbids conversion|warn_unused_result' |
 	sed 's/ .first use in this function.$//; s/\"\([^\"][^\"]*\)\", line \([0-9][0-9]*\)/\1:\2/g' |
 	uniq 1>&2
 	rm -f $xtmp $xtmp.status
