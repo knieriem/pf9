@@ -2,11 +2,7 @@
 #define	getcontext(u)	getmcontext(&(u)->uc_mcontext)
 
 
-#if defined(__MINGW32__)
-typedef CONTEXT mcontext_t;
-#else
 typedef struct mcontext mcontext_t;
-#endif
 typedef struct ucontext ucontext_t;
 
 extern	int		swapcontext(ucontext_t*, ucontext_t*);
@@ -76,7 +72,6 @@ extern	void		setmcontext(mcontext_t*);
  * $FreeBSD: src/sys/i386/include/ucontext.h,v 1.4 1999/10/11 20:33:09 luoqi Exp $
  */
 
-#if !defined(__MINGW32__)
 struct mcontext {
 	/*
 	 * The first 20 fields must match the definition of
@@ -107,7 +102,6 @@ struct mcontext {
 	int	mc_fpregs[28];		/* env87 + fpacc87 + u_long */
 	int	__spare__[17];
 };
-#endif
 
 /* Alternate, preferred interface.  */
 typedef struct sigaltstack

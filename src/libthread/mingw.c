@@ -169,21 +169,6 @@ _threadpexit(void)
 	/* seems to be unused */
 }
 
-int
-getmcontext(mcontext_t *mcp)
-{
-	mcp->ContextFlags = CONTEXT_FULL;
-	if (GetThreadContext(GetCurrentThread(), mcp))
-		return 0;
-	return -1;
-}
-
-void
-setmcontext(mcontext_t *mcp)
-{
-	SetThreadContext(GetCurrentThread(), mcp);
-}
-
 void
 makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 {
@@ -195,9 +180,8 @@ makecontext(ucontext_t *ucp, void (*func)(void), int argc, ...)
 	memmove(sp, &argc+1, argc*sizeof(int));
 
 	*--sp = 0;		/* return address */
-	ucp->uc_mcontext.Eip = (ulong)func;
-	ucp->uc_mcontext.Esp = (ulong)sp;
-	ucp->uc_mcontext.ContextFlags = CONTEXT_FULL;
+	ucp->uc_mcontext.mc_eip = (long)func;
+	ucp->uc_mcontext.mc_esp = (int)sp;
 }
 
 int

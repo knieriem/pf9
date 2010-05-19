@@ -6,5 +6,6 @@ linux)
 	;;
 mingw)
 	echo $objsys.$O
+	echo $objsys-asm.$O
 	;;
 esac
