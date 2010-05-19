@@ -40,7 +40,7 @@ extern	void	fdtabinit(void);
 
 extern	int	fdtalloc(Fd*dupf);
 extern	int	fdtdup(int oldfd, int newfd);
-extern	int	fdtclose(int i);
+extern	int	fdtclose(int i, int);
 
 extern	void	fdtprint(void);
 

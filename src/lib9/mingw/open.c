@@ -96,7 +96,7 @@ open(char *name, int mode)
 	failed:
 		if (fdtdebug>1)
 			fprint(2, "open %s failed: %r\n", name);
-		fdtclose(fd);
+		fdtclose(fd, 1);
 		return -1;
 	}
 

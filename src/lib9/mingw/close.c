@@ -8,7 +8,7 @@
 int
 p9close(int fd)
 {
-	fdtclose(fd);
+	fdtclose(fd, 1);
 
 	return 0;
 }

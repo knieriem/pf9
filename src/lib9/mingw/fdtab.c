@@ -62,8 +62,9 @@ fdtprint(void)
 }
 static
 void
-releasef(Fd *f, int type)
+releasef(Fd *f, int type, int closehandle)
 {
+if(closehandle)
 	/* don't call this function in a locked section */
 		switch (type) {
 		case Fdtypestd:
@@ -229,14 +230,14 @@ fdtdup(int oldfd, int newfd)
 		++oldf->users;
 		qunlock(&lk);
 		if (rf!=nil)
-			releasef(rf, type);
+			releasef(rf, type, 1);
 	}
 	dprint(2, "%\f ->%d\n", oldfd, oldf, "dup", newfd);
 	return newfd;
 }
 
 int
-fdtclose(int fd)
+fdtclose(int fd, int closehandle)
 {
 	Fd	*f, *rf, tf;
 	int	i, fatal;
@@ -270,7 +271,7 @@ out:
 	if (tf.type!=Fdtypenone)
 		fprint(2, "%\f #%d\n", fd, &tf, "closed", nfd);
 	if (rf!=nil)
-		releasef(rf, tf.type);
+		releasef(rf, tf.type, closehandle);
 
 	return 0;
 }

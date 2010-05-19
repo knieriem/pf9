@@ -91,7 +91,7 @@ p9create(char *name, int mode, ulong perm)
 			fail:
 				if (fdtdebug>1)
 					fprint(2, "create %s failed: %r\n", path);
-				fdtclose(fd);
+				fdtclose(fd, 1);
 				return -1;
 			}
 		}
