@@ -21,6 +21,23 @@ char *typestr[] = {
 	[Fdtypedevnull]	"null",
 };
 
+static
+int
+Dconv(Fmt *fmt)
+{
+	char *fn;
+	Fd *f;
+	int fd;
+
+	fd = va_arg(fmt->args, int);
+	f = va_arg(fmt->args, Fd*);
+	fn = va_arg(fmt->args, char*);
+	
+	return fmtprint(fmt, "[%d] %d /%d\t%s\t%s \"%s\"", getpid(),
+		fd, f->users, fn, typestr[f->type], f->name!=nil?f->name:"");
+}
+
+
 int	fdtdebug;
 #define	dprint	if(fdtdebug>0)fprint
 void
@@ -29,6 +46,7 @@ fdtprint(void)
 	int	i, n;
 	Fd	*f;
 
+	fmtinstall('\f', Dconv);
 	dprint(2, "fdtab %s:\n", argv0);
 	n = 0;
 	for (i=0; i<fdtabsz && n<nfd; i++) {
@@ -128,22 +146,6 @@ need(int n)
 }
 
 static QLock lk;
-
-static
-int
-Dconv(Fmt *fmt)
-{
-	char *fn;
-	Fd *f;
-	int fd;
-
-	fd = va_arg(fmt->args, int);
-	f = va_arg(fmt->args, Fd*);
-	fn = va_arg(fmt->args, char*);
-	
-	return fmtprint(fmt, "[%d] %d /%d\t%s\t%s \"%s\"", getpid(),
-		fd, f->users, fn, typestr[f->type], f->name!=nil?f->name:"");
-}
 
 void
 fdtabinit(void)
