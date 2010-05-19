@@ -23,34 +23,17 @@ alloc(HANDLE h, char *name, int type)
 		fprint(2, "%\f\n", fd, f, "create");
 	return fd;
 }
-static int npipes;
-static QLock lk;
+
 int
 p9pipe(int fd[2])
 {
 	HANDLE	h0, h1;
-	OVERLAPPED ov;
 	char	name[40];
-	int	n;
 
-	qlock(&lk);
-	++npipes;
-	n = npipes;
-	qunlock(&lk);
+	wincreatepipename(name, sizeof name);
 
-	snprint(name, sizeof name, "//./pipe/p9pipe-%08x-%08x", GetCurrentProcessId(), n);
-
-	h1 = wincreatenamedpipe(name,
-		PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
-		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
-		1,
-		4096,	// output buffer size 
-		4096,	// input buffer size 
-		0);		// client time-out 
-	if (h1==INVALID_HANDLE_VALUE) {
-		winerror("CreateNamedPipe");
+	if(wincreatenamedpipe(&h1, name, ORDWR, 1) == -1)
 		return -1;
-	}
 
 	h0 = wincreatefile(name,
 		GENERIC_READ | GENERIC_WRITE, 
@@ -62,20 +45,8 @@ p9pipe(int fd[2])
 		return -1;
 	}
 
-	memset(&ov, 0, sizeof ov);
-	ov.hEvent = CreateEvent (nil, 1 /* manual reset */, 0 /* initial */, nil);
-	if (ov.hEvent==INVALID_HANDLE_VALUE) {
-		winerror("");
-		return -1;
-	}
-	switch (winovresult(ConnectNamedPipe(h1, &ov), h1, &ov, nil, 1)) {
-	case 0:
-		werrstr("pipe: connect is expected to fail");
-		return -1;
-	case ERROR_PIPE_CONNECTED:
-		break;
-	default:
-		winerror(nil);
+	if(winconnectpipe(h1, 1) == -1){
+		CloseHandle(h0);
 		return -1;
 	}
 
@@ -83,4 +54,21 @@ p9pipe(int fd[2])
 	fd[1] = alloc(h1, name, Fdtypepipesrv);
 
 	return 0;
+}
+
+
+static int npipes;
+static QLock lk;
+char*
+wincreatepipename(char buf[], int sz)
+{
+	int	n;
+
+	qlock(&lk);
+	++npipes;
+	n = npipes;
+	qunlock(&lk);
+
+	snprint(buf, sz, "//./pipe/p9pipe-%08x-%08x", GetCurrentProcessId(), n);
+	return buf;
 }

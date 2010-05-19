@@ -141,7 +141,6 @@ p9listen(char *dir, char *newdir)
 	int fd, one;
 	SOCKET	s;
 	HANDLE h;
-	OVERLAPPED ov;
 	char *name;
 	Fd	*f;
 
@@ -168,27 +167,10 @@ p9listen(char *dir, char *newdir)
 		break;
 
 	case Fdtypenone:
-		h = wincreatenamedpipe(f->name,
-			PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
-			PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
-			PIPE_UNLIMITED_INSTANCES,
-			4096,	// output buffer size 
-			4096,	// input buffer size 
-			0);		// client time-out 
-		if (h==INVALID_HANDLE_VALUE) {
-			winerror("CreateNamedPipe");
+		if(wincreatenamedpipe(&h, f->name, ORDWR, 0) == -1)
 			return -1;
-		}
-		memset(&ov, 0, sizeof ov);
-		ov.hEvent = CreateEvent (nil, 1 /* manual reset */, 0 /* initial */, nil);
-		if (ov.hEvent==INVALID_HANDLE_VALUE) {
-			winerror("");
+		if(winconnectpipe(h, 0) == -1)
 			return -1;
-		}
-		if (winovresult(ConnectNamedPipe(h, &ov), h, &ov, nil, 1) != 0) {
-			winerror("ConnectNamedPipe");
-			return -1;
-		}
 		name = smprint("<listening %d>", fd);
 		fd = fdtalloc(nil);
 		fdtab[fd]->type = Fdtypepipesrv;

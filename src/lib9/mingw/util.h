@@ -18,7 +18,11 @@ extern	int	winisdrvspec(char*);
 
 extern	HANDLE	wincreatefile(char*, int desiacc, int share, int creatdisp, int flagsattr);
 extern	BOOL	wincreatedir(char*);
-extern	HANDLE	wincreatenamedpipe(char*, int omode, int pmode, int maxinst, int outsz, int insz, int timeout);
+extern	int	wincreatenamedpipe(HANDLE*, char* , int mode, int n);
+extern	int	winconnectpipe(HANDLE, int needclient);
+
+/* pipe.c */
+extern	char* wincreatepipename(char[], int);
 
 /* cons.c */
 extern	BOOL	winwritecons(HANDLE, void*, int);

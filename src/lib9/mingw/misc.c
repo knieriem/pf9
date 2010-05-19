@@ -278,8 +278,9 @@ wincreatedir(char *name)
 	return r;
 }
 
+static
 HANDLE
-wincreatenamedpipe(char *name, int omode, int pmode, int maxinst, int outsz, int insz, int timeout)
+createnamedpipe(char *name, int omode, int pmode, int maxinst, int outsz, int insz, int timeout)
 {
 	HANDLE h;
 	WCHAR *wname;
@@ -294,3 +295,62 @@ wincreatenamedpipe(char *name, int omode, int pmode, int maxinst, int outsz, int
 	return h;
 }
 
+int
+wincreatenamedpipe(HANDLE *h, char *name, int mode, int nclients)
+{
+	int acc;
+
+	if(nclients==0)
+		nclients = PIPE_UNLIMITED_INSTANCES;
+
+	switch(mode){
+	case OREAD:	acc = PIPE_ACCESS_INBOUND; break;
+	case OWRITE:	acc = PIPE_ACCESS_OUTBOUND; break;
+	case ORDWR:
+	default:	acc = PIPE_ACCESS_DUPLEX;
+	}
+
+	assert(h != nil);
+	*h = createnamedpipe(name, 
+		acc | FILE_FLAG_OVERLAPPED,
+		PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+		nclients,
+		4096,	// output buffer size 
+		4096,	// input buffer size 
+		0);		// client time-out
+	
+	if(*h==INVALID_HANDLE_VALUE){
+		winerror("CreateNamedPipe");
+		return -1;
+	}
+	return 0;
+}
+
+int
+winconnectpipe(HANDLE h, int needclient)
+{
+	OVERLAPPED ov;
+
+	memset(&ov, 0, sizeof ov);
+	ov.hEvent = CreateEvent(nil, 1 /* manual reset */, 0 /* initial */, nil);
+	if(ov.hEvent == INVALID_HANDLE_VALUE){
+		winerror("");
+		return -1;
+	}
+
+	switch(winovresult(ConnectNamedPipe(h, &ov), h, &ov, nil, 1)){
+	case 0:
+		if(needclient){
+			werrstr("pipe: connect is expected to fail");
+			break;
+		}
+		/* fall through */
+	case ERROR_PIPE_CONNECTED:
+		return 0;
+	default:
+		winerror("ConnectNamedPipe");
+	}
+
+	CloseHandle(h);
+	return -1;
+}
