@@ -1,5 +1,6 @@
 #include <u.h>
 #include <mingw32.h>
+#include <mingwutil.h>
 #include <libc.h>
 #include <thread.h>
 #include <draw.h>
@@ -307,10 +308,19 @@ winproc(void *v)
 
 	screen.reshaped = 0;
 
-	while(GetMessage(&msg, NULL, 0, 0)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+	for(;;){
+		switch(GetMessage(&msg, NULL, 0, 0)){
+		case -1:
+			winerror("GetMessage");
+			sysfatal("%r\n");
+		case 0:
+			goto quit;
+		default:
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
 	}
+quit:
 //	MessageBox(0, "winproc", "exits", MB_OK);
 	threadexitsall(nil);
 }
