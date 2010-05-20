@@ -10,3 +10,4 @@ threadmain(int argc, char **argv)
 3a
 #include <thread.h>
 .
+0s/^sha1,79c247f69f23986868192bc0641eac2b8c6b6e8e/

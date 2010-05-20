@@ -21,22 +21,26 @@ populate:VQ:	P9 EQ
 		exit 1
 	cat EQ | sed '/,/d' | @{cd $PLAN9 && tar cf - `{cat} } | tar xf -
 	date > $pop
-	for (i in `{cat EQ}){
-		if (test -f $PLAN9/$i)
-			o=$PLAN9/$i
-		if not {
-			tmp=$i
-			o=$PLAN9/^`{echo $tmp | sed 's/,.*//'}
-			i=`{echo $tmp | sed 's/.*,//'}
+	cat EQ | sed 's/,/ /g' | while(e=`{read}) {
+		i=$e(1)
+		if(~ $#e 2)
+			o=$PLAN9/$e(2)
+		if not{
+			o=$PLAN9/$e(1)
 			cp $o $i
 		}
 		if (test -f $i.ed){
-			echo appling $i.ed
 			{
 				cat $i.ed
 				echo w $i
 				echo q
 			} | ed $o >[2=1] | egrep -v '^[0-9?]+$' || true
+	
+			# check sha1sum
+			line=`{cat $i.ed | grep '^0s/^sha1,' | tr /, ' '}
+			sum=`{sha1sum $i}
+			~ $sum(1) $line(3) && s='' || s='		!'
+			echo appling $i.ed$s
 		}
 	}
 	echo
@@ -130,20 +134,21 @@ eqdiff:VQ:	P9 EQ
 	}
 	echo
 
-upded:VQ: 	P9 EQ
+upded:VQ: 	P9 
 	echo '*' updating ed files
-	for (i in `{cat EQ}){
-		if (! test -f $PLAN9/$i){
-			tmp=$i
-			o=$PLAN9/^`{echo $tmp | sed 's/,.*//'}
-			i=`{echo $tmp | sed 's/.*,//'}
-		}
-		if not o=$PLAN9/$i
-		if (test -f $i)
-		if (test -f $o)
-		if (! cmp -s $i $o) {
+	cat EQ | sed 's/,/	/g' | while(e=`{read}) {
+		i=$e(1)
+		if(~ $#e 2)
+			o=$PLAN9/$e(2)
+		if not
+			o=$PLAN9/$e(1)
+	
+		if(test -f $i)
+		if(test -f $o)
+		if(! cmp -s $i $o){
 			echo creating $i.ed
 			9 diff -e $o $i > $i.ed || true
+			sha1sum $i | awk '{print "0s/^sha1," $1 "/" }' >> $i.ed
 		}
 	}
 	echo
@@ -165,3 +170,6 @@ uned:VQ: 	P9 EQ upded
 		}
 	}
 	echo
+
+showed:VQ:
+	hg stat | grep '\.ed$'

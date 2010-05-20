@@ -2,3 +2,4 @@
 //	if(mode&OCEXEC && rx.unixfd>=0)
 //		fcntl(rx.unixfd, F_SETFL, FD_CLOEXEC);
 .
+0s/^sha1,b21e8aca5c0cf0f581070faa2ae748e494336309/

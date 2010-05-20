@@ -6,3 +6,4 @@
 	return winspawn(fd, cmd, argv, 1);
 #else
 .
+0s/^sha1,511d2f81a478978f70aac31601adaea0cf1b7ae6/

@@ -1,3 +1,4 @@
 48c
 		n = seek(bp->fid, n, base);
 .
+0s/^sha1,e55681417f43dfa6ca20787bd2f1ad7e3b27311c/

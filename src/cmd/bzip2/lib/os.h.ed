@@ -1,3 +1,4 @@
 33c
 #if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MINGW32__)
 .
+0s/^sha1,8fef8f01537639365a7a8acf464633b368442599/

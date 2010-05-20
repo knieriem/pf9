@@ -3,3 +3,4 @@
 	return 0;			/* qid.path always zero */
 #endif
 .
+0s/^sha1,0ccbcb0f6e0cabde0147b6ec8bb1e5c0522f798c/
