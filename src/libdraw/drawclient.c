@@ -58,7 +58,15 @@ _displayconnect(Display *d)
 		close(fd[2]);
 		sysfatal("threadspawn devdraw: %r");
 	}
+#ifdef __MINGW32__
+	d->srvfd = recvfd(p[0]);
+	close(p[0]);
+	if(d->srvfd == -1)
+		sysfatal("recvfd: %r");
+#else
 	d->srvfd = p[0];
+#endif
+	
 	return 0;
 }
 

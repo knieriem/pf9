@@ -98,6 +98,8 @@ Channel *ckbd;
 
 static Channel *cwaitmore;
 
+static int cfd;
+
 void
 kbdthread(void *ch)
 {
@@ -152,7 +154,7 @@ writethread(void *cnotew)
 	for(;;) {
 		/* write what we can */
 		n = 1;
-		while(fdout.rp < fdout.wp && (n = iowrite(io, 4, fdout.rp, fdout.wp-fdout.rp)) > 0)
+		while(fdout.rp < fdout.wp && (n = iowrite(io, cfd, fdout.rp, fdout.wp-fdout.rp)) > 0)
 			fdout.rp += n;
 		if(n == 0)
 			sysfatal("short write writing wsys");
@@ -188,18 +190,22 @@ bell(void *v, char *msg)
 void
 threadmain(int argc, char **argv)
 {
+	int fd[2];
 	int n, top;
 	fd_set rd, wr, xx;
 	Wsysmsg m;
 	Channel *cnotew;
 	Ioproc *io;
 
+	pipe(fd);
+	if(sendfd(1, fd[1]) == -1)
+		sysfatal("sendfd: %r");	
+	cfd = fd[0];
+
 	/*
 	 * Move the protocol off stdin/stdout so that
 	 * any inadvertent prints don't screw things up.
 	 */
-	dup(0, 3);
-	dup(1, 4);
 	close(0);
 	close(1);
 	open("/dev/null", OREAD);
@@ -250,7 +256,7 @@ threadmain(int argc, char **argv)
 		/* read what we can */
 		n = 1;
 		if (fdin.wp < fdin.ep) {
-			n = ioread(io, 3, fdin.wp, fdin.ep-fdin.wp);
+			n = ioread(io, cfd, fdin.wp, fdin.ep-fdin.wp);
 			if (n>0)
 				fdin.wp += n;
 		}
@@ -310,7 +316,7 @@ runmsg(Wsysmsg *m)
 	uchar buf[65536];
 	int n;
 	Memimage *i;
-	
+
 	switch(m->type){
 	case Tinit:
 		memimageinit();
@@ -418,7 +424,7 @@ replymsg(Wsysmsg *m)
 	/* T -> R msg */
 	if(m->type%2 == 0)
 		m->type++;
-		
+
 //	fprint(2, "-> %W\n", m);
 	/* copy to output buffer */
 	n = sizeW2M(m);
