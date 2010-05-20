@@ -1,0 +1,5 @@
+76c
+		static Rune null;
+		r = &null;
+.
+0s/^sha1,c0c9e9c5f922d2a3a6c83a75e1ef28fcf9519693/
