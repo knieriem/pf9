@@ -1,0 +1,6 @@
+1a
+#ifdef __MINGW32__
+#include <mingw32.h>
+#endif
+.
+0s/^sha1,2ad31b7cedf965e36b224f44995b9872bfa03243/
