@@ -261,6 +261,7 @@ winspawn(int fd[3], char *file, char *argv[], int search)
 
 	return winspawne(fd, file, argv, environ, search);
 }
+int _winspawnpg;
 int
 winspawne(int fd[3], char *file, char *argv[], char *env[], int search)
 {
@@ -295,6 +296,10 @@ winspawne(int fd[3], char *file, char *argv[], char *env[], int search)
 	cflags = CREATE_UNICODE_ENVIRONMENT;
 	if (!winhascons())
 		cflags |= DETACHED_PROCESS;
+	else if(_winspawnpg){
+		cflags |= CREATE_NEW_PROCESS_GROUP;
+		_winspawnpg = 0;
+	}
 	r = CreateProcessW(wpath, wcmd, nil, nil, 1/*inherit*/, cflags, eb, nil, &si, &pi);
 	free(wpath);
 	free(wcmd);

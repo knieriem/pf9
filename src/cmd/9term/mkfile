@@ -8,6 +8,7 @@ OFILES=\
 
 HFILES=dat.h fns.h term.h
 
+BIN=/$objtype/bin
 <$PF9/src/mkmany
 
 Darwin.$O linux.$O FreeBSD.$O: bsdpty.c

@@ -1136,7 +1136,6 @@ src/cmd/9term/dat.h
 src/cmd/9term/util.c
 src/cmd/9term/SunOS.c
 src/cmd/9term/malloc.c
-src/cmd/9term/rcstart.c
 src/cmd/9term/fns.h
 src/cmd/9term/wind.c
 src/cmd/9term/9term.c
