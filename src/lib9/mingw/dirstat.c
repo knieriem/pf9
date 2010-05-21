@@ -76,6 +76,7 @@ dirstat(char *f)
 	wf = winutf2wpath(f);
 	if(_wstat(wf, &sbuf) < 0) {
 		free(wf);
+		free(f);
 		return nil;
 	}
 	free(wf);
