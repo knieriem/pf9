@@ -22,13 +22,13 @@ populate:VQ:	P9 EQ
 	cat EQ | sed '/,/d' | @{cd $PLAN9 && tar cf - `{cat} } | tar xf -
 	date > $pop
 	cat EQ | sed 's/,/ /g' | while(e=`{read}) {
-		i=$e(1)
-		if(~ $#e 2)
-			o=$PLAN9/$e(2)
-		if not{
-			o=$PLAN9/$e(1)
+		o=$PLAN9/$e(1)
+		if(~ $#e 2){
+			i=$e(2)
 			cp $o $i
 		}
+		if not
+			i=$e(1)
 		if (test -f $i.ed){
 			{
 				cat $i.ed
@@ -106,13 +106,12 @@ tkdiffed:VQ:	,,f
 	rm ,,f
 
 eqdiff:VQ:	P9 EQ
-	for (i in `{cat EQ}){
-		if (! test -f $PLAN9/$i){
-			tmp=$i
-			o=$PLAN9/`{echo $tmp | sed 's/,.*//'}
-			i=`{echo $tmp | sed 's/.*,//'}
-		}
-		if not o=$PLAN9/$i
+	cat EQ | sed 's/,/	/g' | while(e=`{read}) {
+		o=$PLAN9/$e(1)
+		if(~ $#e 2)
+			i=$e(2)
+		if not
+			i=$e(1)
 		if (test -f $i)
 		if (test -f $o){
 			if (test -f $i.ed){
@@ -137,11 +136,11 @@ eqdiff:VQ:	P9 EQ
 upded:VQ: 	P9 
 	echo '*' updating ed files
 	cat EQ | sed 's/,/	/g' | while(e=`{read}) {
-		i=$e(1)
+		o=$PLAN9/$e(1)
 		if(~ $#e 2)
-			o=$PLAN9/$e(2)
+			i=$e(2)
 		if not
-			o=$PLAN9/$e(1)
+			i=$e(1)
 	
 		if(test -f $i)
 		if(test -f $o)
