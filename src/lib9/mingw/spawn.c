@@ -247,8 +247,10 @@ fdexport(int fd, int i, int tx, int *fused)
 			wincreaterxtxproc(fd, tx? OREAD: OWRITE, l);
 			return r;
 		}
-	winerror(nil);
-	fprint(2, "fdexport: %r\n");
+	if(fd != -1){
+		winerror(nil);
+		fprint(2, "fdexport: %r\n");
+	}
 	return INVALID_HANDLE_VALUE;
 }
 
