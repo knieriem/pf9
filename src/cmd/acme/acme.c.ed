@@ -2,4 +2,7 @@
 //	fcntl(pfd[0], F_SETFD, FD_CLOEXEC);
 //	fcntl(pfd[1], F_SETFD, FD_CLOEXEC);
 .
-0s/^sha1,7ca6446a636cd3a5fbc10ea5c629fee6102e64a4/
+41c
+	"*default*",
+.
+0s/^sha1,f01b6df5a5227aae9b1ce8f26dbe99307e6a26f3/
