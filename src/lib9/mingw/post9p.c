@@ -23,8 +23,8 @@ post9pservice(int fd, char *name, char *mtpt)
 	}
 	if(s == nil)
 		return -1;
-	fds[0] = fd;
-	fds[1] = fd;
+	fds[0] = dup(fd, -1);
+	fds[1] = fds[0];
 	fds[2] = dup(2, -1);
 	pid = winspawnl(fds, "9pserve", "9pserve", "-u", s, (char*)0);
 	return 0;
