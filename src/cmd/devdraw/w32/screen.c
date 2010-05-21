@@ -710,7 +710,8 @@ _xputsnarf(char *buf)
 {
 	HANDLE h;
 	char *p, *e;
-	Rune *rp;
+	WCHAR *wp;
+	Rune r;
 	int n = strlen(buf);
 
 	if(!OpenClipboard(window)) {
@@ -724,15 +725,17 @@ _xputsnarf(char *buf)
 		return;
 	}
 
-	h = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, (n+1)*sizeof(Rune));
+	h = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, (n+1)*sizeof(WCHAR));
 	if(h == NULL)
 		sysfatal("out of memory");
-	rp = GlobalLock(h);
+	wp = GlobalLock(h);
 	p = buf;
 	e = p+n;
-	while(p<e)
-		p += chartorune(rp++, p);
-	*rp = 0;
+	while(p<e){
+		p += chartorune(&r, p);
+		*wp++ = r;
+	}
+	*wp = 0;
 	GlobalUnlock(h);
 
 	SetClipboardData(CF_UNICODETEXT, h);
