@@ -979,6 +979,7 @@ src/cmd/devdraw/x11-draw.c,src/cmd/devdraw/x11/draw.c
 src/cmd/devdraw/latin1.c
 src/cmd/devdraw/devdraw.c
 src/cmd/devdraw/snarf.c
+src/cmd/devdraw/mklatinkbd.c
 src/cmd/devdraw/nowsys.c
 src/cmd/postscript/tr2post/test.tr
 src/cmd/postscript/tr2post/ps_include.h
