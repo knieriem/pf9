@@ -7,8 +7,10 @@
 static int
 setpath(char *path, char *file)
 {
-	char *p, *last, tmp[MAX_PATH+1];
+	char *p, *last, tmpbuf[MAX_PATH+1], *tmp;
 	int n;
+
+	tmp = tmpbuf;
 
 	if(strlen(file) >= MAX_PATH){
 		werrstr("file name too long");
@@ -21,7 +23,13 @@ setpath(char *path, char *file)
 			*p = '\\';
 	}
 
+	if(tmp[0] == '\\' && winisdrvspec(&tmp[1])){
+		++tmp;
+		tmp[1] = ':';	/* make sure its not a '-' */
+		goto drvspec;
+	}
 	if(tmp[0] != 0 && tmp[1] == ':') {
+	drvspec:
 		if(tmp[2] == 0) {
 			tmp[2] = '\\';
 			tmp[3] = 0;
