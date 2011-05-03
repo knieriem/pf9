@@ -332,11 +332,8 @@ winconnectpipe(HANDLE h, int needclient)
 	OVERLAPPED ov;
 
 	memset(&ov, 0, sizeof ov);
-	ov.hEvent = CreateEvent(nil, 1 /* manual reset */, 0 /* initial */, nil);
-	if(ov.hEvent == INVALID_HANDLE_VALUE){
-		winerror("");
+	if(wincreatevent(&ov.hEvent, "connectpipe", 1 /* manual reset */, 0 /* initial */)==-1)
 		return -1;
-	}
 
 	switch(winovresult(ConnectNamedPipe(h, &ov), h, &ov, nil, 1)){
 	case 0:
@@ -353,4 +350,21 @@ winconnectpipe(HANDLE h, int needclient)
 
 	CloseHandle(h);
 	return -1;
+}
+
+int
+wincreatevent(HANDLE *hp, char *who, int manrst, int ini)
+{
+	static int nevents;
+	HANDLE h;
+	char buf[64];
+
+	snprint(buf, sizeof buf, "lib9-%x-%d-%s", GetCurrentProcessId(), nevents++, who);
+	h = CreateEventA(nil, manrst, ini, buf);
+	if(h==INVALID_HANDLE_VALUE){
+		winerror("");
+		return -1;
+	}
+	*hp = h;
+	return 0;
 }

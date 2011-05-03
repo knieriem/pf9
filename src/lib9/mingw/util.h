@@ -20,6 +20,7 @@ extern	HANDLE	wincreatefile(char*, int desiacc, int share, int creatdisp, int fl
 extern	BOOL	wincreatedir(char*);
 extern	int	wincreatenamedpipe(HANDLE*, char* , int mode, int n);
 extern	int	winconnectpipe(HANDLE, int needclient);
+extern	int	wincreatevent(HANDLE*, char*, int manrst, int ini);
 
 /* pipe.c */
 extern	char* wincreatepipename(char[], int);

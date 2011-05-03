@@ -3,6 +3,7 @@
 #include <libc.h>
 #include <dirent.h>
 
+#include "util.h"
 #include "fdtab.h"
 
 Fd **fdtab;
@@ -294,14 +295,9 @@ static
 void
 initovev(HANDLE *hev)
 {
-	HANDLE	h;
-
 	qlock(&lk);
-	if (*hev==nil) {
-		h = CreateEvent (nil, 1 /* manual reset */, 0 /* initial */, nil);
-		if (h!=INVALID_HANDLE_VALUE)
-			*hev = h;
-	}
+	if (*hev==nil)
+		wincreatevent(hev, "initovev", 1 /* manual reset */, 0 /* initial */);
 	qunlock(&lk);
 }
 Fd*
