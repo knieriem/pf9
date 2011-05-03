@@ -44,17 +44,22 @@ _threadunlock(Lock *lk, ulong pc)
 void
 _procsleep(_Procrendez *r)
 {
+	static int nsem;
+	char buf[64];
+
 	/* r is protected by r->l, which we hold */
-	r->cond = CreateSemaphore(NULL, 0, 1, NULL);
-	if(r->cond == NULL)
-		sysfatal("CreateSemaphore");
+	if(r->cond == NULL){
+		snprint(buf, sizeof buf, "libthread-%x-%d-%p", GetCurrentProcessId(), nsem++, r);
+		r->cond = CreateSemaphore(NULL, 0, 1, buf);
+		if(r->cond == NULL)
+			sysfatal("CreateSemaphore");
+	}
 	r->asleep = 1;
 //	print("sleep: %p\n", r->cond);
 	unlock(r->l);
 	WaitForSingleObject(r->cond, INFINITE);
 	lock(r->l);
 //	print("wake %p\n", r->cond);
-	CloseHandle(r->cond);
 	r->asleep = 0;
 }
 
@@ -93,7 +98,8 @@ startprocfn(LPVOID v)
 	p->osprocid = GetCurrentThreadId();
 
 	(*fn)(p);
-
+	if(p->runrend.cond != NULL)
+		CloseHandle(p->runrend.cond);
 	ExitThread(0);
 }
 
