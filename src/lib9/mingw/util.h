@@ -12,6 +12,7 @@ extern	int	winwstrutflen(WCHAR*);
 extern	int	winwstrtoutfn(char*, int, WCHAR*);
 extern	int	winwstrlen(WCHAR*);
 
+extern	void	winreplacews(WCHAR*, int rev);
 
 extern	void	winbsl2sl(char*);
 extern	int	winisdrvspec(char*);

@@ -145,8 +145,50 @@ utf2wpath(char *s)
 	w = winutf2wstr(s);
 	if (w==nil)
 		return nil;
+	winreplacews(w, 1);
 	sl2bsl(w);
 	return w;
+}
+
+static int wschar, wsesc;
+void
+winreplacews(WCHAR *w, int rev)
+{
+	char *e, *ep;
+
+	if(wschar<0)
+		return;
+	if(wschar==0){
+		e = getenv("P9FILEWSCHAR");
+		if(e==nil){
+			wschar = -1;
+			return;
+		}else{
+			wschar = strtol(e, &ep, 16);
+			if(*ep != '\0')
+				wsesc =  strtol(ep, &ep, 16);
+			else
+				wsesc = 0xFFFD;
+			free(e);
+		}
+	}
+	if(rev){
+		for( ;*w; w++)
+			if(*w==wschar)
+				*w = ' ';
+			else if(*w==wsesc)
+				*w = wschar;
+			else if(*w==0xFFFD)
+				*w = wsesc;
+	}else{
+		for( ; *w; w++)
+			if(*w==wsesc)
+				*w = 0xFFFD;
+			else if(*w==wschar)
+				*w = wsesc;
+			else if(*w==' ')
+				*w = wschar;
+	}
 }
 
 int

@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
+#include "util.h"
 #include "fdtab.h"
 #define	readdir	_wreaddir
 #define	dirent	_wdirent
@@ -146,8 +147,10 @@ dirpackage(int fd, char *buf, int n, Dir **dp)
 	for(i=0; i<n; i++){
 		p += d_reclen(p, &reclen);
 		de = (struct dirent*)p;
-		if(de->d_name[0] != 0 && _wstat(de->d_name, &st) >= 0)
+		if(de->d_name[0] != 0 && _wstat(de->d_name, &st) >= 0){
+			winreplacews(de->d_name, 0);
 			_p9dir(&st, de->d_name, &d[m++], &str, estr);
+		}
 		p += reclen;
 	}
 

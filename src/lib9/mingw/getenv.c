@@ -7,6 +7,49 @@
 enum {
 	Nmore = 10,
 };
+
+static
+char*
+wsconvert(char *s)
+{
+	WCHAR *w;
+	char *p;
+
+	w = winutf2wstr(s);
+	if(w==nil)
+		return s;
+	winreplacews(w, 0);
+	p = winwstrtoutfm(w);
+	free(w);
+	if(p==nil)
+		return s;
+	free(s);
+	return p;
+}
+static
+void
+convertfilews(void)
+{
+	char **pp, *names[] = { "PATH", "HOME", nil };
+	char *e, *s;
+
+	e = getenv("P9FILEWSDONE");
+	if(e != nil){
+		free(e);
+		return;
+	}
+
+	for(pp=names; *pp != nil; pp++){
+		e = getenv(*pp);
+		if(e != nil){
+			s = wsconvert(e);
+			putenv(*pp, s);
+			free(s);
+		}
+	}
+	putenv("P9FILEWSDONE", "1");
+}
+
 char **mingwenviron;
 static int	envsz;
 int
@@ -14,7 +57,7 @@ mingwinitenv(WCHAR *wenv[])
 {
 	int	n;
 	WCHAR **rp;
-	char **p;
+	char **p, *s;
 
 	if (wenv==nil) {
 		WCHAR dummy[] = {'D', '\0'};
@@ -34,15 +77,19 @@ mingwinitenv(WCHAR *wenv[])
 
 	p = environ;
 	for (rp=wenv; *rp!=nil; rp++) {
-		*p = winwstrtoutfm(*rp);
-		if (*p!=nil) {
-			/* make sure PATH is uppercase */
-			if ((*p)[0]=='P' && !strncasecmp("Path=", *p, 5))
-				memcpy(*p, "PATH", 4);				
+		s = winwstrtoutfm(*rp);
+		if(s!=nil){
+			if(s[0]=='P'){
+				if(strncasecmp("Path=", s, 5)==0)
+					memcpy(s, "PATH", 4);			/* make sure PATH is uppercase */
+			}
 		}
+		*p = s;
 		++p;
 	}
 	*p = nil;
+
+	convertfilews();
 
 	return 0;
 }
