@@ -56,6 +56,8 @@ Xasync(void)
 void
 Xbackq(void)
 {
+	struct thread *p = runq;
+	int pc = p->pc;
 	char wd[8193], **argv;
 	int c;
 	char *s, *ewd=&wd[8192], *stop;
@@ -109,11 +111,11 @@ Xbackq(void)
 	/* v points to reversed arglist -- reverse it onto argv */
 	while(v){
 		nextv=v->next;
-		v->next=runq->argv->words;
-		runq->argv->words=v;
+		v->next=p->argv->words;
+		p->argv->words=v;
 		v=nextv;
 	}
-	runq->pc++;
+	p->pc = pc+1;
 }
 
 void
