@@ -61,23 +61,20 @@ eq:V:	P9 ,,f uned
 	test -f EQ && mv EQ ,EQ
 	
 	{
+		fn testeq{
+			o=`{echo $1 | sed s,$2,}
+			if (cmp -s $1 $PLAN9/$o)
+				echo $o,$1
+		}
 		for (i in `{cat ,,f}){
 			if (cmp -s $i $PLAN9/$i)
 				echo $i
 			if not {
-				o=`{echo $i | sed 's,lib9/linux,lib9,'}
-				if (cmp -s $i $PLAN9/$o)
-					echo $o,$i
-				if not {
-					o=`{echo $i | sed 's,devdraw/x11/,devdraw/x11-,'}
-					if (cmp -s $i $PLAN9/$o)
-						echo $o,$i
-					if not {
-						o=`{echo $i | sed 's,devdraw/x11/x11-,devdraw/x11-,'}
-						if (cmp -s $i $PLAN9/$o)
-							echo $o,$i
-					}
-				}
+				testeq $i lib9/linux,lib9 ||
+				testeq $i devdraw/x11/,devdraw/x11- ||
+				testeq $i devdraw/x11/x11-,devdraw/x11- ||
+				testeq $i 9term/linux,9term/Linux ||
+				~ 0 0
 			}
 		}
 	} > EQ

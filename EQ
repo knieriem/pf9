@@ -623,6 +623,7 @@ src/cmd/mk/rc.c
 src/cmd/mk/shell.c
 src/cmd/mk/graph.c
 src/cmd/mk/varsub.c
+src/cmd/mk/word.c
 src/cmd/mk/sys.h
 src/cmd/mk/recipe.c
 src/cmd/mk/var.c
@@ -688,6 +689,7 @@ src/cmd/gzip/unzip.c
 src/cmd/gzip/zip.c
 src/cmd/gzip/gunzip.c
 src/cmd/gzip/gzip.h
+src/cmd/usage.c
 src/cmd/rc/syn.y
 src/cmd/rc/getflags.h
 src/cmd/rc/fmtquote.c
@@ -946,6 +948,7 @@ src/cmd/acme/cols.c
 src/cmd/acme/text.c
 src/cmd/acme/acme.c
 src/cmd/draw/tcolors.c
+src/cmd/draw/statusbar.c
 src/cmd/factor.c
 src/cmd/cal.c
 src/cmd/hoc/math.c
@@ -1136,9 +1139,9 @@ src/cmd/9term/scrl.c
 src/cmd/9term/dat.h
 src/cmd/9term/util.c
 src/cmd/9term/SunOS.c
-src/cmd/9term/Linux.c,src/cmd/9term/linux.c
 src/cmd/9term/malloc.c
 src/cmd/9term/fns.h
+src/cmd/9term/Linux.c,src/cmd/9term/linux.c
 src/cmd/9term/wind.c
 src/cmd/9term/9term.c
 src/cmd/9term/OpenBSD.c
