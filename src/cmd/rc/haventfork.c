@@ -4,6 +4,8 @@
 #include "io.h"
 #include "fns.h"
 
+extern	void	pushpipefd(int, int);
+
 int havefork = 0;
 
 static char **
@@ -153,10 +155,75 @@ Xpipe(void)
 	p->pid=pid;
 }
 
+
+typedef
+struct Pipefds {
+	int	side;
+	int	main;
+	int	redir;
+} Pipefds;
+
+static
+int
+setuppipe(Pipefds *p, int redirfd)
+{
+	int pfd[2];
+
+	if(pipe(pfd)<0){
+		Xerror("can't get pipe");
+		return -1;
+	}
+	p->side = pfd[redirfd==1? PWR: PRD];
+	p->main = pfd[redirfd==1? PRD: PWR];
+	p->redir = redirfd;
+	return 0;
+}
+
 void
 Xpipefd(void)
 {
-	Abort();
+	struct thread *p = runq;
+	int pc = p->pc, pid;
+	Pipefds pfds[2], *r, *w;
+	char **argv;
+
+	r = &pfds[0];
+	w = &pfds[1];
+	switch(p->code[pc].i){
+	case READ:
+		w = nil;
+		break;
+	case WRITE:
+		r = nil;
+	}
+	if(r && setuppipe(r, 1)<0)
+		return;
+	if(w && setuppipe(w, 0)<0)
+		return;
+
+	argv = rcargv(p->code[p->pc+1].s);
+	pid = ForkExecute(argv0, argv, w? w->side: 0, r? r->side: 1, 2);
+	free(argv);
+
+	if(pid == 0) {
+		Xerror("proc failed");
+		if(r)
+			close(r->main);
+		if(w)
+			close(w->main);
+		return;
+	}
+
+	addwaitpid(pid);
+	if(w){
+		close(w->side);
+		pushpipefd(w->main, OWRITE);
+	}
+	if(r){
+		close(r->side);
+		pushpipefd(r->main, OREAD);
+	}
+	p->pc += 2;
 }
 
 void

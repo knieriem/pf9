@@ -157,3 +157,13 @@ int Executable(char *file)
 	free(statbuf);
 	return ret;
 }
+
+void
+pushpipefd(int fd, int mode)
+{
+	char name[40];
+
+	pushredir(ROPEN, fd, fd);	/* isn't this a noop? */
+	winexportfd(name, sizeof name, fd, mode);
+	pushword(name);
+}
