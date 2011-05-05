@@ -75,7 +75,12 @@ out:
 long
 readnb(int fd, char *buf, long cnt)
 {
-	return read(fd, buf, cnt);
+	int n;
+
+	n = read(fd, buf, cnt);
+	if(ntrap)
+		n = -1;
+	return n;
 }
 
 

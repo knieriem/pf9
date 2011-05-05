@@ -468,11 +468,7 @@ long Write(int fd, char *buf, long cnt)
 }
 long Read(int fd, char *buf, long cnt)
 {
-	int i;
-
-	i = readnb(fd, buf, cnt);
-	if(ntrap) dotrap();
-	return i;
+	return readnb(fd, buf, cnt);
 }
 long Seek(int fd, long cnt, long whence)
 {
