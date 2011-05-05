@@ -167,7 +167,7 @@ _xattach(char *label, char *winsize)
 	mkgscreen();
 
 	sendul(a->csync, 1);
-
+	recvul(a->csync);
 	return gscreen;
 }
 
@@ -301,8 +301,8 @@ winproc(void *v)
 	recvul(a->csync);		/* wait for gscreen */
 
 	ShowWindow(window, SW_SHOWDEFAULT);
-	UpdateWindow(window);
 
+	sendul(a->csync, 1);		/* window is ready */
 	chanfree(a->csync);	
 //	free(a);
 
