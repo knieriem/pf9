@@ -46,18 +46,13 @@ copymasterproc(void *v)
 			if(*p==0x7F){
 				if(p!=p0)
 					write(fdslave[1], p0, p-p0);
-					if(!noecho)
-						write(fdmaster[1], p0, p-p0);
 dprint(2, "INT\n");
 				GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, rcpid);
 				p0 = p+1;
 			}
 		}
-		if(p!=p0){
+		if(p!=p0)
 			write(fdslave[1], p0, p-p0);
-			if(!noecho)
-				write(fdmaster[1], p0, p-p0);
-		}
 		copied = 1;
 	}
 dprint(2, "MX");
@@ -92,27 +87,5 @@ updatewinsize(int row, int col, int dx, int dy)
 int
 isecho(int fd)
 {
-	return !noecho;
-}
-int
-setecho(int fd, int newe)
-{
-	int	old;
-
-	old = !noecho;
-
-	/*
-	 * when turning echo off, reset the
-	 * copy flag so that later we can tell
-	 * whether the not-to-be-echoed data
-	 * already has been written or not
-	 */
-	if(newe == 0)
-		copied = 0;
-	else if(old == 0)
-		if(newe==1)
-		while(!copied)
-			sleep(1);
-	noecho = !newe;
-	return old;
+	return 1;
 }
