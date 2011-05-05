@@ -4,16 +4,36 @@ objtype=mingw
 
 <../../$objtype/config
 
-#<troff.mk
-#<draw.mk
+DRAWDIRS=\
+	font\
+
+DRAWFILES=\
+	lib/keyboard\
+
+TROFFDIRS=\
+	troff\
+	postscript\
+	tmac\
+
+TROFFFILES=\
+	lib/grap.defines\
 
 p9pdirs=\
 	$TROFFDIRS\
 	$DRAWDIRS\
 	plumb\
 
+<|rc ./mkmanrules
+
 p9pfiles=\
-	`{. ./man/p9p-files}\
+	$MANFILES\
+	man/man1/man.1\
+	man/man7/man.7\
+	man/man7/ms.7\
+	man/mkindex\
+	man/junkwords\
+	man/fonts\
+	\
 	$p9pdirs\
 	$TROFFFILES\
 	$DRAWFILES\
@@ -31,6 +51,8 @@ binzip=\
 	$objtype\
 	rc\
 	pf9.bat\
+	acme.bat\
+	pf9cmd.bat\
 	rcmain\
 
 libzip=\
@@ -38,23 +60,13 @@ libzip=\
 	lib\
 	man\
 
-all:V:	copy-p9p	copy-bin copy-rc binzip libzip
+all:V:	copy-bin copy-rc binzip ziplibp9p.rc
 
 clean:V:
 	rm -rf $objtype
-	rm -rf $p9pfiles
 	rm -f copy-*
 	rm -rf rc
-
-copy-p9p:
-	if (test -d $PLAN9)
-		p9pdir=$PLAN9
-	if not
-		p9pdir = /usr/local/plan9
-	
-	@{cd $p9pdir && tar cf - $p9pfiles} | tar xf -
-	
-	echo > $target
+	rm -f ziplibp9p.rc
 
 copy-bin:
 	@{cd ../.. && tar cf - mingw/bin} | tar xf -
@@ -67,8 +79,27 @@ copy-rc:
 	echo > $target
 
 binzip:V:
-	9 zip -9 -f pf9-$objtype.bin.zip $binzip && echo success
+	d=`{9 date | awk '{print $6$2$3}'}
+	9 zip -9 -f pf9bin-$d.zip $binzip && echo success
 
-libzip:V:
-	9 zip -9 -f pf9-$objtype.lib.zip $libzip && echo success
 
+ziplibp9p.rc:
+	{
+		echo '#!/usr/local/plan9/bin/rc'
+		echo
+		echo 'copyfiles=(' $p9pfiles ')'
+		echo 'zipfiles=(' $libzip ')'
+		echo
+		cat copyp9files.tpl
+	} > $target
+
+
+listexe:VQ:
+	cd ../../mingw/bin
+	{
+		find . -type f | grep exe | sed 's,^[.]/,,;s,[.]exe$,,'
+		echo lc
+		echo lookman
+		echo man
+		echo psfonts
+	} | sort
