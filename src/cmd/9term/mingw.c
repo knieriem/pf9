@@ -23,7 +23,6 @@ copyslaveproc(void *v)
 			break;
 		write(fdmaster[1], buf, n);
 	}
-dprint(2, "SX");
 	threadexitsall(nil);
 }
 extern int rcpid;
@@ -46,7 +45,6 @@ copymasterproc(void *v)
 			if(*p==0x7F){
 				if(p!=p0)
 					write(fdslave[1], p0, p-p0);
-dprint(2, "INT\n");
 				GenerateConsoleCtrlEvent(CTRL_BREAK_EVENT, rcpid);
 				p0 = p+1;
 			}
@@ -55,7 +53,6 @@ dprint(2, "INT\n");
 			write(fdslave[1], p0, p-p0);
 		copied = 1;
 	}
-dprint(2, "MX");
 }
 
 int
