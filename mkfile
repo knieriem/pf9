@@ -2,20 +2,20 @@ MKSHELL=rc
 
 pop=+P9
 
-all:VQ:
+all:V:
 	echo 'targets: eq, rm(equals), pop(ulate)'
 
-ls:VQ:
+ls:V:
 	hg manifest | grep -v '\([.]\(ed\|mk\)\|mkfile\)'
 
 pop:V:	populate
 rm:V:	rmequals
 
-P9:VQ:
+P9:V:
 	test x^$PLAN9 '!=' x
 	test -d $PLAN9
 
-populate:VQ:	P9 EQ
+populate:V:	P9 EQ
 	echo '*' copying identical files from p9p
 	if (test -f $pop)
 		exit 1
@@ -80,7 +80,7 @@ eq:V:	P9 ,,f uned
 	} > EQ
 	rm ,,f
 
-tkdiff:VQ:	,,f
+tkdiff:V:	,,f
 	for (i in `{hg manifest}){
 		if (! echo $i | grep '\(CVS\|mkfile\)' >/dev/null)
 		if (test -f $i)
@@ -90,7 +90,7 @@ tkdiff:VQ:	,,f
 	}
 	rm ,,f
 
-tkdiffed:VQ:	,,f
+tkdiffed:V:	,,f
 	for (i in `{hg manifest}){
 		e = `{echo $i | sed 's,[.]ed$,,'}
 		if(! ~ $e $i)
@@ -102,7 +102,7 @@ tkdiffed:VQ:	,,f
 	}
 	rm ,,f
 
-eqdiff:VQ:	P9 EQ
+eqdiff:V:	P9 EQ
 	cat EQ | sed 's/,/	/g' | while(e=`{read}) {
 		o=$PLAN9/$e(1)
 		if(~ $#e 2)
@@ -130,7 +130,7 @@ eqdiff:VQ:	P9 EQ
 	}
 	echo
 
-upded:VQ: 	P9 
+upded:V: 	P9 
 	echo '*' updating ed files
 	cat EQ | sed 's/,/	/g' | while(e=`{read}) {
 		o=$PLAN9/$e(1)
@@ -149,7 +149,7 @@ upded:VQ: 	P9
 	}
 	echo
 
-uned:VQ: 	P9 EQ upded
+uned:V: 	P9 EQ upded
 	echo '*' unapply ed files
 	for (i in `{cat EQ}){
 		if (! test -f $PLAN9/$i){
@@ -167,5 +167,5 @@ uned:VQ: 	P9 EQ upded
 	}
 	echo
 
-showed:VQ:
+showed:V:
 	hg stat | grep '\.ed$'
