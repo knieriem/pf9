@@ -624,7 +624,6 @@ src/cmd/mk/rc.c
 src/cmd/mk/shell.c
 src/cmd/mk/graph.c
 src/cmd/mk/varsub.c
-src/cmd/mk/word.c
 src/cmd/mk/sys.h
 src/cmd/mk/recipe.c
 src/cmd/mk/var.c
