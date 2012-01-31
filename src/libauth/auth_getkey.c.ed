@@ -1,0 +1,4 @@
+18c
+	switch(pid = -1 /*fork()*/){
+.
+0s/^sha1,962b4442311e4079bd822a8b2e5e834aba626f80/
