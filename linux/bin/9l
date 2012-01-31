@@ -253,7 +253,7 @@ case "$tag" in
 *Linux*)
 	ld=gcc
 	userpath=true
-	#extralibs="$extralibs -lutil"
+	extralibs="$extralibs -lutil"
 	case "${SYSVERSION:-`uname -r`}" in
 	2.6.*)
 		extralibs="$extralibs -lpthread"
