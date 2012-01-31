@@ -219,6 +219,7 @@ src/libauth/auth_challenge.c
 src/libauth/noworld.c
 src/libauth/auth_wep.c
 src/libauth/auth_rpc.c
+src/libauth/auth_getkey.c
 src/libdraw/event.c
 src/libdraw/buildfont.c
 src/libdraw/bezier.c
