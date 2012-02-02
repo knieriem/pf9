@@ -1,5 +1,51 @@
 #! /bin/sh
 
+# there must be a plan9port installation present
+if test "x$PLAN9" = x; then
+	echo PLAN9 variable not set >&2
+	exit 1
+fi
+
+# check that PATH does not contain settings that might
+# cause problems
+hasbin=false
+hasusrbin=false
+hasinfernobin=false
+hasplan9bin=false
+
+for p in `echo $PATH | tr ' :' '_ '`; do
+	case $p in
+	/usr/bin)
+		hasusrbin=:
+		;;
+	/bin)
+		hasbin=:
+		;;
+	$PLAN9/bin)
+		if $hasbin && $hasusrbin; then :
+		else
+			echo 'Error: $PLAN9/bin in PATH is not behind /bin and /usr/bin, which will cause problems' >&2
+			exit 1
+		fi
+		hasplan9bin=:
+		;;	
+	*/inferno/*/bin*)
+		if $hasplan9bin; then :
+		else
+			echo 'Error: PATH seems to contain an inferno /bin, that comes before $PLAN9/bin' >&2
+			echo 'This will cause problems, because of the mk binary.'
+			exit 1
+		fi
+		;;
+	esac
+done
+if $hasplan9bin; then :
+else
+	echo 'Error: PATH does not contain $PLAN9/bin' >&2
+	exit 1	
+fi
+
+
 # check whether we are inside of a pf9 tree,
 # and try to guess a value for PF9
 
