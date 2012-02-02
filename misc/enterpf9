@@ -98,14 +98,10 @@ EOF
 cpusys=`cat  $PF9/$cputype/sysname`
 PATH=$PF9/$cpusys/bin:$PF9/$cputype/bin:$PATH
 
-# try to make rc runable
-if test -z "$PLAN9"; then
-	PLAN9=$PF9/$cputype
-	export PLAN9
-elif test -d "$PLAN9"; then :
-else
-	PLAN9=$PF9/$cputype
-	export PLAN9
-fi
 
-exec rc
+
+shell=$SHELL
+if echo $shell | grep 'rc$' > /dev/null; then
+	shell=rc
+fi
+exec $shell
