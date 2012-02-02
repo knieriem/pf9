@@ -2,20 +2,20 @@ MKSHELL=rc
 
 pop=+P9
 
-all:V:
+all:VQ:
 	echo 'targets: eq, rm(equals), pop(ulate)'
 
-ls:V:
+ls:VQ:
 	hg manifest | grep -v '\([.]\(ed\|mk\)\|mkfile\)'
 
 pop:V:	populate
 rm:V:	rmequals
 
-P9:V:
+P9:VQ:
 	test x^$PLAN9 '!=' x
 	test -d $PLAN9
 
-populate:V:	P9 EQ
+populate:VQ:	P9 EQ
 	echo '*' copying identical files from p9p
 	if (test -f $pop)
 		exit 1
@@ -50,13 +50,13 @@ rmequals:V:	$pop EQ
 	rm -f $pop
 
 
-,,f:
+./,,f:
 	find include src -type f | grep '/[^/]*\.\([chysS]\|lx\|spp\|utf\|lib\|pdf\|ps\|tr\)$' > ,,f
 	find src -type f \
 		| grep '/\(README.*\|portdate\|reduce\|utfmap\|cvt\|find\|unansi\|mkfile\|COPYRIGHT\|NOTICE\|FIXES\|Root\|Repository\|Entries\|mkfile\|\.cvsignore\)$' >> ,,f
 	find lib | grep '\(lex\|yacc\).*' >> ,,f || true
 
-eq:V:	P9 ,,f uned
+eq:V:	P9 ./,,f uned
 	rm -f ,EQ
 	test -f EQ && mv EQ ,EQ
 	
@@ -80,7 +80,7 @@ eq:V:	P9 ,,f uned
 	} > EQ
 	rm ,,f
 
-tkdiff:V:	,,f
+tkdiff:VQ:	./,,f
 	for (i in `{hg manifest}){
 		if (! echo $i | grep '\(CVS\|mkfile\)' >/dev/null)
 		if (test -f $i)
@@ -90,7 +90,7 @@ tkdiff:V:	,,f
 	}
 	rm ,,f
 
-tkdiffed:V:	,,f
+tkdiffed:VQ:	./,,f
 	for (i in `{hg manifest}){
 		e = `{echo $i | sed 's,[.]ed$,,'}
 		if(! ~ $e $i)
@@ -102,7 +102,7 @@ tkdiffed:V:	,,f
 	}
 	rm ,,f
 
-eqdiff:V:	P9 EQ
+eqdiff:VQ:	P9 EQ
 	cat EQ | sed 's/,/	/g' | while(e=`{read}) {
 		o=$PLAN9/$e(1)
 		if(~ $#e 2)
@@ -130,7 +130,7 @@ eqdiff:V:	P9 EQ
 	}
 	echo
 
-upded:V: 	P9 
+upded:VQ: 	P9 
 	echo '*' updating ed files
 	cat EQ | sed 's/,/	/g' | while(e=`{read}) {
 		o=$PLAN9/$e(1)
@@ -149,7 +149,7 @@ upded:V: 	P9
 	}
 	echo
 
-uned:V: 	P9 EQ upded
+uned:VQ: 	P9 EQ upded
 	echo '*' unapply ed files
 	for (i in `{cat EQ}){
 		if (! test -f $PLAN9/$i){
@@ -167,5 +167,5 @@ uned:V: 	P9 EQ upded
 	}
 	echo
 
-showed:V:
+showed:VQ:
 	hg stat | grep '\.ed$'
