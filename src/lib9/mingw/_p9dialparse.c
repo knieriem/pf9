@@ -1,5 +1,7 @@
 #include <u.h>
+#define WINVER 0x0501
 #include <mingw32.h>
+#include <ws2tcpip.h>
 #define NOPLAN9DEFINES
 #include <libc.h>
 
