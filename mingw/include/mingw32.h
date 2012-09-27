@@ -7,7 +7,9 @@ extern "C" {
 #endif
 
 
+#define WINVER 0x0501
 #include <windows.h>
+#include <ws2tcpip.h>
 
 /* missing stuff */
 WINBASEAPI DWORD WINAPI GetLongPathNameW(LPCWSTR,LPWSTR,DWORD);

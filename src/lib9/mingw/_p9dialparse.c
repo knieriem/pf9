@@ -29,58 +29,35 @@ static struct {
 };
 
 static int
-parseip(char *host, u32int *pip)
+setport(struct sockaddr_storage *ss, int port)
 {
-	uchar addr[4];
-	int x, i;
-	char *p;
-
-	p = host;
-	for(i=0; i<4 && *p; i++){
-		x = strtoul(p, &p, 0);
-		if(x < 0 || x >= 256)
-			return -1;
-		if(*p != '.' && *p != 0)
-			return -1;
-		if(*p == '.')
-			p++;
-		addr[i] = x;
-	}
-
-	switch(CLASS(addr)){
-	case 0:
-	case 1:
-		if(i == 3){
-			addr[3] = addr[2];
-			addr[2] = addr[1];
-			addr[1] = 0;
-		}else if(i == 2){
-			addr[3] = addr[1];
-			addr[2] = 0;
-			addr[1] = 0;
-		}else if(i != 4)
-			return -1;
+	switch(ss->ss_family){
+	case AF_INET:
+		((struct sockaddr_in*)ss)->sin_port = htons(port);
 		break;
-	case 2:
-		if(i == 3){
-			addr[3] = addr[2];
-			addr[2] = 0;
-		}else if(i != 4)
-			return -1;
+	case AF_INET6:
+		((struct sockaddr_in6*)ss)->sin6_port = htons(port);
 		break;
+	default:
+		errstr("unknown protocol family %d", ss->ss_family);
+		return -1;
 	}
-	*pip = *(u32int*)addr;
 	return 0;
 }
 
 int
-p9dialparse(char *addr, char **pnet, char **punix, u32int *phost, int *pport)
+p9dialparse(char *addr, char **pnet, char **punix, void *phost, int *pport)
 {
 	char *net, *host, *port, *e;
 	int i;
 	struct servent *se;
 	struct hostent *he;
-//	struct sockaddr_un *sockun;
+	struct sockaddr_storage *ss;
+	struct addrinfo *result;
+
+	ss = phost;
+
+	memset(ss, 0, sizeof *ss);
 
 	*punix = nil;
 	net = addr;
@@ -98,7 +75,6 @@ p9dialparse(char *addr, char **pnet, char **punix, u32int *phost, int *pport)
 			}
 			*punix = host;
 			*pnet = "unix";
-			*phost = 0;
 			*pport = 0;
 			return 0;
 		}
@@ -125,13 +101,35 @@ p9dialparse(char *addr, char **pnet, char **punix, u32int *phost, int *pport)
 	}
 
 	/* translate host */
-	if(strcmp(host, "*") == 0)
-		*phost = 0;
-	else if(parseip(host, phost) == 0)
-		{}
-	else if((he = gethostbyname(host)) != nil)
-		*phost = *(u32int*)(he->h_addr);
-	else{
+	if(strcmp(host, "*") == 0){
+		ss->ss_family = AF_INET6;
+		((struct sockaddr_in6*)ss)->sin6_addr = in6addr_any;
+	}else if((he = gethostbyname(host)) != nil && he->h_addr_list[0] != nil){
+		ss->ss_family = he->h_addrtype;
+		switch(ss->ss_family){
+		case AF_INET:
+			((struct sockaddr_in*)ss)->sin_addr = *(struct in_addr*) *(he->h_addr_list);
+			break;
+		case AF_INET6:
+			((struct sockaddr_in6*)ss)->sin6_addr = *(struct in6_addr*) *(he->h_addr_list);
+			break;
+		default:
+			errstr("unknown protocol family %d", ss->ss_family);
+			return -1;
+		}
+	}else if(getaddrinfo(host, NULL, NULL, &result) == 0) {
+		switch (result->ai_family) {
+		case AF_INET:
+			memmove((struct sockaddr_in*)ss, result->ai_addr, result->ai_addrlen);
+			break;
+		case AF_INET6:
+			memmove((struct sockaddr_in6*)ss, result->ai_addr, result->ai_addrlen);
+			break;
+		default:
+			errstr("unknown protocol family %d", ss->ss_family);
+			return -1;
+		}
+	}else{
 		werrstr("unknown host %s", host);
 		return -1;
 	}
@@ -142,7 +140,7 @@ p9dialparse(char *addr, char **pnet, char **punix, u32int *phost, int *pport)
 			if((se = getservbyname(port, nets[i])) != nil){
 				*pnet = nets[i];
 				*pport = ntohs(se->s_port);
-				return 0;
+				return setport(ss, *pport);
 			}
 		}
 	}
@@ -152,7 +150,7 @@ p9dialparse(char *addr, char **pnet, char **punix, u32int *phost, int *pport)
 		if(strcmp(porttbl[i].service, port) == 0){
 			*pnet = porttbl[i].net;
 			*pport = porttbl[i].port;
-			return 0;
+			return setport(ss, *pport);
 		}
 	}
 
@@ -170,12 +168,12 @@ p9dialparse(char *addr, char **pnet, char **punix, u32int *phost, int *pport)
 	i = strtol(port, &e, 0);
 	if(*e == 0){
 		*pport = i;
-		return 0;
+		return setport(ss, *pport);
 	}
 
 	if((se = getservbyname(port, net)) != nil){
 		*pport = ntohs(se->s_port);
-		return 0;
+		return setport(ss, *pport);
 	}
 	werrstr("unknown service %s!*!%s", net, port);
 	return -1;
