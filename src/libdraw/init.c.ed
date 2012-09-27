@@ -1,4 +1,4 @@
-61c
+67c
 	if(fontname == nil || strcmp(fontname, deffontname) == 0){
 .
-0s/^sha1,39c417455c33cd57567d229f8c7037f0d37210e1/
+0s/^sha1,58285bb72457888d6d55c4ff7748fbd08780fe2e/
