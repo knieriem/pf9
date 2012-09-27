@@ -1,5 +1,6 @@
 #include <u.h>
 #include <mingw32.h>
+#include <ws2tcpip.h>
 #include <mingwutil.h>
 #include <libc.h>
 
@@ -34,18 +35,41 @@ unix2winpipe(char *unix)
 	return name;	
 }
 
+static int
+isany(struct sockaddr_storage *ss)
+{
+	switch(ss->ss_family){
+	case AF_INET:
+		return (((struct sockaddr_in*)ss)->sin_addr.s_addr == INADDR_ANY);
+	case AF_INET6:
+		return (memcmp(((struct sockaddr_in6*)ss)->sin6_addr.s6_addr,
+			in6addr_any.s6_addr, sizeof (struct in6_addr)) == 0);
+	}
+	return 0;
+}
+
+static int
+addrlen(struct sockaddr_storage *ss)
+{
+	switch(ss->ss_family){
+	case AF_INET:
+		return sizeof(struct sockaddr_in);
+	case AF_INET6:
+		return sizeof(struct sockaddr_in6);
+	}
+	return 0;
+}
 
 int
 p9dial(char *addr, char *local, char *dummy2, int *dummy3)
 {
 	char *buf;
 	char *net, *unix;
-	u32int host;
 	int port;
 	int proto;
 	int sn;
 	int n;
-	struct sockaddr_in sa, sal;
+	struct sockaddr_storage ss, ssl;
 	SOCKET s;
 	HANDLE h;
 	char *pname;
@@ -60,7 +84,7 @@ p9dial(char *addr, char *local, char *dummy2, int *dummy3)
 	if(buf == nil)
 		return -1;
 
-	if(p9dialparse(buf, &net, &unix, &host, &port) < 0){
+	if(p9dialparse(buf, &net, &unix, &ss, &port) < 0){
 		free(buf);
 		return -1;
 	}
@@ -78,7 +102,7 @@ p9dial(char *addr, char *local, char *dummy2, int *dummy3)
 	}
 	free(buf);
 
-	if((s = socket(AF_INET, proto, 0)) < 0)
+	if((s = socket(ss.ss_family, proto, 0)) < 0)
 		return -1;
 		
 	if(local){
@@ -87,7 +111,7 @@ p9dial(char *addr, char *local, char *dummy2, int *dummy3)
 			closesocket(s);
 			return -1;
 		}
-		if(p9dialparse(buf, &net, &unix, &host, &port) < 0){
+		if(p9dialparse(buf, &net, &unix, &ss, &port) < 0){
 		badlocal:
 			free(buf);
 			closesocket(s);
@@ -97,29 +121,21 @@ p9dial(char *addr, char *local, char *dummy2, int *dummy3)
 			werrstr("bad local address %s for dial %s", local, addr);
 			goto badlocal;
 		}
-		memset(&sal, 0, sizeof sal);
-		memmove(&sal.sin_addr, &local, 4);
-		sal.sin_family = AF_INET;
-		sal.sin_port = htons(port);
 		sn = sizeof n;
 		if(port && getsockopt(s, SOL_SOCKET, SO_TYPE, (void*)&n, &sn) >= 0
 		&& n == SOCK_STREAM){
 			n = 1;
 			setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char*)&n, sizeof n);
 		}
-		if(bind(s, (struct sockaddr*)&sal, sizeof sal) < 0)
+		if(bind(s, (struct sockaddr*)&ssl, addrlen(&ssl)) < 0)
 			goto badlocal;
 		free(buf);
 	}
 
 	n = 1;
 	setsockopt(s, SOL_SOCKET, SO_BROADCAST, (char*)&n, sizeof n);
-	if(host != 0){
-		memset(&sa, 0, sizeof sa);
-		memmove(&sa.sin_addr, &host, 4);
-		sa.sin_family = AF_INET;
-		sa.sin_port = htons(port);
-		if(connect(s, (struct sockaddr*)&sa, sizeof sa) < 0){
+	if(!isany(&ss)){
+		if(connect(s, (struct sockaddr*)&ss, addrlen(&ss)) < 0){
 			closesocket(s);
 			return -1;
 		}

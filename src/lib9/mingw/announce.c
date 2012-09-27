@@ -1,5 +1,6 @@
 #include <u.h>
 #include <mingw32.h>
+#include <ws2tcpip.h>
 #include <mingwutil.h>
 #define NOPLAN9DEFINES
 #include <libc.h>
@@ -35,24 +36,35 @@ putfd(char *dir, int fd)
 #undef unix
 #define unix sockunix
 
+static int
+addrlen(struct sockaddr_storage *ss)
+{
+	switch(ss->ss_family){
+	case AF_INET:
+		return sizeof(struct sockaddr_in);
+	case AF_INET6:
+		return sizeof(struct sockaddr_in6);
+	}
+	return 0;
+}
+
 int
 p9announce(char *addr, char *dir)
 {
 	int proto;
 	char *buf, *unix;
 	char *net;
-	u32int host;
 	int port;
 	SOCKET s;
 	int n, sn;
-	struct sockaddr_in sa;
+	struct sockaddr_storage ss;
 	int	fd;
 
 	buf = strdup(addr);
 	if(buf == nil)
 		return -1;
 
-	if(p9dialparse(buf, &net, &unix, &host, &port) < 0){
+	if(p9dialparse(buf, &net, &unix, &ss, &port) < 0){
 		free(buf);
 		return -1;
 	}
@@ -69,11 +81,7 @@ p9announce(char *addr, char *dir)
 	}
 	free(buf);
 
-	memset(&sa, 0, sizeof sa);
-	memmove(&sa.sin_addr, &host, 4);
-	sa.sin_family = AF_INET;
-	sa.sin_port = htons(port);
-	if((s = socket(AF_INET, proto, 0)) < 0)
+	if((s = socket(ss.ss_family, proto, 0)) < 0)
 		return -1;
 	sn = sizeof n;
 	if(port && getsockopt(s, SOL_SOCKET, SO_TYPE, (void*)&n, &sn) >= 0
@@ -81,7 +89,7 @@ p9announce(char *addr, char *dir)
 		n = 1;
 		setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char*)&n, sizeof n);
 	}
-	if(bind(s, (struct sockaddr*)&sa, sizeof sa) < 0){
+	if(bind(s, (struct sockaddr*)&ss, addrlen(&ss)) < 0){
 		close(s);
 		return -1;
 	}
@@ -106,33 +114,6 @@ Unix:
 		fprint(2, "announce: %d - %s\n", fd, fdtab[fd]->name);
 	putfd(dir, fd);
 	return fd;
-#if 0
-	memset(&sun, 0, sizeof sun);
-	sun.sun_family = AF_UNIX;
-	strcpy(sun.sun_path, unix);
-	if((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
-		return -1;
-	sn = sizeof sun;
-	if(bind(s, (struct sockaddr*)&sun, sizeof sun) < 0){
-		if(errno == EADDRINUSE
-		&& connect(s, (struct sockaddr*)&sun, sizeof sun) < 0
-		&& errno == ECONNREFUSED){
-			/* dead socket, so remove it */
-			remove(unix);
-			close(s);
-			if((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
-				return -1;
-			if(bind(s, (struct sockaddr*)&sun, sizeof sun) >= 0)
-				goto Success;
-		}
-		close(s);
-		return -1;
-	}
-Success:
-	listen(s, 8);
-	putfd(dir, s);
-#endif
-	return s;
 }
 
 int
