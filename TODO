@@ -7,9 +7,6 @@
 		programs using the thread-based mouse
 		interface will run.
 
--	cmd/test.c might need an update
-
 -	cmd/ed.c could be made linkable again
 
--	cmd/9term/win.c could be ported, so that
-	acme would also have a shell on Windows/MinGW
+-	lib9/mingw/_p9dir: sync parts with p9p's version
