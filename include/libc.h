@@ -1,3 +1,7 @@
+// This file originated as Plan 9's /sys/include/libc.h.
+// The plan9port-specific changes may be distributed
+// using the license in ../src/lib9/LICENSE.
+
 /*
  * Lib9 is miscellany from the Plan 9 C library that doesn't
  * fit into libutf or into libfmt, but is still missing from traditional
@@ -799,10 +803,11 @@ extern	Waitmsg*	p9wait(void);
 extern	Waitmsg*	p9waitfor(int);
 extern	Waitmsg*	waitnohang(void);
 extern	int	p9waitpid(void);
-extern	long	p9write(int, void*, long);
 /* <unistd.h>
+extern	long	write(int, void*, long);
 extern	long	writev(int, IOchunk*, int);
 */
+extern	long	p9write(int, void*, long);
 /* extern	int	wstat(char*, uchar*, int); give up */
 extern	ulong	rendezvous(ulong, ulong);
 
@@ -824,12 +829,12 @@ extern	ulong	rendezvous(ulong, ulong);
 #undef open
 #define open		p9open
 #define read		p9read
-#define write		p9write
 #define pread		p9pread
 #define pwrite		p9pwrite
 #define close		p9close
 #define pipe		p9pipe
 #define	waitfor		p9waitfor
+#define write		p9write
 #endif
 
 extern	Dir*	dirstat(char*);
