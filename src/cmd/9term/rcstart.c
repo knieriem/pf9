@@ -53,7 +53,16 @@ rcstart(int argc, char **argv, int *pfd, int *tfd)
 	 */
 	notifyoff("sys: window size change");
 
-	putenv("TERM", "9term");
+	// This used to be TERM=9term but we don't know of anything that cares.
+	// Worse, various cc have started assuming that TERM != dumb implies
+	// the ability to understand ANSI escape codes. 9term will squelch them
+	// but acme win does not.
+	putenv("TERM", "dumb");
+
+	// Set $termprog to 9term or win for those who care about what kind of
+	// dumb terminal this is.
+	putenv("termprog", (char*)termprog);
+
 	fds[0] = fd[0];
 	fds[1] = fd[0];
 	fds[2] = fd[0];
