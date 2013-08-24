@@ -653,12 +653,12 @@ setcolor(ulong index, ulong red, ulong green, ulong blue)
 }
 
 
-uchar*
+char*
 clipreadunicode(HANDLE h)
 {
 	WCHAR *p;
 	int n;
-	uchar *q;
+	char *q;
 	
 	p = GlobalLock(h);
 	n = wstrutflen(p)+1;
@@ -669,10 +669,10 @@ clipreadunicode(HANDLE h)
 	return q;
 }
 
-uchar *
+char *
 clipreadutf(HANDLE h)
 {
-	uchar *p;
+	char *p;
 
 	p = GlobalLock(h);
 	p = strdup(p);
@@ -685,7 +685,7 @@ char*
 _xgetsnarf(void)
 {
 	HANDLE h;
-	uchar *p;
+	char *p;
 
 	if(!OpenClipboard(window)) {
 		oserror();

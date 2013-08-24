@@ -191,8 +191,7 @@ void
 threadmain(int argc, char **argv)
 {
 	int fd[2];
-	int n, top;
-	fd_set rd, wr, xx;
+	int n;
 	Wsysmsg m;
 	Channel *cnotew;
 	Ioproc *io;
