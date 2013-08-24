@@ -159,7 +159,7 @@ struct _Procrendez
 #ifdef PLAN9PORT_USING_PTHREADS
 	pthread_cond_t	cond;
 #elif defined(__MINGW32__)
-	HANDLE cond;
+	HANDLE	cond;
 #else
 	int		pid;
 #endif
