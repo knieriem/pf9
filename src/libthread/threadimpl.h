@@ -8,6 +8,9 @@
 #endif
 #include <signal.h>
 #if !defined(__OpenBSD__) && !defined(__MINGW32__)
+#	if defined(__APPLE__)
+#		define _XOPEN_SOURCE 	/* for Snow Leopard */
+#	endif
 #	include <ucontext.h>
 #endif
 #ifdef __MINGW32__
@@ -44,8 +47,12 @@ extern	void		makecontext(ucontext_t*, void(*)(), int, ...);
 #	define makecontext libthread_makecontext
 #	if defined(__i386__)
 #		include "386-ucontext.h"
-#	else
+#	elif defined(__x86_64__)
+#		include "x86_64-ucontext.h"
+#	elif defined(__ppc__) || defined(__power__)
 #		include "power-ucontext.h"
+#	else
+#		error "unknown architecture"
 #	endif
 #endif
 
@@ -56,6 +63,8 @@ extern	void		makecontext(ucontext_t*, void(*)(), int, ...);
 #	define ucontext_t libthread_ucontext_t
 #	if defined __i386__
 #		include "386-ucontext.h"
+#	elif defined __amd64__
+#		include "x86_64-ucontext.h"
 #	else
 #		include "power-ucontext.h"
 #	endif
@@ -77,10 +86,10 @@ but surely the latter would be defined(__sparc__).
 */
 
 #if defined(__arm__)
-int getmcontext(mcontext_t*);
-void setmcontext(const mcontext_t*);
-#define	setcontext(u)	setmcontext(&(u)->uc_mcontext)
-#define	getcontext(u)	getmcontext(&(u)->uc_mcontext)
+int mygetmcontext(ulong*);
+void mysetmcontext(const ulong*);
+#define	setcontext(u)	mysetmcontext(&(u)->uc_mcontext.arm_r0)
+#define	getcontext(u)	mygetmcontext(&(u)->uc_mcontext.arm_r0)
 #endif
 
 
@@ -103,6 +112,15 @@ enum
 struct Context
 {
 	ucontext_t	uc;
+#ifdef __APPLE__
+	/*
+	 * On Snow Leopard, etc., the context routines exist,
+	 * so we use them, but apparently they write past the
+	 * end of the ucontext_t.  Sigh.  We put some extra
+	 * scratch space here for them.
+	 */
+	uchar	buf[1024];
+#endif
 };
 
 struct Execjob
@@ -110,6 +128,7 @@ struct Execjob
 	int *fd;
 	char *cmd;
 	char **argv;
+	char *dir;
 	Channel *c;
 };
 
@@ -120,12 +139,12 @@ struct _Thread
 	_Thread	*allnext;
 	_Thread	*allprev;
 	Context	context;
+	void	(*startfn)(void*);
+	void	*startarg;
 	uint	id;
 	uchar	*stk;
 	uint	stksize;
 	int		exiting;
-	void	(*startfn)(void*);
-	void	*startarg;
 	Proc	*proc;
 	char	name[256];
 	char	state[256];
@@ -140,7 +159,7 @@ struct _Procrendez
 #ifdef PLAN9PORT_USING_PTHREADS
 	pthread_cond_t	cond;
 #elif defined(__MINGW32__)
-	HANDLE	cond;
+	HANDLE cond;
 #else
 	int		pid;
 #endif
@@ -194,8 +213,8 @@ extern void _threadsetproc(Proc*);
 extern int _threadlock(Lock*, int, ulong);
 extern void _threadunlock(Lock*, ulong);
 extern void _pthreadinit(void);
-extern int _threadspawn(int*, char*, char**);
-extern int _runthreadspawn(int*, char*, char**);
+extern int _threadspawn(int*, char*, char**, char*);
+extern int _runthreadspawn(int*, char*, char**, char*);
 extern void _threadsetupdaemonize(void);
 extern void _threaddodaemonize(char*);
 extern void _threadpexit(void);
