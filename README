@@ -58,9 +58,21 @@ On Linux, to compile for the MinGW, run
 Copy identical files from Plan9port
 ---------------------------
 
-A lot of files are used from plan9port without change. They are not distributed
-along with pf9. You should have a plan9port distribution installed, and the
-PLAN9 variable set.
+A lot of files are used without changes from a specific revision
+of plan9port.  They are not distributed along with pf9. This copy of
+plan9port can be setup using
+
+	git clone https://github.com/9fans/plan9port
+	cd plan9port
+	git checkout 1889a257
+	PLAN9=`pwd`
+	export PLAN9
+
+If you have, in parallel, a current version of plan9port installed,
+which has already been added to PATH, these steps should be
+sufficient. Otherwise you would have to run `./INSTALL` in the checked
+out copy of plan9port, so that some commands like `sed`, or `date`
+get built, that are needed for the pf9 build process.
 
 You can run
 
