@@ -168,7 +168,7 @@ src/libthread/BSD.c
 src/libthread/OpenBSD-power-asm.S
 src/libthread/Linux-sparc64-swapcontext.c
 src/libthread/thread.c
-src/libthread/OpenBSD-386-asm.S
+src/libthread/OpenBSD-386-asm.s
 src/libthread/Linux-sparc64-context.S
 src/libthread/ioproc.h
 src/libthread/Linux-power-asm.s
@@ -1042,8 +1042,8 @@ src/cmd/tbl/tt.c
 src/cmd/tbl/t2.c
 src/cmd/tbl/t7.c
 src/cmd/tail.c
-src/cmd/mkdir.c
-src/cmd/ls.c
+src/cmd/mkdir.C
+src/cmd/ls.C
 src/cmd/comm.c
 src/cmd/troff/n7.c
 src/cmd/troff/suftab.c
@@ -1068,7 +1068,7 @@ src/cmd/troff/n8.c
 src/cmd/troff/ni.c
 src/cmd/basename.c
 src/cmd/9p.c
-src/cmd/md5sum.c
+src/cmd/md5sum.C
 src/cmd/ascii.c
 src/cmd/wc.c
 src/cmd/eqn/size.c
@@ -1125,7 +1125,7 @@ src/cmd/lex/ldefs.h
 src/cmd/lex/sub2.c
 src/cmd/lex/sub1.c
 src/cmd/resample.c
-src/cmd/du.c
+src/cmd/du.C
 src/cmd/9term/win.c
 src/cmd/9term/NetBSD.c
 src/cmd/9term/bsdpty.c
