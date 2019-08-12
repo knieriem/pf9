@@ -1,6 +1,6 @@
 #include <u.h>
-#include <mingw32.h>
 #include <ws2tcpip.h>
+#include <mingw32.h>
 #include <mingwutil.h>
 #include <libc.h>
 

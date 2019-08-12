@@ -30,6 +30,10 @@ extern "C" {
 #define	cwait	pf9_cwait
 #undef	eof
 #define	eof		pf9_eof
+#undef	stdin
+#undef	stderr
+#undef	stdout
+#undef	strtod
 
 /* mingw doesn't know SIGHUP and SIGQUIT */
 #define	SIGHUP	-1
@@ -41,12 +45,18 @@ extern "C" {
 #define _NEEDUINT 1
 #define _NEEDULONG 1
 
+typedef int sigset_t;
+
 /* FIXME: mingw has no sigjmp_buf */
 #define sigjmp_buf jmp_buf
 typedef long p9jmp_buf[sizeof(sigjmp_buf)/sizeof(long)];
 
 /* mingw has no sigsetjmp */
-#define sigsetjmp(b,s) _setjmp((void*)b)
+#ifdef _WIN64
+#define sigsetjmp(b, s) _setjmp((b), mingw_getsp())
+#else
+#define sigsetjmp(b,s) _setjmp3((void*)(b), NULL)
+#endif
 
 /*
  * This is a placeholder for Windows's CRITICAL_SECTION

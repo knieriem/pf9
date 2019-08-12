@@ -2,6 +2,11 @@
 #define FILE	pf9FILE
 #undef FILENAME_MAX
 
+#undef stdin
+#undef stderr
+#undef stdout
+
+
 /*
  * pANS stdio.h
  */

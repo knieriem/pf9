@@ -145,7 +145,7 @@ int Executable(char *file)
 {
 	Dir *statbuf;
 	int ret;
-	char path[MAX_PATH];
+	char path[_MAX_PATH];
 	char *shell;
 
 	if (!winexecpath(path, file, &shell))
