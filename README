@@ -13,9 +13,9 @@ in src/cmd/mkfile.
 For a list of ported libraries see src/lib*. Status of some
 libraries:
 
-	libthread: works mostly, daemonizing works not
+-	libthread: works mostly, daemonizing works not
 
-	libdraw:	works basically, tested with tcolors, acme
+-	libdraw:	works basically, tested with tcolors, acme
 		and sam. Events have not been ported, so only
 		programs using the thread-based mouse
 		interface will run.
