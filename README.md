@@ -22,26 +22,25 @@ libraries:
 
 Status of the support of various concepts:
 
-Pipes
-	Implemented using Named Pipes.
+*	Pipes - Implemented using Named Pipes.
 
-Unix Sockets
+*	Unix Sockets  
 	Implemented using Named Pipes. You can use the same
 	addresses as in plan9port, e.g. unix!/tmp/acme.
 
-Internet Sockets
+*	Internet Sockets  
 	Implemented using Winsock.
 
-Unicode
+*	Unicode  
 	All programs get UTF-8 encoded streams on stdin, UTF-8
 	encoded environment and command line arguments.
 
-Console support
+*	Console support  
 	Reading from the console input and writing to the console
 	screen buffer is supported transparently. A `cat > file` from
 	the Windows console will produce UTF-8 characters, regardless
 	of which codepage is installed.
-
+	
 	You can also use the history feature of the console window without
 	extra support in programs.
 
