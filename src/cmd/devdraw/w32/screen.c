@@ -1,3 +1,4 @@
+#define UNICODE
 #include <u.h>
 #include <mingw32.h>
 #include <mingwutil.h>
@@ -16,6 +17,7 @@ enum {
 	STACK	= 32768,
 };
 
+extern	LPWSTR	winutf2wstr(char*);
 extern int parsewinsize(char*, Rectangle*, int*);
 
 Memimage	*gscreen;
@@ -99,7 +101,7 @@ struct Winarg
 {
 	int	x, y, dx, dy;
 	Channel *csync;
-	char label[1];
+	LPWSTR label;
 } Winarg;
 Memimage*
 _xattach(char *label, char *winsize)
@@ -137,10 +139,10 @@ _xattach(char *label, char *winsize)
 	}
 	if(label == nil)
 		label = "pjw-face-here";
-	a = malloc(sizeof(Winarg)+strlen(label));
+	a = malloc(sizeof(Winarg));
 	if (a==nil)
 		sysfatal("out of memory");
-	strcpy(a->label, label);
+	a->label = winutf2wstr(label);
 
 	a->dx = CW_USEDEFAULT;
 	a->dy = CW_USEDEFAULT;
@@ -258,6 +260,7 @@ winproc(void *v)
 {
 	WNDCLASS wc;
 	MSG msg;
+	LPWSTR class;
 	Winarg *a;
 
 	a = v;
@@ -267,21 +270,22 @@ winproc(void *v)
 	bmiinit();
 //	terminit();
 
+	class = winutf2wstr("9pmgraphics");
 	wc.style = 0;
 	wc.lpfnWndProc = WindowProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = inst;
-	wc.hIcon = LoadIcon(inst, "IDI_ICON1");
+	wc.hIcon = LoadIconA(inst, "IDI_ICON1");
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
-	wc.lpszClassName = "9pmgraphics";
+	wc.lpszClassName = class;
 	RegisterClass(&wc);
 
 	window = CreateWindowEx(
 		0,			/* extended style */
-		"9pmgraphics",		/* class */
+		class,		/* class */
 		a->label,		/* caption */
 		WS_OVERLAPPEDWINDOW,    /* style */
 		a->x,		/* init. x pos */
@@ -321,6 +325,7 @@ winproc(void *v)
 		}
 	}
 quit:
+	
 //	MessageBox(0, "winproc", "exits", MB_OK);
 	threadexitsall(nil);
 }
