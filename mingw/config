@@ -1,5 +1,5 @@
-mingw_mach=i586
-mingw_os=mingw32msvc
+mingw_mach=i686
+mingw_os=w64-mingw32
 gcc_ver=3.4.2
 
 TOOLPFX=$mingw_mach-$mingw_os-
