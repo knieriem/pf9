@@ -1,8 +1,9 @@
-_Pf9_ is a port of some libraries and programs from [_Plan9 from User
-Space_](https://9fans.github.io/plan9port/) to Win32 using the MinGW-w64
-environment. A lot of files are used without modification, some need
-only slight adaptions. The actual porting has been done in lib9/mingw
-and libthread/mingw.c, with help of ideas from inferno and 9pm.
+_Pf9_ (package framework 9) is a port of some libraries and programs
+from [_Plan9 from User Space_](https://9fans.github.io/plan9port/) to
+Win32 using the MinGW-w64 environment. A lot of files are used without
+modification, some need only slight adaptions. The actual porting has
+been done in lib9/mingw and libthread/mingw.c, with help of ideas from
+inferno and 9pm.
 
 See `LICENSE` file for which licenses apply to the source files.
 
