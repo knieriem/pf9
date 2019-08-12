@@ -1,11 +1,10 @@
-`Pf9' is a port of some libraries and programs from `Plan9 from
-User Space' (http://www.swtch.com/plan9port/) to Windows
-using the MinGW compiler. A lot of files are used without
-modification, some need only slight adaptions. The actual porting
-has been done in lib9/mingw and libthread/mingw.c, with
-help of ideas from inferno and 9pm.
+_Pf9_ is a port of some libraries and programs from [_Plan9 from User
+Space_](https://9fans.github.io/plan9port/) to Win32 using the MinGW-w64
+environment. A lot of files are used without modification, some need
+only slight adaptions. The actual porting has been done in lib9/mingw
+and libthread/mingw.c, with help of ideas from inferno and 9pm.
 
-See LICENSE file for which licenses apply to the source files.
+See `LICENSE` file for which licenses apply to the source files.
 
 For a list of ported programs see DIRS and TARG definitions
 in src/cmd/mkfile.
@@ -39,7 +38,7 @@ Unicode
 
 Console support
 	Reading from the console input and writing to the console
-	screen buffer is supported transparently. A "cat > file" from
+	screen buffer is supported transparently. A `cat > file` from
 	the Windows console will produce UTF-8 characters, regardless
 	of which codepage is installed.
 
@@ -85,63 +84,68 @@ You can run
 	mk tkdiff		... to get a list of tkdiff commands you can click at in rc to
 				explore the differences between p9p and pf9
 
-	mk eqdiff		... like `mk tkdiff', but this time a list showing on which
+	mk eqdiff		... like `mk tkdiff`, but this time a list showing on which
 				files an ed script has been run.
 
 Some files will be modified slightly after copying from plan9port. This
 is done using one ed script per file.
 
 
-How to build for mingw
--------------------
+How to build for MinGW-w64 (Win32)
+----------------------------------
 
-1.	Set `PF9' to the main directory of this distribution. Set cputype
+The MinGW-w64 compiler and development files for
+Win32 must be available, which can, for example, be
+installed on Debian using the [`gcc-mingw-w64-i686`
+package](https://packages.debian.org/buster/gcc-mingw-w64-i686).
+
+1.	Set `PF9` to the main directory of this distribution. Set cputype
 	and objtype:
 		cputype=lin386
 		objtype=mingw
 
-	You might just run `sh misc/enterpf9' alternatively, which should
+	You might just run `sh misc/enterpf9` alternatively, which should
 	start an rc shell with these values already set (it won't affect the
 	environment of the calling shell).
 	
 2.	Set PATH to include the necessary bin directories $cputype/bin and
 	$cpusys/bin, i.e. lin386/bin and linux/bin. They should come
 	before the PLAN9/bin directory, to avoid conflicts. If you have
-	run `misc/enterpf9' in step 1, this has already been done.
+	run `misc/enterpf9` in step 1, this has already been done.
 
-3.	You should have run `mk pop' once to copy identical source files from
+3.	You should have run `mk pop` once to copy identical source files from
 	your plan9port distribution, and to apply changes, where neccessary.
 
-4.		cd src
+4.	Build libraries and programs:
+
+		cd src
 		mk
 		mk install
 	
-	This should build all the programs, on success you will
-	find them in mingw/bin.
+	On success you will the programs in mingw/bin.
 
-5.	To get a distribution for windows, e.g. the compiled binaries
-	and additional files like troff fonts from plan9port, look into
-	dist/mingw/mkfile.
-
-	This needs some further explanations ...
+To get a distribution for windows, e.g. the compiled binaries
+and additional files like troff fonts from plan9port, look into
+`dist/mingw/mkfile`.
+This needs some further explanation.
 
 
 
 Run it
 -----
 
-	FIXME
+FIXME
 	
-	This should be enough to get it work. Now you might generate the
-	lookman index from a shell prompt, which is a good test of some
-	of the functionality:
+This should be enough to get it work. Now you might generate the
+lookman index from a shell prompt, which is a good test of some
+of the functionality:
 
-		$ rc
-		% cd $PF9/sys/man
-		% ./mkindex
+	$ rc
+	% cd $PF9/sys/man
+	% ./mkindex
 
 
 Debugging
 --------
 
-Define FDTDEBUG=2 to get debug output from the file descriptor layer.
+Define `FDTDEBUG=2` to get debug output from the file descriptor layer.
