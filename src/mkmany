@@ -20,6 +20,15 @@ $O.%:	%.$O $OFILES $LIB
 %.$O:	%.c
 	$CC $CFLAGS $stem.c
 
+# This is a workaround that should be removed
+# once files like cmd/du.C have been renamed to du.c
+# again (i.e. if a recent enough copy of plan9port is used)
+%.$O:	%.C
+	cp $stem.C _$stem.c
+	$CC $CFLAGS _$stem.c
+	rm -f _$stem.c
+	mv _$stem.W $stem.W
+
 %.$O:	%.s
 	$AS $AFLAGS $stem.s
 
