@@ -78,13 +78,12 @@ int
 winutftowstr(WCHAR *w, char *s, int n)
 {
 	int len;
-	WCHAR *e, *ow;
+	WCHAR *e;
 	Rune r;
 
 	len = utflen(s);
 	if(len >= n)
 		return len;
-	ow = w;
 	e = w+n-1;
 	while(w<e && *s){
 		s += chartorune(&r, s);

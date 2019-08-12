@@ -95,9 +95,9 @@ winerror(char *pfx)
 int
 winovresult(int ret, HANDLE h, OVERLAPPED *ov, DWORD *np, int evclose)
 {
-	DWORD e, e0, n, n0;
+	DWORD e, e0, n;
 
-	n = 0; n0=np==nil? 0 : *np;
+	n = 0;
 	e = e0 = 0;
 	if (ret==0) {
 		e = GetLastError();
@@ -105,7 +105,6 @@ winovresult(int ret, HANDLE h, OVERLAPPED *ov, DWORD *np, int evclose)
 		if (e==ERROR_IO_PENDING) {
 			e = 0;
 
-//			fprint(2, " pend");
 			n = np==nil? 0: *np;
 			if (!GetOverlappedResult(h, ov, &n, 1 /* wait */))
 				e = GetLastError();
@@ -114,7 +113,6 @@ winovresult(int ret, HANDLE h, OVERLAPPED *ov, DWORD *np, int evclose)
 		}
 	}
 
-//	fprint(2, " done: (%d) %d bytes e0: %d e: %d\n", n0, np==nil? n: *np, e0, e);
 	if (evclose)
 		CloseHandle(ov->hEvent);
 	else

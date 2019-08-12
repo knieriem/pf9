@@ -121,7 +121,6 @@ signotify(int sig)
 {
 	char tmp[64];
 	Jmp *j;
-	Sig *s;
 
 	signal(sig, signotify);
 	j = &onejmp;
@@ -134,7 +133,6 @@ signotify(int sig)
 	case 1:	/* noted(NDFLT) */
  //   Beep( 7000, 200 ); 
  		if(0)print("DEFAULT %d\n", sig);
-		s = findsig(sig);
 		signal(sig, SIG_DFL);
 		raise(sig);
 		_exit(1);

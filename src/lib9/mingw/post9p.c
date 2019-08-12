@@ -8,7 +8,6 @@
 int
 post9pservice(int fd, char *name, char *mtpt)
 {
-	int pid;
 	char *ns, *s;
 	Waitmsg *w;
 	int	fds[3];
@@ -26,7 +25,7 @@ post9pservice(int fd, char *name, char *mtpt)
 	fds[0] = dup(fd, -1);
 	fds[1] = fds[0];
 	fds[2] = dup(2, -1);
-	pid = winspawnl(fds, "9pserve", "9pserve", "-u", s, (char*)0);
+	winspawnl(fds, "9pserve", "9pserve", "-u", s, (char*)0);
 	return 0;
 	w = wait();
 	if(w == nil)

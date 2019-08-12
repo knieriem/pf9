@@ -92,10 +92,12 @@ int
 _p9dir(struct stat *st, WCHAR *wname, Dir *d, char **str, char *estr)
 {
 	char *s, *name;
+#if 0
 	char tmp[20];
 	static struct group *g;
 	static struct passwd *p;
 	static int gid, uid;
+#endif
 	int sz, fd;
 
 	fd = -1;
