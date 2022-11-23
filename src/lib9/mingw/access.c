@@ -32,7 +32,7 @@ p9access(char *name, int mode)
 	fd = p9open(name, omode);
 	if (fd<0)
 		return -1;
-	close(fd);
+	p9close(fd);
 	return 0;
 }
 
